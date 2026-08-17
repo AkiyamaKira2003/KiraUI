@@ -12,6 +12,7 @@
       - Rounded border / shadow
       - Status + Phase pill
       - RightShift (configurable) show/hide
+      - Floating restore launcher when hidden
       - Mouse + touch support
 
     Example:
@@ -29,7 +30,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.1.0"
+KiraUI.Version = "0.1.1"
 
 KiraUI.Theme = {
     Background = Color3.fromRGB(15, 16, 22),
@@ -178,6 +179,12 @@ function KiraUI:CreateWindow(config)
     local toggleKey = config.ToggleKey or Enum.KeyCode.RightShift
     local titleText = tostring(config.Title or "Kira UI")
     local subtitleText = tostring(config.Subtitle or "Responsive Roblox interface")
+    local closeBehavior = string.lower(tostring(config.CloseBehavior or "hide"))
+    local launcherEnabled = config.ShowLauncher ~= false
+    local launcherText = tostring(config.LauncherText or "Open UI")
+    local launcherPosition = config.LauncherPosition or UDim2.new(0, 18, 0.5, 0)
+    local launcherAnchorPoint = config.LauncherAnchorPoint or Vector2.new(0, 0.5)
+    local launcherSize = config.LauncherSize or UDim2.fromOffset(154, 44)
 
     local uiParent = resolveParent()
 
@@ -209,6 +216,8 @@ function KiraUI:CreateWindow(config)
         _minSize = minSize,
         _maxSize = maxSize,
         _toggleKey = toggleKey,
+        _closeBehavior = closeBehavior,
+        _launcherEnabled = launcherEnabled,
         _savedSize = startSize,
     }
 
@@ -250,6 +259,28 @@ function KiraUI:CreateWindow(config)
     window:_connect(dismissLayer.MouseButton1Click, function()
         window:_closeDropdown()
     end)
+
+    local launcherButton = new("TextButton", {
+        Name = "RestoreLauncher",
+        BackgroundColor3 = theme.Accent,
+        BorderSizePixel = 0,
+        AnchorPoint = launcherAnchorPoint,
+        Position = launcherPosition,
+        Size = launcherSize,
+        AutoButtonColor = false,
+        Font = Enum.Font.GothamBold,
+        Text = launcherText,
+        TextSize = 13,
+        TextColor3 = theme.Text,
+        TextTruncate = Enum.TextTruncate.AtEnd,
+        Visible = false,
+        Active = true,
+        ZIndex = 950,
+    }, gui)
+    corner(launcherButton, 12)
+    stroke(launcherButton, theme.Text, 0.72, 1)
+    padding(launcherButton, 14, 14, 0, 0)
+    window.LauncherButton = launcherButton
 
     local viewport = getViewport()
     local initialWidth = math.min(startSize.X, math.max(320, viewport.X - 24))
@@ -1541,11 +1572,28 @@ function KiraUI:CreateWindow(config)
     end
 
     function window:SetVisible(value)
-        self._hidden = not (value == true)
+        local hidden = not (value == true)
+        if self._hidden == hidden then
+            host.Visible = not self._hidden
+            launcherButton.Visible = self._launcherEnabled and self._hidden
+            return
+        end
+
+        self._hidden = hidden
         host.Visible = not self._hidden
+        launcherButton.Visible = self._launcherEnabled and self._hidden
+
         if self._hidden then
             self:_closeDropdown()
+        else
+            task.defer(function()
+                self:_applyResponsive()
+            end)
         end
+    end
+
+    function window:IsVisible()
+        return not self._hidden
     end
 
     function window:Toggle()
@@ -1574,7 +1622,15 @@ function KiraUI:CreateWindow(config)
     end)
 
     window:_connect(closeButton.MouseButton1Click, function()
-        window:Destroy()
+        if window._closeBehavior == "destroy" then
+            window:Destroy()
+        else
+            window:SetVisible(false)
+        end
+    end)
+
+    window:_connect(launcherButton.MouseButton1Click, function()
+        window:SetVisible(true)
     end)
 
     window:_connect(host:GetPropertyChangedSignal("AbsoluteSize"), function()

@@ -2,7 +2,7 @@
 -- Upload KiraUI.lua to GitHub, then replace this URL with the RAW file URL.
 
 local KiraUI = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPOSITORY/main/KiraUI.lua"
+    "https://raw.githubusercontent.com/AkiyamaKira2003/KiraUI/main/KiraUI.lua"
 ))()
 
 local State = {
@@ -23,6 +23,7 @@ local Window = KiraUI:CreateWindow({
     MinSize = Vector2.new(560, 390),
     MaxSize = Vector2.new(1280, 820),
     ToggleKey = Enum.KeyCode.RightShift,
+    LauncherText = "Open Garden UI",
     Status = "Garden controller ready",
     Phase = "IDLE",
 })
@@ -142,7 +143,7 @@ SystemSection:AddButton({
 })
 
 SystemSection:AddLabel({
-    Text = "RightShift hides/shows the window. Drag the top bar to move. Resize from any edge or corner.",
+    Text = "RightShift toggles the window. The × button hides it and shows an Open UI button on screen. Drag the top bar to move.",
     Wrap = true,
     Muted = true,
     Height = 46,
