@@ -142,8 +142,15 @@ SystemSection:AddButton({
     end,
 })
 
+if type(SystemSection.AddKeybind) == "function" then
+    SystemSection:AddKeybind({
+        Text = "Show / Hide Key",
+        WindowToggle = true,
+    })
+end
+
 SystemSection:AddLabel({
-    Text = "RightShift toggles the window. The × button hides it and shows an Open UI button on screen. Drag the top bar to move.",
+    Text = "Set your own show/hide key above. The × button hides the window and shows an Open UI button on screen.",
     Wrap = true,
     Muted = true,
     Height = 46,

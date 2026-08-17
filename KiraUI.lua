@@ -12,6 +12,7 @@
       - Rounded border / shadow
       - Status + Phase pill
       - RightShift (configurable) show/hide
+      - Runtime keybind picker
       - Floating restore launcher when hidden
       - Optional close button / launcher behavior for script-specific flows
       - Mouse + touch support
@@ -31,7 +32,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.1.2"
+KiraUI.Version = "0.1.3"
 
 KiraUI.Theme = {
     Background = Color3.fromRGB(15, 16, 22),
@@ -128,6 +129,40 @@ local function formatNumber(value, step)
     return string.format("%." .. tostring(decimals) .. "f", value)
 end
 
+local function normalizeKeyCode(value)
+    if value == nil or value == false then
+        return nil
+    end
+
+    if typeof(value) == "EnumItem" then
+        local text = tostring(value)
+        if text:match("^Enum%.KeyCode%.") then
+            return value
+        end
+    end
+
+    if type(value) == "string" then
+        local name = value:gsub("^Enum%.KeyCode%.", "")
+        local ok, keyCode = pcall(function()
+            return Enum.KeyCode[name]
+        end)
+        if ok and keyCode then
+            return keyCode
+        end
+    end
+
+    return nil
+end
+
+local function formatKeyCode(keyCode)
+    keyCode = normalizeKeyCode(keyCode)
+    if not keyCode then
+        return "None"
+    end
+
+    return keyCode.Name or tostring(keyCode):gsub("^Enum%.KeyCode%.", "")
+end
+
 local function makeValueObject(defaultValue, callback)
     local object = {
         Value = defaultValue,
@@ -177,11 +212,11 @@ function KiraUI:CreateWindow(config)
     local startSize = config.Size or Vector2.new(900, 540)
     local minSize = config.MinSize or Vector2.new(560, 380)
     local maxSize = config.MaxSize or Vector2.new(1280, 850)
-    local toggleKey = config.ToggleKey
-    if toggleKey == nil then
+    local toggleKey
+    if config.ToggleKey == nil then
         toggleKey = Enum.KeyCode.RightShift
-    elseif toggleKey == false then
-        toggleKey = nil
+    else
+        toggleKey = normalizeKeyCode(config.ToggleKey)
     end
     local titleText = tostring(config.Title or "Kira UI")
     local subtitleText = tostring(config.Subtitle or "Responsive Roblox interface")
@@ -217,12 +252,14 @@ function KiraUI:CreateWindow(config)
         _connections = {},
         _activeTab = nil,
         _openDropdown = nil,
+        _keybindCapture = nil,
         _hidden = false,
         _minimized = false,
         _destroyed = false,
         _minSize = minSize,
         _maxSize = maxSize,
         _toggleKey = toggleKey,
+        _toggleKeyListeners = {},
         _closeBehavior = closeBehavior,
         _showCloseButton = showCloseButton,
         _launcherEnabled = launcherEnabled,
@@ -1220,6 +1257,176 @@ function KiraUI:CreateWindow(config)
                 return object
             end
 
+            function section:AddKeybind(options)
+                if type(options) == "string" then
+                    options = { Text = options }
+                else
+                    options = options or {}
+                end
+                local bindWindowToggle = options.WindowToggle == true
+                local default = options.Default
+                if default == nil then
+                    default = options.KeyCode or options.Key or options.Value
+                end
+                if bindWindowToggle and default == nil then
+                    default = window:GetToggleKey()
+                end
+
+                local object = makeValueObject(normalizeKeyCode(default), options.Callback)
+                local pressedListeners = {}
+                local row = controlFrame(options.Height or 42)
+
+                local label = new("TextLabel", {
+                    BackgroundTransparency = 1,
+                    Size = UDim2.new(1, -126, 1, 0),
+                    Font = Enum.Font.GothamMedium,
+                    Text = tostring(options.Text or options.Name or "Keybind"),
+                    TextSize = 12,
+                    TextColor3 = theme.Text,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    ZIndex = 17,
+                }, row)
+
+                local captureButton = new("TextButton", {
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    AnchorPoint = Vector2.new(1, 0.5),
+                    Position = UDim2.new(1, 0, 0.5, 0),
+                    Size = UDim2.fromOffset(112, 30),
+                    Font = Enum.Font.GothamMedium,
+                    Text = "",
+                    TextSize = 10,
+                    TextColor3 = theme.Text,
+                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    AutoButtonColor = false,
+                    ZIndex = 17,
+                }, row)
+                corner(captureButton, 8)
+
+                local listening = false
+
+                local function render()
+                    if listening then
+                        captureButton.Text = "Press key..."
+                        captureButton.TextColor3 = theme.Warning
+                    else
+                        captureButton.Text = formatKeyCode(object.Value)
+                        captureButton.TextColor3 = object.Value and theme.Text or theme.MutedText
+                    end
+                end
+
+                local function stopCapture()
+                    if window._keybindCapture == object then
+                        window._keybindCapture = nil
+                    end
+                    listening = false
+                    render()
+                end
+
+                local function startCapture()
+                    window:_closeDropdown()
+                    if window._keybindCapture and window._keybindCapture.StopCapture then
+                        window._keybindCapture:StopCapture()
+                    end
+                    window._keybindCapture = object
+                    listening = true
+                    render()
+                end
+
+                function object:SetValue(value, silent)
+                    local keyCode = normalizeKeyCode(value)
+                    if self.Value == keyCode then
+                        render()
+                        return self
+                    end
+
+                    self.Value = keyCode
+                    if bindWindowToggle then
+                        window:SetToggleKey(keyCode)
+                    end
+                    render()
+
+                    if not silent then
+                        self:_emit(keyCode)
+                    end
+                    return self
+                end
+
+                function object:SetKey(keyCode, silent)
+                    return self:SetValue(keyCode, silent)
+                end
+
+                function object:GetKey()
+                    return self.Value
+                end
+
+                function object:StartCapture()
+                    startCapture()
+                    return self
+                end
+
+                function object:StopCapture()
+                    stopCapture()
+                    return self
+                end
+
+                function object:OnPressed(fn)
+                    if type(fn) == "function" then
+                        table.insert(pressedListeners, fn)
+                    end
+                    return self
+                end
+
+                function object:_emitPressed(input)
+                    safeCall(options.Pressed, input, self.Value)
+                    for _, fn in ipairs(pressedListeners) do
+                        safeCall(fn, input, self.Value)
+                    end
+                end
+
+                window:_connect(captureButton.MouseButton1Click, startCapture)
+
+                window:_connect(UserInputService.InputBegan, function(input)
+                    if window._destroyed then
+                        return
+                    end
+
+                    if listening and window._keybindCapture == object then
+                        if input.KeyCode == Enum.KeyCode.Escape then
+                            stopCapture()
+                        elseif input.KeyCode == Enum.KeyCode.Backspace or input.KeyCode == Enum.KeyCode.Delete then
+                            object:SetValue(nil)
+                            stopCapture()
+                        elseif input.KeyCode and input.KeyCode ~= Enum.KeyCode.Unknown then
+                            object:SetValue(input.KeyCode)
+                            stopCapture()
+                        end
+                        return
+                    end
+
+                    if not listening and object.Value and input.KeyCode == object.Value then
+                        object:_emitPressed(input)
+                    end
+                end)
+
+                if bindWindowToggle then
+                    window:OnToggleKeyChanged(function(keyCode)
+                        if object.Value ~= keyCode then
+                            object:SetValue(keyCode, true)
+                        else
+                            render()
+                        end
+                    end)
+                end
+
+                render()
+                object.Instance = row
+                object.Button = captureButton
+                object.Label = label
+                return object
+            end
+
             function section:AddButton(options)
                 if type(options) == "string" then
                     options = { Text = options }
@@ -1618,6 +1825,30 @@ function KiraUI:CreateWindow(config)
         return not self._hidden
     end
 
+    function window:GetToggleKey()
+        return self._toggleKey
+    end
+
+    function window:SetToggleKey(keyCode)
+        keyCode = normalizeKeyCode(keyCode)
+        if self._toggleKey == keyCode then
+            return self
+        end
+
+        self._toggleKey = keyCode
+        for _, fn in ipairs(self._toggleKeyListeners) do
+            safeCall(fn, keyCode)
+        end
+        return self
+    end
+
+    function window:OnToggleKeyChanged(fn)
+        if type(fn) == "function" then
+            table.insert(self._toggleKeyListeners, fn)
+        end
+        return self
+    end
+
     function window:Toggle()
         self:SetVisible(self._hidden)
     end
@@ -1664,10 +1895,10 @@ function KiraUI:CreateWindow(config)
     end)
 
     window:_connect(UserInputService.InputBegan, function(input)
-        if window._destroyed then
+        if window._destroyed or window._keybindCapture then
             return
         end
-        if toggleKey and input.KeyCode == toggleKey then
+        if window._toggleKey and input.KeyCode == window._toggleKey then
             window:Toggle()
         end
     end)
