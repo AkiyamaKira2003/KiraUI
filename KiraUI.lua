@@ -13,6 +13,7 @@
       - Status + Phase pill
       - RightShift (configurable) show/hide
       - Floating restore launcher when hidden
+      - Optional close button / launcher behavior for script-specific flows
       - Mouse + touch support
 
     Example:
@@ -30,7 +31,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.1.1"
+KiraUI.Version = "0.1.2"
 
 KiraUI.Theme = {
     Background = Color3.fromRGB(15, 16, 22),
@@ -176,10 +177,16 @@ function KiraUI:CreateWindow(config)
     local startSize = config.Size or Vector2.new(900, 540)
     local minSize = config.MinSize or Vector2.new(560, 380)
     local maxSize = config.MaxSize or Vector2.new(1280, 850)
-    local toggleKey = config.ToggleKey or Enum.KeyCode.RightShift
+    local toggleKey = config.ToggleKey
+    if toggleKey == nil then
+        toggleKey = Enum.KeyCode.RightShift
+    elseif toggleKey == false then
+        toggleKey = nil
+    end
     local titleText = tostring(config.Title or "Kira UI")
     local subtitleText = tostring(config.Subtitle or "Responsive Roblox interface")
     local closeBehavior = string.lower(tostring(config.CloseBehavior or "hide"))
+    local showCloseButton = config.ShowCloseButton ~= false
     local launcherEnabled = config.ShowLauncher ~= false
     local launcherText = tostring(config.LauncherText or "Open UI")
     local launcherPosition = config.LauncherPosition or UDim2.new(0, 18, 0.5, 0)
@@ -217,6 +224,7 @@ function KiraUI:CreateWindow(config)
         _maxSize = maxSize,
         _toggleKey = toggleKey,
         _closeBehavior = closeBehavior,
+        _showCloseButton = showCloseButton,
         _launcherEnabled = launcherEnabled,
         _savedSize = startSize,
     }
@@ -419,9 +427,16 @@ function KiraUI:CreateWindow(config)
         Text = "×",
         TextSize = 16,
         TextColor3 = theme.MutedText,
+        Visible = showCloseButton,
+        Active = showCloseButton,
         ZIndex = 14,
     }, header)
     corner(closeButton, 9)
+
+    if not showCloseButton then
+        minimizeButton.Position = UDim2.new(1, -12, 0, 15)
+        phasePill.Position = UDim2.new(1, -56, 0, 16)
+    end
 
     -- Body
     local body = new("Frame", {
@@ -1291,6 +1306,13 @@ function KiraUI:CreateWindow(config)
                     return self
                 end
 
+                function object:SetHeight(nextHeight)
+                    local value = tonumber(nextHeight) or height
+                    value = math.max(16, value)
+                    row.Size = UDim2.new(row.Size.X.Scale, row.Size.X.Offset, 0, value)
+                    return self
+                end
+
                 return object
             end
 
@@ -1621,13 +1643,15 @@ function KiraUI:CreateWindow(config)
         window:SetMinimized(not window._minimized)
     end)
 
-    window:_connect(closeButton.MouseButton1Click, function()
-        if window._closeBehavior == "destroy" then
-            window:Destroy()
-        else
-            window:SetVisible(false)
-        end
-    end)
+    if showCloseButton then
+        window:_connect(closeButton.MouseButton1Click, function()
+            if window._closeBehavior == "destroy" then
+                window:Destroy()
+            else
+                window:SetVisible(false)
+            end
+        end)
+    end
 
     window:_connect(launcherButton.MouseButton1Click, function()
         window:SetVisible(true)
@@ -1639,11 +1663,11 @@ function KiraUI:CreateWindow(config)
         end)
     end)
 
-    window:_connect(UserInputService.InputBegan, function(input, processed)
-        if processed or window._destroyed then
+    window:_connect(UserInputService.InputBegan, function(input)
+        if window._destroyed then
             return
         end
-        if input.KeyCode == toggleKey then
+        if toggleKey and input.KeyCode == toggleKey then
             window:Toggle()
         end
     end)
