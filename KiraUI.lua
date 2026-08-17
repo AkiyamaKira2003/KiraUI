@@ -14,6 +14,8 @@
       - RightShift (configurable) show/hide
       - Runtime keybind picker
       - Floating restore launcher when hidden
+      - Draggable compact launcher button
+      - Rounded shell with synced backdrop / shadow layers
       - Optional close button / launcher behavior for script-specific flows
       - Mouse + touch support
 
@@ -32,7 +34,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.1.3"
+KiraUI.Version = "0.1.5"
 
 KiraUI.Theme = {
     Background = Color3.fromRGB(15, 16, 22),
@@ -223,10 +225,19 @@ function KiraUI:CreateWindow(config)
     local closeBehavior = string.lower(tostring(config.CloseBehavior or "hide"))
     local showCloseButton = config.ShowCloseButton ~= false
     local launcherEnabled = config.ShowLauncher ~= false
-    local launcherText = tostring(config.LauncherText or "Open UI")
+    local launcherText = tostring(config.LauncherText or "K")
     local launcherPosition = config.LauncherPosition or UDim2.new(0, 18, 0.5, 0)
     local launcherAnchorPoint = config.LauncherAnchorPoint or Vector2.new(0, 0.5)
-    local launcherSize = config.LauncherSize or UDim2.fromOffset(154, 44)
+    local launcherSize = config.LauncherSize or UDim2.fromOffset(46, 46)
+    local launcherDraggable = config.LauncherDraggable ~= false
+    local launcherColorA = config.LauncherColorA or theme.Surface3
+    local launcherColorB = config.LauncherColorB or theme.AccentSoft
+    local windowRadius = tonumber(config.WindowRadius) or 24
+    local controlRadius = tonumber(config.ControlRadius) or 12
+    local shadowOffset = config.ShadowOffset or Vector2.new(0, 8)
+    local shadowSpread = tonumber(config.ShadowSpread) or 10
+    local shadowTransparency = config.ShadowTransparency or 0.66
+    local backdropTransparency = config.BackdropTransparency or 0.84
 
     local uiParent = resolveParent()
 
@@ -307,25 +318,132 @@ function KiraUI:CreateWindow(config)
 
     local launcherButton = new("TextButton", {
         Name = "RestoreLauncher",
-        BackgroundColor3 = theme.Accent,
+        BackgroundColor3 = launcherColorA,
         BorderSizePixel = 0,
         AnchorPoint = launcherAnchorPoint,
         Position = launcherPosition,
         Size = launcherSize,
         AutoButtonColor = false,
-        Font = Enum.Font.GothamBold,
+        Font = Enum.Font.GothamBlack,
         Text = launcherText,
-        TextSize = 13,
+        TextSize = config.LauncherTextSize or 24,
         TextColor3 = theme.Text,
         TextTruncate = Enum.TextTruncate.AtEnd,
         Visible = false,
         Active = true,
         ZIndex = 950,
     }, gui)
-    corner(launcherButton, 12)
-    stroke(launcherButton, theme.Text, 0.72, 1)
-    padding(launcherButton, 14, 14, 0, 0)
+    corner(launcherButton, tonumber(config.LauncherRadius) or 16)
+    stroke(launcherButton, theme.Text, 0.78, 1)
+    new("UIGradient", {
+        Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, launcherColorA),
+            ColorSequenceKeypoint.new(1, launcherColorB),
+        }),
+        Rotation = 45,
+    }, launcherButton)
+
+    local launcherShadow = new("Frame", {
+        Name = "LauncherShadow",
+        BackgroundColor3 = theme.Shadow,
+        BackgroundTransparency = 0.72,
+        BorderSizePixel = 0,
+        AnchorPoint = launcherAnchorPoint,
+        Position = launcherPosition,
+        Size = launcherSize,
+        Visible = false,
+        ZIndex = 949,
+    }, gui)
+    corner(launcherShadow, tonumber(config.LauncherRadius) or 16)
+    window.LauncherShadow = launcherShadow
     window.LauncherButton = launcherButton
+
+    local function syncLauncherShadow()
+        launcherShadow.AnchorPoint = launcherButton.AnchorPoint
+        launcherShadow.Size = launcherButton.Size
+        launcherShadow.Position = UDim2.new(
+            launcherButton.Position.X.Scale,
+            launcherButton.Position.X.Offset,
+            launcherButton.Position.Y.Scale,
+            launcherButton.Position.Y.Offset + 5
+        )
+        launcherShadow.Visible = launcherButton.Visible
+    end
+
+    syncLauncherShadow()
+
+    do
+        local draggingLauncher = false
+        local launcherMoved = false
+        local launcherDragStart = Vector2.zero
+        local launcherStartPos = Vector2.zero
+
+        local function setLauncherOffset(x, y)
+            local vp = getViewport()
+            local size = launcherButton.AbsoluteSize
+            local margin = 8
+
+            x = clamp(x, margin, math.max(margin, vp.X - size.X - margin))
+            y = clamp(y, margin, math.max(margin, vp.Y - size.Y - margin))
+
+            launcherButton.AnchorPoint = Vector2.new(0, 0)
+            launcherButton.Position = UDim2.fromOffset(math.floor(x), math.floor(y))
+            syncLauncherShadow()
+        end
+
+        window:_connect(launcherButton.InputBegan, function(input)
+            if not launcherDraggable then
+                return
+            end
+
+            if input.UserInputType == Enum.UserInputType.MouseButton1
+                or input.UserInputType == Enum.UserInputType.Touch then
+                draggingLauncher = true
+                launcherMoved = false
+                launcherDragStart = input.Position
+                launcherStartPos = launcherButton.AbsolutePosition
+            end
+        end)
+
+        window:_connect(UserInputService.InputChanged, function(input)
+            if not draggingLauncher then
+                return
+            end
+
+            if input.UserInputType ~= Enum.UserInputType.MouseMovement
+                and input.UserInputType ~= Enum.UserInputType.Touch then
+                return
+            end
+
+            local delta = input.Position - launcherDragStart
+            if math.abs(delta.X) > 3 or math.abs(delta.Y) > 3 then
+                launcherMoved = true
+            end
+
+            setLauncherOffset(launcherStartPos.X + delta.X, launcherStartPos.Y + delta.Y)
+        end)
+
+        window:_connect(UserInputService.InputEnded, function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1
+                or input.UserInputType == Enum.UserInputType.Touch then
+                draggingLauncher = false
+            end
+        end)
+
+        window._launcherWasDragged = function()
+            local moved = launcherMoved
+            launcherMoved = false
+            return moved
+        end
+
+        window._clampLauncherToViewport = function()
+            if launcherButton.Visible then
+                setLauncherOffset(launcherButton.AbsolutePosition.X, launcherButton.AbsolutePosition.Y)
+            else
+                syncLauncherShadow()
+            end
+        end
+    end
 
     local viewport = getViewport()
     local initialWidth = math.min(startSize.X, math.max(320, viewport.X - 24))
@@ -360,16 +478,29 @@ function KiraUI:CreateWindow(config)
 
     updateSizeConstraint()
 
-    local shadow = new("Frame", {
-        Name = "Shadow",
+    local backdrop = new("Frame", {
+        Name = "Backdrop",
         BackgroundColor3 = theme.Shadow,
-        BackgroundTransparency = 0.58,
+        BackgroundTransparency = backdropTransparency,
         BorderSizePixel = 0,
-        Position = UDim2.fromOffset(5, 7),
-        Size = UDim2.new(1, 0, 1, 0),
-        ZIndex = 10,
+        Position = UDim2.fromOffset(-shadowSpread, -shadowSpread),
+        Size = UDim2.new(1, shadowSpread * 2, 1, shadowSpread * 2),
+        ZIndex = 8,
     }, host)
-    corner(shadow, 18)
+    corner(backdrop, windowRadius + shadowSpread)
+    window.Backdrop = backdrop
+
+    local shadow = new("Frame", {
+        Name = "DropShadow",
+        BackgroundColor3 = theme.Shadow,
+        BackgroundTransparency = shadowTransparency,
+        BorderSizePixel = 0,
+        Position = UDim2.fromOffset(shadowOffset.X, shadowOffset.Y),
+        Size = UDim2.fromScale(1, 1),
+        ZIndex = 9,
+    }, host)
+    corner(shadow, windowRadius)
+    window.Shadow = shadow
 
     local main = new("Frame", {
         Name = "Main",
@@ -379,8 +510,8 @@ function KiraUI:CreateWindow(config)
         ClipsDescendants = true,
         ZIndex = 11,
     }, host)
-    corner(main, 18)
-    stroke(main, theme.Border, 0.12, 1)
+    corner(main, windowRadius)
+    stroke(main, theme.Border, 0.2, 1)
     window.Main = main
 
     -- Header
@@ -392,6 +523,17 @@ function KiraUI:CreateWindow(config)
         ZIndex = 12,
         Active = true,
     }, main)
+    corner(header, windowRadius)
+
+    local headerBottomFill = new("Frame", {
+        Name = "HeaderBottomFill",
+        BackgroundColor3 = theme.Surface,
+        BorderSizePixel = 0,
+        AnchorPoint = Vector2.new(0, 1),
+        Position = UDim2.new(0, 0, 1, 0),
+        Size = UDim2.new(1, 0, 0, windowRadius),
+        ZIndex = 12,
+    }, header)
 
     local title = new("TextLabel", {
         Name = "Title",
@@ -434,7 +576,7 @@ function KiraUI:CreateWindow(config)
         TextColor3 = theme.Success,
         ZIndex = 14,
     }, header)
-    corner(phasePill, 9)
+    corner(phasePill, controlRadius)
 
     local minimizeButton = new("TextButton", {
         Name = "Minimize",
@@ -450,7 +592,7 @@ function KiraUI:CreateWindow(config)
         TextColor3 = theme.Text,
         ZIndex = 14,
     }, header)
-    corner(minimizeButton, 9)
+    corner(minimizeButton, controlRadius)
 
     local closeButton = new("TextButton", {
         Name = "Close",
@@ -468,7 +610,7 @@ function KiraUI:CreateWindow(config)
         Active = showCloseButton,
         ZIndex = 14,
     }, header)
-    corner(closeButton, 9)
+    corner(closeButton, controlRadius)
 
     if not showCloseButton then
         minimizeButton.Position = UDim2.new(1, -12, 0, 15)
@@ -527,7 +669,17 @@ function KiraUI:CreateWindow(config)
         Size = UDim2.new(1, 0, 0, 38),
         ZIndex = 12,
     }, main)
+    corner(statusBar, windowRadius)
     window.StatusBar = statusBar
+
+    local statusTopFill = new("Frame", {
+        Name = "StatusTopFill",
+        BackgroundColor3 = theme.Surface,
+        BorderSizePixel = 0,
+        Position = UDim2.fromOffset(0, 0),
+        Size = UDim2.new(1, 0, 0, windowRadius),
+        ZIndex = 12,
+    }, statusBar)
 
     local statusDot = new("Frame", {
         Name = "Dot",
@@ -1764,6 +1916,7 @@ function KiraUI:CreateWindow(config)
 
         if value then
             self._savedSize = Vector2.new(host.Size.X.Offset, host.Size.Y.Offset)
+            headerBottomFill.Visible = false
             body.Visible = false
             statusBar.Visible = false
             for _, handle in ipairs(resizeHandles) do
@@ -1778,6 +1931,7 @@ function KiraUI:CreateWindow(config)
                 Size = UDim2.fromOffset(minimizedWidth, 60),
             }):Play()
         else
+            headerBottomFill.Visible = true
             body.Visible = true
             statusBar.Visible = true
             for _, handle in ipairs(resizeHandles) do
@@ -1805,12 +1959,14 @@ function KiraUI:CreateWindow(config)
         if self._hidden == hidden then
             host.Visible = not self._hidden
             launcherButton.Visible = self._launcherEnabled and self._hidden
+            syncLauncherShadow()
             return
         end
 
         self._hidden = hidden
         host.Visible = not self._hidden
         launcherButton.Visible = self._launcherEnabled and self._hidden
+        syncLauncherShadow()
 
         if self._hidden then
             self:_closeDropdown()
@@ -1885,6 +2041,9 @@ function KiraUI:CreateWindow(config)
     end
 
     window:_connect(launcherButton.MouseButton1Click, function()
+        if window._launcherWasDragged and window._launcherWasDragged() then
+            return
+        end
         window:SetVisible(true)
     end)
 
@@ -1917,6 +2076,9 @@ function KiraUI:CreateWindow(config)
                 clamp(pos.X, 8, math.max(8, vp.X - newWidth - 8)),
                 clamp(pos.Y, 8, math.max(8, vp.Y - newHeight - 8))
             )
+            if window._clampLauncherToViewport then
+                window._clampLauncherToViewport()
+            end
             window:_closeDropdown()
             window:_applyResponsive()
         end)

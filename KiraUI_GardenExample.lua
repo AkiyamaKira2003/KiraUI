@@ -23,7 +23,6 @@ local Window = KiraUI:CreateWindow({
     MinSize = Vector2.new(560, 390),
     MaxSize = Vector2.new(1280, 820),
     ToggleKey = Enum.KeyCode.RightShift,
-    LauncherText = "Open Garden UI",
     Status = "Garden controller ready",
     Phase = "IDLE",
 })
@@ -150,7 +149,7 @@ if type(SystemSection.AddKeybind) == "function" then
 end
 
 SystemSection:AddLabel({
-    Text = "Set your own show/hide key above. The × button hides the window and shows an Open UI button on screen.",
+    Text = "Set your own show/hide key above. The × button hides the window and shows a draggable K launcher.",
     Wrap = true,
     Muted = true,
     Height = 46,
