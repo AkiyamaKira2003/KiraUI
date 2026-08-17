@@ -34,7 +34,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.1.5"
+KiraUI.Version = "0.1.6"
 
 KiraUI.Theme = {
     Background = Color3.fromRGB(15, 16, 22),
@@ -376,7 +376,6 @@ function KiraUI:CreateWindow(config)
         local draggingLauncher = false
         local launcherMoved = false
         local launcherDragStart = Vector2.zero
-        local launcherStartPos = Vector2.zero
 
         local function setLauncherOffset(x, y)
             local vp = getViewport()
@@ -391,6 +390,11 @@ function KiraUI:CreateWindow(config)
             syncLauncherShadow()
         end
 
+        local function setLauncherCenter(position)
+            local size = launcherButton.AbsoluteSize
+            setLauncherOffset(position.X - (size.X / 2), position.Y - (size.Y / 2))
+        end
+
         window:_connect(launcherButton.InputBegan, function(input)
             if not launcherDraggable then
                 return
@@ -401,7 +405,6 @@ function KiraUI:CreateWindow(config)
                 draggingLauncher = true
                 launcherMoved = false
                 launcherDragStart = input.Position
-                launcherStartPos = launcherButton.AbsolutePosition
             end
         end)
 
@@ -420,7 +423,9 @@ function KiraUI:CreateWindow(config)
                 launcherMoved = true
             end
 
-            setLauncherOffset(launcherStartPos.X + delta.X, launcherStartPos.Y + delta.Y)
+            if launcherMoved then
+                setLauncherCenter(input.Position)
+            end
         end)
 
         window:_connect(UserInputService.InputEnded, function(input)
