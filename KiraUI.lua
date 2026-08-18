@@ -7,7 +7,7 @@
       - Windows-like resizing from 4 edges + 4 corners
       - Responsive sidebar and 1/2-column masonry sections
       - Portal-based dropdowns (no clipping / ZIndex overlap bugs)
-      - Slider, Toggle, Dropdown, MultiSelect, Input, Button, Label
+      - Slider, Toggle, Dropdown, MultiSelect, Input, NumberMap, Button, Label
       - Decoupled :OnChanged() state API
       - Rounded border / opt-in soft image shadow
       - Status + Phase pill
@@ -34,7 +34,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.1.9"
+KiraUI.Version = "0.2.0"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -1371,6 +1371,414 @@ function KiraUI:CreateWindow(config)
 
             section.AddTextBox = section.AddInput
             section.AddTextbox = section.AddInput
+
+            function section:AddNumberMap(options)
+                options = options or {}
+                local minValue = tonumber(options.Min)
+                local maxValue = tonumber(options.Max)
+                local step = tonumber(options.Step) or 1
+                local suffix = tostring(options.Suffix or "")
+                if minValue and maxValue and maxValue < minValue then
+                    minValue, maxValue = maxValue, minValue
+                end
+
+                local function trimNumberText(text)
+                    text = tostring(text or "")
+                    if text:find("%.") then
+                        text = text:gsub("0+$", ""):gsub("%.$", "")
+                    end
+                    return text
+                end
+
+                local function normalizeNumber(value, fallback)
+                    local text = tostring(value or "")
+                    local numberText = text:match("%-?%d+%.?%d*") or text:match("%-?%.%d+")
+                    local number = tonumber(numberText)
+                    if number == nil then
+                        number = tonumber(fallback)
+                    end
+                    if number == nil then
+                        number = minValue or 0
+                    end
+                    if minValue then
+                        number = math.max(minValue, number)
+                    end
+                    if maxValue then
+                        number = math.min(maxValue, number)
+                    end
+                    if step > 0 then
+                        number = roundToStep(number, minValue or 0, step)
+                    end
+                    return number
+                end
+
+                local function formatValue(value)
+                    return trimNumberText(formatNumber(normalizeNumber(value, 0), step)) .. suffix
+                end
+
+                local function copyMap(values)
+                    local out = {}
+                    for key, value in pairs(values or {}) do
+                        out[tostring(key)] = normalizeNumber(value, options.Default or options.Shared or 0)
+                    end
+                    return out
+                end
+
+                local function copyItems(items)
+                    local out = {}
+                    local seen = {}
+                    for _, item in ipairs(items or {}) do
+                        local key
+                        local text
+                        if type(item) == "table" then
+                            key = item.Key or item.Id or item.Value or item.Name or item.Text or item.Label
+                            text = item.Text or item.Label or item.Name or key
+                        else
+                            key = item
+                            text = item
+                        end
+
+                        key = tostring(key or "")
+                        text = tostring(text or key)
+                        if key ~= "" and not seen[key] then
+                            seen[key] = true
+                            out[#out + 1] = {
+                                Key = key,
+                                Text = text,
+                            }
+                        end
+                    end
+                    return out
+                end
+
+                local function readItems()
+                    if type(options.Items) == "function" then
+                        local ok, result = pcall(options.Items)
+                        return copyItems(ok and result or {})
+                    elseif type(options.Provider) == "function" then
+                        local ok, result = pcall(options.Provider)
+                        return copyItems(ok and result or {})
+                    end
+                    return copyItems(options.Items or {})
+                end
+
+                local state = {
+                    Locked = options.Locked ~= false,
+                    Shared = normalizeNumber(options.Shared or options.Default or options.Value, minValue or 0),
+                    Values = copyMap(options.Values or options.DefaultValues or {}),
+                    Items = readItems(),
+                }
+
+                local function copyState()
+                    return {
+                        Locked = state.Locked,
+                        Shared = state.Shared,
+                        Values = copyMap(state.Values),
+                        Items = copyItems(state.Items),
+                    }
+                end
+
+                local object = makeValueObject(copyState(), options.Callback)
+                local row = controlFrame(68)
+                local itemBoxes = {}
+
+                local label = new("TextLabel", {
+                    BackgroundTransparency = 1,
+                    Position = UDim2.fromOffset(0, 0),
+                    Size = UDim2.new(1, 0, 0, 18),
+                    Font = Enum.Font.Gotham,
+                    Text = string.upper(tostring(options.Text or options.Name or "Number Map")),
+                    TextSize = 10,
+                    TextColor3 = theme.MutedText,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    ZIndex = 17,
+                }, row)
+
+                local sharedBox = new("TextBox", {
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    Position = UDim2.fromOffset(0, 22),
+                    Size = UDim2.new(1, -98, 0, 36),
+                    Font = Enum.Font.GothamMedium,
+                    Text = "",
+                    PlaceholderText = tostring(options.Placeholder or "Shared value"),
+                    TextSize = 11,
+                    TextColor3 = theme.Text,
+                    PlaceholderColor3 = theme.MutedText,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    ClearTextOnFocus = false,
+                    ZIndex = 17,
+                }, row)
+                corner(sharedBox, 8)
+                stroke(sharedBox, theme.Border, 0.5, 1)
+                padding(sharedBox, 11, 11, 0, 0)
+
+                local lockButton = new("TextButton", {
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    AnchorPoint = Vector2.new(1, 0),
+                    Position = UDim2.new(1, 0, 0, 22),
+                    Size = UDim2.fromOffset(88, 36),
+                    Font = Enum.Font.GothamBold,
+                    Text = "",
+                    TextSize = 10,
+                    TextColor3 = theme.Text,
+                    AutoButtonColor = false,
+                    ZIndex = 17,
+                }, row)
+                corner(lockButton, 8)
+
+                local list = new("ScrollingFrame", {
+                    Name = "NumberMapItems",
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    Position = UDim2.fromOffset(0, 66),
+                    Size = UDim2.new(1, 0, 0, 0),
+                    CanvasSize = UDim2.fromOffset(0, 0),
+                    ScrollBarThickness = 2,
+                    ScrollBarImageColor3 = theme.Border,
+                    ScrollBarImageTransparency = 0.1,
+                    Visible = false,
+                    ZIndex = 17,
+                }, row)
+                corner(list, 10)
+                stroke(list, theme.Border, 0.35, 1)
+                padding(list, 6, 6, 6, 6)
+
+                local listLayout = new("UIListLayout", {
+                    Padding = UDim.new(0, 6),
+                    SortOrder = Enum.SortOrder.LayoutOrder,
+                }, list)
+
+                local function emit(silent)
+                    object.Value = copyState()
+                    if not silent then
+                        object:_emit(copyState())
+                    end
+                end
+
+                local function syncRowHeight()
+                    local itemHeight = 34
+                    local maxVisibleItems = tonumber(options.MaxVisibleItems) or 5
+                    local listHeight = state.Locked and 0 or math.min(
+                        math.max(1, #state.Items) * (itemHeight + 6) + 6,
+                        (maxVisibleItems * (itemHeight + 6)) + 6
+                    )
+
+                    list.Visible = not state.Locked
+                    list.Size = UDim2.new(1, 0, 0, listHeight)
+                    row.Size = UDim2.new(1, 0, 0, state.Locked and 68 or (72 + listHeight))
+                    list.CanvasSize = UDim2.fromOffset(0, math.max(0, listLayout.AbsoluteContentSize.Y + 12))
+                end
+
+                local function renderItemBox(key, box)
+                    local value = state.Values[key]
+                    if value == nil then
+                        value = state.Shared
+                    end
+                    box.Text = formatValue(value)
+                end
+
+                local function clearList()
+                    itemBoxes = {}
+                    for _, child in ipairs(list:GetChildren()) do
+                        if child:IsA("Frame") then
+                            child:Destroy()
+                        end
+                    end
+                end
+
+                local function rebuildList()
+                    clearList()
+
+                    if #state.Items == 0 then
+                        local empty = new("Frame", {
+                            BackgroundTransparency = 1,
+                            Size = UDim2.new(1, 0, 0, 34),
+                            ZIndex = 18,
+                        }, list)
+                        new("TextLabel", {
+                            BackgroundTransparency = 1,
+                            Size = UDim2.fromScale(1, 1),
+                            Font = Enum.Font.Gotham,
+                            Text = tostring(options.EmptyText or "No items"),
+                            TextSize = 10,
+                            TextColor3 = theme.MutedText,
+                            ZIndex = 19,
+                        }, empty)
+                        syncRowHeight()
+                        return
+                    end
+
+                    for index, item in ipairs(state.Items) do
+                        local key = item.Key
+                        local line = new("Frame", {
+                            BackgroundTransparency = 1,
+                            Size = UDim2.new(1, 0, 0, 34),
+                            LayoutOrder = index,
+                            ZIndex = 18,
+                        }, list)
+
+                        new("TextLabel", {
+                            BackgroundTransparency = 1,
+                            Position = UDim2.fromOffset(0, 0),
+                            Size = UDim2.new(1, -110, 1, 0),
+                            Font = Enum.Font.GothamMedium,
+                            Text = item.Text,
+                            TextSize = 10,
+                            TextColor3 = theme.Text,
+                            TextXAlignment = Enum.TextXAlignment.Left,
+                            TextTruncate = Enum.TextTruncate.AtEnd,
+                            ZIndex = 19,
+                        }, line)
+
+                        local box = new("TextBox", {
+                            BackgroundColor3 = theme.Surface2,
+                            BorderSizePixel = 0,
+                            AnchorPoint = Vector2.new(1, 0.5),
+                            Position = UDim2.new(1, 0, 0.5, 0),
+                            Size = UDim2.fromOffset(96, 28),
+                            Font = Enum.Font.GothamMedium,
+                            Text = "",
+                            PlaceholderText = formatValue(state.Shared),
+                            TextSize = 10,
+                            TextColor3 = theme.Text,
+                            PlaceholderColor3 = theme.MutedText,
+                            ZIndex = 19,
+                        }, line)
+                        corner(box, 7)
+                        itemBoxes[key] = box
+                        renderItemBox(key, box)
+
+                        window:_connect(box.FocusLost, function()
+                            state.Values[key] = normalizeNumber(box.Text, state.Values[key] or state.Shared)
+                            renderItemBox(key, box)
+                            emit(false)
+                        end)
+                    end
+
+                    syncRowHeight()
+                end
+
+                local function render()
+                    sharedBox.Text = formatValue(state.Shared)
+                    lockButton.Text = state.Locked and "LOCKED" or "CUSTOM"
+                    lockButton.BackgroundColor3 = state.Locked and theme.AccentSoft or theme.Surface3
+                    lockButton.TextColor3 = state.Locked and theme.Text or theme.Warning
+                    for key, box in pairs(itemBoxes) do
+                        renderItemBox(key, box)
+                    end
+                    syncRowHeight()
+                end
+
+                function object:SetLocked(locked, silent)
+                    state.Locked = locked == true
+                    render()
+                    emit(silent)
+                    return self
+                end
+
+                function object:IsLocked()
+                    return state.Locked
+                end
+
+                function object:SetSharedValue(value, silent)
+                    state.Shared = normalizeNumber(value, state.Shared)
+                    render()
+                    emit(silent)
+                    return self
+                end
+
+                function object:SetItemValue(key, value, silent)
+                    key = tostring(key or "")
+                    if key == "" then
+                        return self
+                    end
+                    state.Values[key] = normalizeNumber(value, state.Shared)
+                    render()
+                    emit(silent)
+                    return self
+                end
+
+                function object:GetItemValue(key)
+                    key = tostring(key or "")
+                    if state.Locked then
+                        return state.Shared
+                    end
+                    return state.Values[key] or state.Shared
+                end
+
+                function object:SetItems(items, silent)
+                    state.Items = copyItems(items)
+                    rebuildList()
+                    render()
+                    emit(silent)
+                    return self
+                end
+
+                function object:Refresh()
+                    return self:SetItems(readItems())
+                end
+
+                function object:SetValues(values, silent)
+                    state.Values = copyMap(values)
+                    render()
+                    emit(silent)
+                    return self
+                end
+
+                function object:GetValues()
+                    return copyMap(state.Values)
+                end
+
+                function object:SetValue(value, silent)
+                    if type(value) == "table" then
+                        if value.Locked ~= nil then
+                            state.Locked = value.Locked == true
+                        end
+                        if value.Shared ~= nil then
+                            state.Shared = normalizeNumber(value.Shared, state.Shared)
+                        elseif value.Default ~= nil then
+                            state.Shared = normalizeNumber(value.Default, state.Shared)
+                        end
+                        if value.Values ~= nil then
+                            state.Values = copyMap(value.Values)
+                        end
+                        if value.Items ~= nil then
+                            state.Items = copyItems(value.Items)
+                            rebuildList()
+                        end
+                    else
+                        state.Shared = normalizeNumber(value, state.Shared)
+                    end
+                    render()
+                    emit(silent)
+                    return self
+                end
+
+                window:_connect(sharedBox.FocusLost, function()
+                    object:SetSharedValue(sharedBox.Text)
+                end)
+
+                window:_connect(lockButton.MouseButton1Click, function()
+                    object:SetLocked(not state.Locked)
+                end)
+
+                window:_connect(listLayout:GetPropertyChangedSignal("AbsoluteContentSize"), syncRowHeight)
+
+                rebuildList()
+                render()
+                object.Instance = row
+                object.Label = label
+                object.SharedBox = sharedBox
+                object.LockButton = lockButton
+                object.List = list
+                return object
+            end
+
+            section.AddPerItemNumber = section.AddNumberMap
+            section.AddNumberList = section.AddNumberMap
 
             function section:AddDropdown(options)
                 options = options or {}
