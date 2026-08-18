@@ -9,13 +9,13 @@
       - Portal-based dropdowns (no clipping / ZIndex overlap bugs)
       - Slider, Toggle, Dropdown, Button, Label
       - Decoupled :OnChanged() state API
-      - Rounded border / shadow
+      - Rounded border / optional soft image shadow
       - Status + Phase pill
       - RightShift (configurable) show/hide
       - Runtime keybind picker
       - Floating restore launcher when hidden
       - Draggable compact launcher button
-      - Rounded shell with synced backdrop / shadow layers
+      - Rounded shell with synced optional shadow layers
       - Optional close button / launcher behavior for script-specific flows
       - Mouse + touch support
 
@@ -34,7 +34,10 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.1.6"
+KiraUI.Version = "0.1.7"
+
+local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
+local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
 
 KiraUI.Theme = {
     Background = Color3.fromRGB(15, 16, 22),
@@ -232,12 +235,21 @@ function KiraUI:CreateWindow(config)
     local launcherDraggable = config.LauncherDraggable ~= false
     local launcherColorA = config.LauncherColorA or theme.Surface3
     local launcherColorB = config.LauncherColorB or theme.AccentSoft
+    local launcherRadius = tonumber(config.LauncherRadius) or 16
     local windowRadius = tonumber(config.WindowRadius) or 24
     local controlRadius = tonumber(config.ControlRadius) or 12
-    local shadowOffset = config.ShadowOffset or Vector2.new(0, 8)
-    local shadowSpread = tonumber(config.ShadowSpread) or 10
-    local shadowTransparency = config.ShadowTransparency or 0.66
-    local backdropTransparency = config.BackdropTransparency or 0.84
+    local shadowEnabled = config.ShadowEnabled ~= false
+    local shadowImage = tostring(config.ShadowImage or DEFAULT_SHADOW_IMAGE)
+    local shadowOffset = config.ShadowOffset or Vector2.new(0, 10)
+    local shadowSpread = tonumber(config.ShadowSpread) or 28
+    local shadowTransparency = config.ShadowTransparency or 0.6
+    local backdropEnabled = config.BackdropEnabled == true
+    local backdropSpread = tonumber(config.BackdropSpread) or math.max(10, math.floor(shadowSpread * 0.45))
+    local backdropTransparency = config.BackdropTransparency or 0.9
+    local launcherShadowEnabled = config.LauncherShadowEnabled ~= false
+    local launcherShadowOffset = config.LauncherShadowOffset or Vector2.new(0, 5)
+    local launcherShadowSpread = tonumber(config.LauncherShadowSpread) or 14
+    local launcherShadowTransparency = config.LauncherShadowTransparency or 0.68
 
     local uiParent = resolveParent()
 
@@ -333,7 +345,7 @@ function KiraUI:CreateWindow(config)
         Active = true,
         ZIndex = 950,
     }, gui)
-    corner(launcherButton, tonumber(config.LauncherRadius) or 16)
+    corner(launcherButton, launcherRadius)
     stroke(launcherButton, theme.Text, 0.78, 1)
     new("UIGradient", {
         Color = ColorSequence.new({
@@ -343,34 +355,48 @@ function KiraUI:CreateWindow(config)
         Rotation = 45,
     }, launcherButton)
 
-    local launcherShadow = new("Frame", {
+    local launcherShadow = new("ImageLabel", {
         Name = "LauncherShadow",
-        BackgroundColor3 = theme.Shadow,
-        BackgroundTransparency = 0.72,
+        BackgroundTransparency = 1,
         BorderSizePixel = 0,
-        AnchorPoint = launcherAnchorPoint,
-        Position = launcherPosition,
-        Size = launcherSize,
+        Image = shadowImage,
+        ImageColor3 = theme.Shadow,
+        ImageTransparency = launcherShadowTransparency,
+        ScaleType = Enum.ScaleType.Slice,
+        SliceCenter = DEFAULT_SHADOW_SLICE,
+        AnchorPoint = Vector2.zero,
+        Position = UDim2.fromOffset(0, 0),
+        Size = UDim2.fromOffset(0, 0),
         Visible = false,
         ZIndex = 949,
     }, gui)
-    corner(launcherShadow, tonumber(config.LauncherRadius) or 16)
     window.LauncherShadow = launcherShadow
     window.LauncherButton = launcherButton
 
     local function syncLauncherShadow()
-        launcherShadow.AnchorPoint = launcherButton.AnchorPoint
-        launcherShadow.Size = launcherButton.Size
-        launcherShadow.Position = UDim2.new(
-            launcherButton.Position.X.Scale,
-            launcherButton.Position.X.Offset,
-            launcherButton.Position.Y.Scale,
-            launcherButton.Position.Y.Offset + 5
+        local visible = launcherShadowEnabled and launcherButton.Visible
+        launcherShadow.Visible = visible
+        if not visible then
+            return
+        end
+
+        local size = launcherButton.AbsoluteSize
+        local position = launcherButton.AbsolutePosition
+        launcherShadow.Size = UDim2.fromOffset(
+            math.max(0, size.X + launcherShadowSpread * 2),
+            math.max(0, size.Y + launcherShadowSpread * 2)
         )
-        launcherShadow.Visible = launcherButton.Visible
+        launcherShadow.Position = UDim2.fromOffset(
+            math.floor(position.X + launcherShadowOffset.X - launcherShadowSpread),
+            math.floor(position.Y + launcherShadowOffset.Y - launcherShadowSpread)
+        )
     end
 
     syncLauncherShadow()
+    task.defer(syncLauncherShadow)
+
+    window:_connect(launcherButton:GetPropertyChangedSignal("AbsolutePosition"), syncLauncherShadow)
+    window:_connect(launcherButton:GetPropertyChangedSignal("AbsoluteSize"), syncLauncherShadow)
 
     do
         local draggingLauncher = false
@@ -483,28 +509,37 @@ function KiraUI:CreateWindow(config)
 
     updateSizeConstraint()
 
-    local backdrop = new("Frame", {
+    local backdropTotalSpread = shadowSpread + backdropSpread
+    local backdrop = new("ImageLabel", {
         Name = "Backdrop",
-        BackgroundColor3 = theme.Shadow,
-        BackgroundTransparency = backdropTransparency,
+        BackgroundTransparency = 1,
         BorderSizePixel = 0,
-        Position = UDim2.fromOffset(-shadowSpread, -shadowSpread),
-        Size = UDim2.new(1, shadowSpread * 2, 1, shadowSpread * 2),
+        Image = shadowImage,
+        ImageColor3 = theme.Shadow,
+        ImageTransparency = backdropTransparency,
+        ScaleType = Enum.ScaleType.Slice,
+        SliceCenter = DEFAULT_SHADOW_SLICE,
+        Position = UDim2.fromOffset(-backdropTotalSpread, -backdropTotalSpread),
+        Size = UDim2.new(1, backdropTotalSpread * 2, 1, backdropTotalSpread * 2),
+        Visible = shadowEnabled and backdropEnabled,
         ZIndex = 8,
     }, host)
-    corner(backdrop, windowRadius + shadowSpread)
     window.Backdrop = backdrop
 
-    local shadow = new("Frame", {
+    local shadow = new("ImageLabel", {
         Name = "DropShadow",
-        BackgroundColor3 = theme.Shadow,
-        BackgroundTransparency = shadowTransparency,
+        BackgroundTransparency = 1,
         BorderSizePixel = 0,
-        Position = UDim2.fromOffset(shadowOffset.X, shadowOffset.Y),
-        Size = UDim2.fromScale(1, 1),
+        Image = shadowImage,
+        ImageColor3 = theme.Shadow,
+        ImageTransparency = shadowTransparency,
+        ScaleType = Enum.ScaleType.Slice,
+        SliceCenter = DEFAULT_SHADOW_SLICE,
+        Position = UDim2.fromOffset(shadowOffset.X - shadowSpread, shadowOffset.Y - shadowSpread),
+        Size = UDim2.new(1, shadowSpread * 2, 1, shadowSpread * 2),
+        Visible = shadowEnabled,
         ZIndex = 9,
     }, host)
-    corner(shadow, windowRadius)
     window.Shadow = shadow
 
     local main = new("Frame", {
