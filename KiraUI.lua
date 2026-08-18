@@ -9,6 +9,7 @@
       - Portal-based dropdowns (no clipping / ZIndex overlap bugs)
       - Slider, Toggle, Dropdown, MultiSelect, Input, NumberMap, Button, Label
       - Decoupled :OnChanged() state API
+      - Named config profiles with save / overwrite / load / list UI
       - Rounded border / opt-in soft image shadow
       - Status + Phase pill
       - RightShift (configurable) show/hide
@@ -28,13 +29,14 @@ local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
+local HttpService = game:GetService("HttpService")
 
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.2.0"
+KiraUI.Version = "0.3.0"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -168,6 +170,137 @@ local function formatKeyCode(keyCode)
     return keyCode.Name or tostring(keyCode):gsub("^Enum%.KeyCode%.", "")
 end
 
+local function trimText(value)
+    return (tostring(value or ""):match("^%s*(.-)%s*$")) or ""
+end
+
+local function sanitizeConfigName(value)
+    local text = trimText(value)
+    text = text:gsub("[\\/:*?\"<>|%c]", "_")
+    text = text:gsub("^%.+", "")
+    text = text:gsub("%s+", " ")
+    text = trimText(text)
+
+    if text == "" then
+        text = "default"
+    end
+
+    return text
+end
+
+local function pathJoin(left, right)
+    left = tostring(left or ""):gsub("\\", "/"):gsub("/+$", "")
+    right = tostring(right or ""):gsub("\\", "/"):gsub("^/+", "")
+
+    if left == "" then
+        return right
+    end
+
+    if right == "" then
+        return left
+    end
+
+    return left .. "/" .. right
+end
+
+local function fileApiAvailable()
+    return type(writefile) == "function"
+        and type(readfile) == "function"
+end
+
+local function ensureFolder(path)
+    path = tostring(path or ""):gsub("\\", "/"):gsub("/+$", "")
+
+    if path == "" then
+        return true
+    end
+
+    if type(isfolder) == "function" then
+        local okExisting, alreadyExists = pcall(isfolder, path)
+        if okExisting and alreadyExists == true then
+            return true
+        end
+    end
+
+    if type(makefolder) ~= "function" then
+        return false, "This executor cannot create folders."
+    end
+
+    local current = ""
+
+    for part in path:gmatch("[^/]+") do
+        current = current == "" and part or (current .. "/" .. part)
+
+        local exists = false
+        if type(isfolder) == "function" then
+            local ok, result = pcall(isfolder, current)
+            exists = ok and result == true
+        end
+
+        if not exists then
+            local ok, err = pcall(makefolder, current)
+
+            if not ok then
+                if type(isfolder) == "function" then
+                    local checkOk, result = pcall(isfolder, current)
+                    if checkOk and result == true then
+                        ok = true
+                    end
+                end
+
+                if not ok then
+                    return false, tostring(err)
+                end
+            end
+        end
+    end
+
+    return true
+end
+
+local function encodeConfigValue(value, seen)
+    local valueType = type(value)
+
+    if valueType == "nil"
+        or valueType == "boolean"
+        or valueType == "number"
+        or valueType == "string" then
+
+        return value
+    end
+
+    if typeof(value) == "EnumItem" then
+        return value.Name
+    end
+
+    if valueType ~= "table" then
+        return nil
+    end
+
+    seen = seen or {}
+    if seen[value] then
+        return nil
+    end
+    seen[value] = true
+
+    local out = {}
+
+    for key, child in pairs(value) do
+        local keyType = type(key)
+
+        if keyType == "string" or keyType == "number" then
+            local encoded = encodeConfigValue(child, seen)
+
+            if encoded ~= nil then
+                out[key] = encoded
+            end
+        end
+    end
+
+    seen[value] = nil
+    return out
+end
+
 local function makeValueObject(defaultValue, callback)
     local object = {
         Value = defaultValue,
@@ -250,6 +383,15 @@ function KiraUI:CreateWindow(config)
     local launcherShadowOffset = config.LauncherShadowOffset or Vector2.new(0, 5)
     local launcherShadowSpread = tonumber(config.LauncherShadowSpread) or 14
     local launcherShadowTransparency = config.LauncherShadowTransparency or 0.68
+    local configFolder =
+        config.ConfigFolder
+        or config.ConfigPath
+        or pathJoin(
+            "KiraUI/Configs",
+            sanitizeConfigName(config.SingletonName or titleText)
+        )
+    local defaultConfigName =
+        sanitizeConfigName(config.DefaultConfigName or "default")
 
     local uiParent = resolveParent()
 
@@ -287,6 +429,10 @@ function KiraUI:CreateWindow(config)
         _showCloseButton = showCloseButton,
         _launcherEnabled = launcherEnabled,
         _savedSize = startSize,
+        _configFolder = configFolder,
+        _defaultConfigName = defaultConfigName,
+        _configItems = {},
+        _configItemList = {},
     }
 
     function window:_connect(signal, fn)
@@ -300,6 +446,268 @@ function KiraUI:CreateWindow(config)
             self._openDropdown:Close()
         end
         self._openDropdown = nil
+    end
+
+    function window:_getConfigFlag(options)
+        options = options or {}
+        return options.Flag
+            or options.ConfigKey
+            or options.SaveKey
+    end
+
+    function window:_maybeRegisterConfig(object, options)
+        local flag = self:_getConfigFlag(options)
+
+        if flag and options.Save ~= false then
+            self:RegisterConfigItem(flag, object, options)
+        end
+
+        return object
+    end
+
+    function window:RegisterConfigItem(flag, object, itemOptions)
+        flag = trimText(flag)
+
+        if flag == "" or type(object) ~= "table" then
+            return object
+        end
+
+        itemOptions = itemOptions or {}
+
+        if not self._configItems[flag] then
+            table.insert(self._configItemList, flag)
+        end
+
+        self._configItems[flag] = {
+            Flag = flag,
+            Object = object,
+            Getter = itemOptions.Getter or itemOptions.Get,
+            Setter = itemOptions.Setter or itemOptions.Set,
+        }
+
+        return object
+    end
+
+    function window:GetConfigValues()
+        local values = {}
+
+        for _, flag in ipairs(self._configItemList) do
+            local item = self._configItems[flag]
+
+            if item then
+                local value = nil
+
+                if type(item.Getter) == "function" then
+                    local ok, result = pcall(item.Getter, item.Object)
+                    if ok then
+                        value = result
+                    end
+                elseif item.Object then
+                    value = item.Object.Value
+                end
+
+                value = encodeConfigValue(value)
+
+                if value ~= nil then
+                    values[flag] = value
+                end
+            end
+        end
+
+        return values
+    end
+
+    function window:ApplyConfig(values, options)
+        if type(values) ~= "table" then
+            return false, "Config data is invalid."
+        end
+
+        options = options or {}
+        local applied = 0
+
+        for _, flag in ipairs(self._configItemList) do
+            local item = self._configItems[flag]
+            local value = values[flag]
+
+            if item and value ~= nil then
+                local ok, err
+
+                if type(item.Setter) == "function" then
+                    ok, err = pcall(item.Setter, value, item.Object)
+                elseif item.Object and type(item.Object.SetValue) == "function" then
+                    ok, err = pcall(function()
+                        item.Object:SetValue(value, options.Silent == true)
+                    end)
+                end
+
+                if ok then
+                    applied += 1
+                elseif err then
+                    warn(
+                        "[Kira UI config] "
+                            .. tostring(flag)
+                            .. ": "
+                            .. tostring(err)
+                    )
+                end
+            end
+        end
+
+        return true, applied
+    end
+
+    function window:_configFilePath(name)
+        local safeName = sanitizeConfigName(name or self._defaultConfigName)
+        return pathJoin(self._configFolder, safeName .. ".json"), safeName
+    end
+
+    function window:SaveConfig(name, options)
+        if not fileApiAvailable() then
+            return false, "This executor cannot save files."
+        end
+
+        options = options or {}
+
+        local okFolder, folderError = ensureFolder(self._configFolder)
+        if not okFolder then
+            return false, folderError
+        end
+
+        local path, safeName = self:_configFilePath(name)
+        local exists = false
+
+        if type(isfile) == "function" then
+            local okExists, result = pcall(isfile, path)
+            exists = okExists and result == true
+        end
+
+        if exists and options.Overwrite == false then
+            return false, "A config with this name already exists."
+        end
+
+        local payload = {
+            Library = "KiraUI",
+            Version = KiraUI.Version,
+            Name = safeName,
+            SavedAt = os.time(),
+            Values = self:GetConfigValues(),
+        }
+
+        local okJson, json = pcall(function()
+            return HttpService:JSONEncode(payload)
+        end)
+
+        if not okJson then
+            return false, tostring(json)
+        end
+
+        local okWrite, writeError = pcall(writefile, path, json)
+        if not okWrite then
+            return false, tostring(writeError)
+        end
+
+        return true, safeName
+    end
+
+    function window:ReadConfig(name)
+        if not fileApiAvailable() then
+            return false, "This executor cannot read saved files."
+        end
+
+        local path, safeName = self:_configFilePath(name)
+
+        if type(isfile) == "function" then
+            local okExists, result = pcall(isfile, path)
+            if okExists and result ~= true then
+                return false, "Config not found: " .. safeName
+            end
+        end
+
+        local okRead, source = pcall(readfile, path)
+        if not okRead then
+            return false, tostring(source)
+        end
+
+        local okJson, payload = pcall(function()
+            return HttpService:JSONDecode(source)
+        end)
+
+        if not okJson or type(payload) ~= "table" then
+            return false, "Config file is damaged or not JSON."
+        end
+
+        local values = payload.Values or payload
+        if type(values) ~= "table" then
+            return false, "Config file has no saved values."
+        end
+
+        return true, values, payload
+    end
+
+    function window:LoadConfig(name, options)
+        local okRead, values, payload = self:ReadConfig(name)
+        if not okRead then
+            return false, values
+        end
+
+        local okApply, appliedOrError = self:ApplyConfig(values, options)
+        if not okApply then
+            return false, appliedOrError
+        end
+
+        return true, appliedOrError, payload
+    end
+
+    function window:ListConfigs()
+        local okFolder = ensureFolder(self._configFolder)
+        if not okFolder then
+            return {}
+        end
+
+        if type(listfiles) ~= "function" then
+            return {}
+        end
+
+        local okList, files = pcall(listfiles, self._configFolder)
+        if not okList or type(files) ~= "table" then
+            return {}
+        end
+
+        local names = {}
+
+        for _, path in ipairs(files) do
+            local fileName = tostring(path):gsub("\\", "/"):match("([^/]+)$")
+            local configName = fileName and fileName:match("^(.*)%.json$")
+
+            if configName and configName ~= "" then
+                table.insert(names, configName)
+            end
+        end
+
+        table.sort(names)
+        return names
+    end
+
+    function window:DeleteConfig(name)
+        if type(delfile) ~= "function" then
+            return false, "This executor cannot delete config files."
+        end
+
+        local path, safeName = self:_configFilePath(name)
+
+        if type(isfile) == "function" then
+            local okExists, result = pcall(isfile, path)
+            if okExists and result ~= true then
+                return false, "Config not found: " .. safeName
+            end
+        end
+
+        local okDelete, err = pcall(delfile, path)
+        if not okDelete then
+            return false, tostring(err)
+        end
+
+        return true, safeName
     end
 
     -- Full-screen portal used by dropdowns/toasts so section clipping can never cover them.
@@ -1078,7 +1486,7 @@ function KiraUI:CreateWindow(config)
                 object.Instance = row
                 object.Switch = switch
                 object.Label = label
-                return object
+                return window:_maybeRegisterConfig(object, options)
             end
 
             function section:AddSlider(options)
@@ -1227,7 +1635,7 @@ function KiraUI:CreateWindow(config)
                 render()
                 object.Instance = row
                 object.Label = label
-                return object
+                return window:_maybeRegisterConfig(object, options)
             end
 
             function section:AddInput(options)
@@ -1366,7 +1774,7 @@ function KiraUI:CreateWindow(config)
                 object.Instance = row
                 object.Label = label
                 object.Box = box
-                return object
+                return window:_maybeRegisterConfig(object, options)
             end
 
             section.AddTextBox = section.AddInput
@@ -1774,7 +2182,7 @@ function KiraUI:CreateWindow(config)
                 object.SharedBox = sharedBox
                 object.LockButton = lockButton
                 object.List = list
-                return object
+                return window:_maybeRegisterConfig(object, options)
             end
 
             section.AddPerItemNumber = section.AddNumberMap
@@ -1996,7 +2404,7 @@ function KiraUI:CreateWindow(config)
                 object.Instance = row
                 object.Trigger = trigger
                 object.Close = close
-                return object
+                return window:_maybeRegisterConfig(object, options)
             end
 
             function section:AddMultiSelect(options)
@@ -2366,7 +2774,7 @@ function KiraUI:CreateWindow(config)
                 object.Instance = row
                 object.Trigger = trigger
                 object.Close = close
-                return object
+                return window:_maybeRegisterConfig(object, options)
             end
 
             function section:AddKeybind(options)
@@ -2536,7 +2944,7 @@ function KiraUI:CreateWindow(config)
                 object.Instance = row
                 object.Button = captureButton
                 object.Label = label
-                return object
+                return window:_maybeRegisterConfig(object, options)
             end
 
             function section:AddButton(options)
@@ -2656,6 +3064,176 @@ function KiraUI:CreateWindow(config)
             relayout()
         end)
 
+        return tab
+    end
+
+    function window:AddConfigSection(tabOrSection, options)
+        options = options or {}
+
+        local section = tabOrSection
+        if type(section) == "table" and type(section.AddSection) == "function" then
+            section = section:AddSection(options.Title or "Configs", {
+                Span = options.Span or "full",
+            })
+        end
+
+        if type(section) ~= "table" or type(section.AddInput) ~= "function" then
+            return nil
+        end
+
+        local status = section:AddLabel({
+            Text = fileApiAvailable()
+                and "Configs are saved on this device."
+                or "Config saving is not available in this executor.",
+            Wrap = true,
+            Muted = true,
+            Height = 44,
+        })
+
+        local nameInput = section:AddInput({
+            Text = options.NameText or "Config Name",
+            Default = options.DefaultName or self._defaultConfigName,
+            Placeholder = options.NamePlaceholder or "default",
+        })
+
+        local savedDropdown = section:AddDropdown({
+            Text = options.ListText or "Saved Configs",
+            Values = function()
+                return self:ListConfigs()
+            end,
+            Placeholder = options.ListPlaceholder or "Choose saved config...",
+            MaxVisibleItems = options.MaxVisibleItems or 6,
+        })
+
+        local overwriteToggle = section:AddToggle({
+            Text = options.OverwriteText or "Overwrite Existing Save",
+            Default = options.OverwriteDefault ~= false,
+        })
+
+        local function selectedName()
+            local typed = nameInput.Value
+            local selected = savedDropdown.Value
+
+            if trimText(typed) ~= "" then
+                return sanitizeConfigName(typed)
+            end
+
+            if trimText(selected) ~= "" then
+                return sanitizeConfigName(selected)
+            end
+
+            return self._defaultConfigName
+        end
+
+        local function refreshList()
+            if type(savedDropdown.Refresh) == "function" then
+                savedDropdown:Refresh()
+            end
+        end
+
+        local function setConfigStatus(text, tone)
+            status:SetText(text)
+            self:SetStatus(text, tone)
+        end
+
+        savedDropdown:OnChanged(function(value)
+            if trimText(value) ~= "" then
+                nameInput:SetValue(value, true)
+            end
+        end)
+
+        section:AddButton({
+            Text = options.SaveText or "Save Config",
+            Callback = function()
+                local ok, result =
+                    self:SaveConfig(selectedName(), {
+                        Overwrite = overwriteToggle.Value == true,
+                    })
+
+                if ok then
+                    refreshList()
+                    nameInput:SetValue(result, true)
+                    savedDropdown:SetValue(result, true)
+                    setConfigStatus(
+                        "Saved config: " .. tostring(result),
+                        "success"
+                    )
+                    safeCall(options.OnSaved, result)
+                else
+                    setConfigStatus(tostring(result), "danger")
+                end
+            end,
+        })
+
+        section:AddButton({
+            Text = options.LoadText or "Load Config",
+            Callback = function()
+                local name = selectedName()
+                local ok, result =
+                    self:LoadConfig(name, {
+                        Silent = options.SilentLoad == true,
+                    })
+
+                if ok then
+                    nameInput:SetValue(name, true)
+                    savedDropdown:SetValue(name, true)
+                    setConfigStatus(
+                        "Loaded config: "
+                            .. tostring(name)
+                            .. " ("
+                            .. tostring(result)
+                            .. " setting(s))",
+                        "success"
+                    )
+                    safeCall(options.OnLoaded, name, result)
+                else
+                    setConfigStatus(tostring(result), "danger")
+                end
+            end,
+        })
+
+        section:AddButton({
+            Text = options.RefreshText or "Refresh List",
+            Callback = function()
+                refreshList()
+                setConfigStatus("Config list refreshed.")
+            end,
+        })
+
+        section:AddButton({
+            Text = options.DeleteText or "Delete Config",
+            Danger = true,
+            Callback = function()
+                local name = selectedName()
+                local ok, result = self:DeleteConfig(name)
+
+                if ok then
+                    refreshList()
+                    savedDropdown:SetValue("", true)
+                    setConfigStatus(
+                        "Deleted config: " .. tostring(result),
+                        "warning"
+                    )
+                    safeCall(options.OnDeleted, result)
+                else
+                    setConfigStatus(tostring(result), "danger")
+                end
+            end,
+        })
+
+        return {
+            Section = section,
+            Status = status,
+            NameInput = nameInput,
+            SavedDropdown = savedDropdown,
+            OverwriteToggle = overwriteToggle,
+            Refresh = refreshList,
+        }
+    end
+
+    function window:AddConfigTab(name, icon, options)
+        local tab = self:AddTab(name or "Config", icon or "C")
+        self:AddConfigSection(tab, options or {})
         return tab
     end
 
