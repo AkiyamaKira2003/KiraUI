@@ -36,7 +36,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.3.0"
+KiraUI.Version = "0.3.1"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -561,6 +561,10 @@ function KiraUI:CreateWindow(config)
         return pathJoin(self._configFolder, safeName .. ".json"), safeName
     end
 
+    function window:_autoLoadFilePath()
+        return pathJoin(self._configFolder, "_autoload.json")
+    end
+
     function window:SaveConfig(name, options)
         if not fileApiAvailable() then
             return false, "This executor cannot save files."
@@ -658,6 +662,140 @@ function KiraUI:CreateWindow(config)
         return true, appliedOrError, payload
     end
 
+    function window:SetAutoLoadConfig(name, options)
+        if not fileApiAvailable() then
+            return false, "This executor cannot save files."
+        end
+
+        options = options or {}
+
+        local _, safeName = self:_configFilePath(name)
+
+        if safeName == "_autoload" then
+            return false, "This name is reserved."
+        end
+
+        if options.RequireExisting ~= false then
+            local okRead, readError = self:ReadConfig(safeName)
+
+            if not okRead then
+                return false, readError
+            end
+        end
+
+        local okFolder, folderError = ensureFolder(self._configFolder)
+        if not okFolder then
+            return false, folderError
+        end
+
+        local payload = {
+            Library = "KiraUI",
+            Version = KiraUI.Version,
+            Name = safeName,
+            SavedAt = os.time(),
+        }
+
+        local okJson, json = pcall(function()
+            return HttpService:JSONEncode(payload)
+        end)
+
+        if not okJson then
+            return false, tostring(json)
+        end
+
+        local okWrite, writeError =
+            pcall(writefile, self:_autoLoadFilePath(), json)
+
+        if not okWrite then
+            return false, tostring(writeError)
+        end
+
+        return true, safeName
+    end
+
+    function window:GetAutoLoadConfig()
+        if not fileApiAvailable() then
+            return false, "This executor cannot read saved files."
+        end
+
+        local path = self:_autoLoadFilePath()
+
+        if type(isfile) == "function" then
+            local okExists, exists = pcall(isfile, path)
+            if okExists and exists ~= true then
+                return true, nil
+            end
+        end
+
+        local okRead, source = pcall(readfile, path)
+        if not okRead then
+            return true, nil
+        end
+
+        local okJson, payload = pcall(function()
+            return HttpService:JSONDecode(source)
+        end)
+
+        if not okJson or type(payload) ~= "table" then
+            return false, "Autoload setting is damaged."
+        end
+
+        local rawName = trimText(payload.Name)
+        if rawName == "" then
+            return true, nil
+        end
+
+        local name = sanitizeConfigName(rawName)
+        if name == "_autoload" then
+            return true, nil
+        end
+
+        return true, name
+    end
+
+    function window:ClearAutoLoadConfig()
+        if type(delfile) ~= "function" then
+            return false, "This executor cannot delete config files."
+        end
+
+        local path = self:_autoLoadFilePath()
+
+        if type(isfile) == "function" then
+            local okExists, exists = pcall(isfile, path)
+            if okExists and exists ~= true then
+                return true, nil
+            end
+        end
+
+        local okDelete, err = pcall(delfile, path)
+        if not okDelete then
+            return false, tostring(err)
+        end
+
+        return true, nil
+    end
+
+    function window:LoadAutoConfig(options)
+        local okAuto, nameOrError = self:GetAutoLoadConfig()
+
+        if not okAuto then
+            return false, nameOrError
+        end
+
+        if not nameOrError then
+            return true, nil, nil
+        end
+
+        local okLoad, appliedOrError =
+            self:LoadConfig(nameOrError, options)
+
+        if not okLoad then
+            return false, appliedOrError, nameOrError
+        end
+
+        return true, appliedOrError, nameOrError
+    end
+
     function window:ListConfigs()
         local okFolder = ensureFolder(self._configFolder)
         if not okFolder then
@@ -679,7 +817,10 @@ function KiraUI:CreateWindow(config)
             local fileName = tostring(path):gsub("\\", "/"):match("([^/]+)$")
             local configName = fileName and fileName:match("^(.*)%.json$")
 
-            if configName and configName ~= "" then
+            if configName
+                and configName ~= ""
+                and configName ~= "_autoload" then
+
                 table.insert(names, configName)
             end
         end
@@ -705,6 +846,11 @@ function KiraUI:CreateWindow(config)
         local okDelete, err = pcall(delfile, path)
         if not okDelete then
             return false, tostring(err)
+        end
+
+        local okAuto, autoName = self:GetAutoLoadConfig()
+        if okAuto and autoName == safeName then
+            self:ClearAutoLoadConfig()
         end
 
         return true, safeName
@@ -2221,7 +2367,7 @@ function KiraUI:CreateWindow(config)
                     ZIndex = 17,
                 }, row)
                 corner(trigger, 8)
-                padding(trigger, 11, 11, 0, 0)
+                padding(trigger, 11, 36, 0, 0)
 
                 local arrow = new("TextLabel", {
                     BackgroundTransparency = 1,
@@ -2229,7 +2375,7 @@ function KiraUI:CreateWindow(config)
                     Position = UDim2.new(1, -9, 0, 22),
                     Size = UDim2.fromOffset(20, 36),
                     Font = Enum.Font.GothamBold,
-                    Text = "⌄",
+                    Text = "v",
                     TextSize = 13,
                     TextColor3 = theme.MutedText,
                     ZIndex = 18,
@@ -2268,7 +2414,7 @@ function KiraUI:CreateWindow(config)
                         popup = nil
                     end
                     dismissLayer.Visible = false
-                    arrow.Text = "⌄"
+                    arrow.Text = "v"
                     if window._openDropdown == dropdownApi then
                         window._openDropdown = nil
                     end
@@ -2306,7 +2452,7 @@ function KiraUI:CreateWindow(config)
                 local function open()
                     window:_closeDropdown()
                     dismissLayer.Visible = true
-                    arrow.Text = "⌃"
+                    arrow.Text = "^"
 
                     local values = getOptions()
                     local itemHeight = 34
@@ -2475,7 +2621,7 @@ function KiraUI:CreateWindow(config)
                     Position = UDim2.new(1, -9, 0, 22),
                     Size = UDim2.fromOffset(20, 36),
                     Font = Enum.Font.GothamBold,
-                    Text = "⌄",
+                    Text = "v",
                     TextSize = 13,
                     TextColor3 = theme.MutedText,
                     ZIndex = 18,
@@ -2559,7 +2705,7 @@ function KiraUI:CreateWindow(config)
                     end
                     itemButtons = {}
                     dismissLayer.Visible = false
-                    arrow.Text = "⌄"
+                    arrow.Text = "v"
                     if window._openDropdown == multiApi then
                         window._openDropdown = nil
                     end
@@ -2641,7 +2787,7 @@ function KiraUI:CreateWindow(config)
                 local function open()
                     window:_closeDropdown()
                     dismissLayer.Visible = true
-                    arrow.Text = "⌃"
+                    arrow.Text = "^"
 
                     local values = getOptions()
                     local itemHeight = 34
@@ -3110,6 +3256,13 @@ function KiraUI:CreateWindow(config)
             Default = options.OverwriteDefault ~= false,
         })
 
+        local autoLoadLabel = section:AddLabel({
+            Text = "Autoload: checking...",
+            Wrap = true,
+            Muted = true,
+            Height = 30,
+        })
+
         local function selectedName()
             local typed = nameInput.Value
             local selected = savedDropdown.Value
@@ -3125,10 +3278,23 @@ function KiraUI:CreateWindow(config)
             return self._defaultConfigName
         end
 
+        local function updateAutoLoadLabel()
+            local ok, nameOrError = self:GetAutoLoadConfig()
+
+            if ok and nameOrError then
+                autoLoadLabel:SetText("Autoload: " .. tostring(nameOrError))
+            elseif ok then
+                autoLoadLabel:SetText("Autoload: none")
+            else
+                autoLoadLabel:SetText("Autoload: " .. tostring(nameOrError))
+            end
+        end
+
         local function refreshList()
             if type(savedDropdown.Refresh) == "function" then
                 savedDropdown:Refresh()
             end
+            updateAutoLoadLabel()
         end
 
         local function setConfigStatus(text, tone)
@@ -3193,6 +3359,42 @@ function KiraUI:CreateWindow(config)
         })
 
         section:AddButton({
+            Text = options.AutoLoadText or "Set as Autoload",
+            Callback = function()
+                local ok, result =
+                    self:SetAutoLoadConfig(selectedName())
+
+                if ok then
+                    refreshList()
+                    nameInput:SetValue(result, true)
+                    savedDropdown:SetValue(result, true)
+                    setConfigStatus(
+                        "Autoload set: " .. tostring(result),
+                        "success"
+                    )
+                    safeCall(options.OnAutoLoadSet, result)
+                else
+                    setConfigStatus(tostring(result), "danger")
+                end
+            end,
+        })
+
+        section:AddButton({
+            Text = options.ClearAutoLoadText or "Clear Autoload",
+            Callback = function()
+                local ok, result = self:ClearAutoLoadConfig()
+
+                if ok then
+                    refreshList()
+                    setConfigStatus("Autoload cleared.", "warning")
+                    safeCall(options.OnAutoLoadCleared)
+                else
+                    setConfigStatus(tostring(result), "danger")
+                end
+            end,
+        })
+
+        section:AddButton({
             Text = options.RefreshText or "Refresh List",
             Callback = function()
                 refreshList()
@@ -3221,12 +3423,15 @@ function KiraUI:CreateWindow(config)
             end,
         })
 
+        updateAutoLoadLabel()
+
         return {
             Section = section,
             Status = status,
             NameInput = nameInput,
             SavedDropdown = savedDropdown,
             OverwriteToggle = overwriteToggle,
+            AutoLoadLabel = autoLoadLabel,
             Refresh = refreshList,
         }
     end
