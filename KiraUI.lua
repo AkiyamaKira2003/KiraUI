@@ -7,7 +7,7 @@
       - Windows-like resizing from 4 edges + 4 corners
       - Responsive sidebar and 1/2-column masonry sections
       - Portal-based dropdowns (no clipping / ZIndex overlap bugs)
-      - Slider, Toggle, Dropdown, Button, Label
+      - Slider, Toggle, Dropdown, MultiSelect, Input, Button, Label
       - Decoupled :OnChanged() state API
       - Rounded border / optional soft image shadow
       - Status + Phase pill
@@ -34,7 +34,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.1.7"
+KiraUI.Version = "0.1.8"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -1230,6 +1230,148 @@ function KiraUI:CreateWindow(config)
                 return object
             end
 
+            function section:AddInput(options)
+                options = options or {}
+                local numeric = options.Numeric == true or options.Number == true
+                local step = tonumber(options.Step)
+                local minValue = tonumber(options.Min)
+                local maxValue = tonumber(options.Max)
+                if minValue and maxValue and maxValue < minValue then
+                    minValue, maxValue = maxValue, minValue
+                end
+
+                local function trimNumberText(text)
+                    text = tostring(text or "")
+                    if text:find("%.") then
+                        text = text:gsub("0+$", ""):gsub("%.$", "")
+                    end
+                    return text
+                end
+
+                local function normalizeInputValue(value, fallback)
+                    if not numeric then
+                        return tostring(value or ""), true
+                    end
+
+                    local text = tostring(value or "")
+                    local numberText = text:match("%-?%d+%.?%d*") or text:match("%-?%.%d+")
+                    local number = tonumber(numberText)
+                    if number == nil then
+                        return fallback, false
+                    end
+
+                    if minValue then
+                        number = math.max(minValue, number)
+                    end
+                    if maxValue then
+                        number = math.min(maxValue, number)
+                    end
+                    if step and step > 0 then
+                        number = roundToStep(number, minValue or 0, step)
+                    end
+
+                    return number, true
+                end
+
+                local default, hasDefault = normalizeInputValue(options.Default, nil)
+                if not hasDefault then
+                    default = numeric and (minValue or 0) or ""
+                end
+
+                local object = makeValueObject(default, options.Callback)
+                local row = controlFrame(62)
+
+                local label = new("TextLabel", {
+                    BackgroundTransparency = 1,
+                    Position = UDim2.fromOffset(0, 0),
+                    Size = UDim2.new(1, 0, 0, 18),
+                    Font = Enum.Font.Gotham,
+                    Text = string.upper(tostring(options.Text or options.Name or "Input")),
+                    TextSize = 10,
+                    TextColor3 = theme.MutedText,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    ZIndex = 17,
+                }, row)
+
+                local box = new("TextBox", {
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    Position = UDim2.fromOffset(0, 22),
+                    Size = UDim2.new(1, 0, 0, 36),
+                    Font = Enum.Font.GothamMedium,
+                    Text = "",
+                    PlaceholderText = tostring(options.Placeholder or (numeric and "Enter number..." or "Enter text...")),
+                    TextSize = 11,
+                    TextColor3 = theme.Text,
+                    PlaceholderColor3 = theme.MutedText,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    ClearTextOnFocus = options.ClearTextOnFocus == true,
+                    TextEditable = options.ReadOnly ~= true,
+                    ZIndex = 17,
+                }, row)
+                corner(box, 8)
+                stroke(box, theme.Border, 0.5, 1)
+                padding(box, 11, 11, 0, 0)
+
+                local function formatValue(value)
+                    if not numeric then
+                        return tostring(value or "")
+                    end
+                    if step and step > 0 then
+                        return trimNumberText(formatNumber(value, step))
+                    end
+                    return trimNumberText(tostring(value or 0))
+                end
+
+                local function render()
+                    box.Text = formatValue(object.Value)
+                end
+
+                function object:SetValue(value, silent)
+                    local normalized, ok = normalizeInputValue(value, self.Value)
+                    if not ok then
+                        render()
+                        return self
+                    end
+                    if self.Value == normalized then
+                        render()
+                        return self
+                    end
+                    self.Value = normalized
+                    render()
+                    if not silent then
+                        self:_emit(normalized)
+                    end
+                    return self
+                end
+
+                function object:SetText(text, silent)
+                    return self:SetValue(text, silent)
+                end
+
+                function object:GetText()
+                    return box.Text
+                end
+
+                function object:GetNumber()
+                    return tonumber(self.Value)
+                end
+
+                window:_connect(box.FocusLost, function()
+                    object:SetValue(box.Text)
+                end)
+
+                render()
+                object.Instance = row
+                object.Label = label
+                object.Box = box
+                return object
+            end
+
+            section.AddTextBox = section.AddInput
+            section.AddTextbox = section.AddInput
+
             function section:AddDropdown(options)
                 options = options or {}
                 local default = tostring(options.Default or "")
@@ -1436,6 +1578,376 @@ function KiraUI:CreateWindow(config)
 
                 window:_connect(trigger.MouseButton1Click, function()
                     if window._openDropdown == dropdownApi then
+                        close()
+                    else
+                        open()
+                    end
+                end)
+
+                renderTrigger()
+                object.Instance = row
+                object.Trigger = trigger
+                object.Close = close
+                return object
+            end
+
+            function section:AddMultiSelect(options)
+                options = options or {}
+
+                local function copyArray(values)
+                    local out = {}
+                    for _, value in ipairs(values or {}) do
+                        out[#out + 1] = value
+                    end
+                    return out
+                end
+
+                local function normalizeSelection(values)
+                    local out = {}
+                    local seen = {}
+                    if type(values) ~= "table" then
+                        values = values == nil and {} or { values }
+                    end
+                    for _, value in ipairs(values) do
+                        local text = tostring(value or "")
+                        if text ~= "" and not seen[text] then
+                            seen[text] = true
+                            out[#out + 1] = text
+                        end
+                    end
+                    return out
+                end
+
+                local selected = normalizeSelection(options.Default or options.Value)
+                local object = makeValueObject(copyArray(selected), options.Callback)
+                local selectedSet = {}
+                local row = controlFrame(62)
+
+                local label = new("TextLabel", {
+                    BackgroundTransparency = 1,
+                    Position = UDim2.fromOffset(0, 0),
+                    Size = UDim2.new(1, 0, 0, 18),
+                    Font = Enum.Font.Gotham,
+                    Text = string.upper(tostring(options.Text or options.Name or "Multi Select")),
+                    TextSize = 10,
+                    TextColor3 = theme.MutedText,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    ZIndex = 17,
+                }, row)
+
+                local trigger = new("TextButton", {
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    Position = UDim2.fromOffset(0, 22),
+                    Size = UDim2.new(1, 0, 0, 36),
+                    Font = Enum.Font.GothamMedium,
+                    Text = "",
+                    TextSize = 11,
+                    TextColor3 = theme.Text,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    AutoButtonColor = false,
+                    ZIndex = 17,
+                }, row)
+                corner(trigger, 8)
+                padding(trigger, 11, 36, 0, 0)
+
+                local arrow = new("TextLabel", {
+                    BackgroundTransparency = 1,
+                    AnchorPoint = Vector2.new(1, 0),
+                    Position = UDim2.new(1, -9, 0, 22),
+                    Size = UDim2.fromOffset(20, 36),
+                    Font = Enum.Font.GothamBold,
+                    Text = "⌄",
+                    TextSize = 13,
+                    TextColor3 = theme.MutedText,
+                    ZIndex = 18,
+                }, row)
+
+                local multiApi = {}
+                local popup
+                local itemButtons = {}
+                local currentOptions = {}
+
+                local function rebuildSet()
+                    selectedSet = {}
+                    for _, value in ipairs(object.Value or {}) do
+                        selectedSet[value] = true
+                    end
+                end
+
+                local function getOptions()
+                    local values
+                    if type(options.Values) == "function" then
+                        local ok, result = pcall(options.Values)
+                        values = ok and result or {}
+                    elseif type(options.Provider) == "function" then
+                        local ok, result = pcall(options.Provider)
+                        values = ok and result or {}
+                    else
+                        values = options.Values or options.Options or {}
+                    end
+
+                    local out = {}
+                    local seen = {}
+                    for _, value in ipairs(values or {}) do
+                        local text = tostring(value)
+                        if text ~= "" and not seen[text] then
+                            seen[text] = true
+                            out[#out + 1] = text
+                        end
+                    end
+                    currentOptions = out
+                    return out
+                end
+
+                local function renderTrigger()
+                    local values = object.Value or {}
+                    if #values == 0 then
+                        trigger.Text = tostring(options.Placeholder or "Select...")
+                        trigger.TextColor3 = theme.MutedText
+                        return
+                    end
+
+                    trigger.TextColor3 = theme.Text
+                    local maxLabels = tonumber(options.MaxLabels) or 2
+                    if #values <= maxLabels then
+                        trigger.Text = table.concat(values, ", ")
+                    else
+                        trigger.Text = tostring(#values) .. " selected"
+                    end
+                end
+
+                local function renderItems()
+                    rebuildSet()
+                    for value, item in pairs(itemButtons) do
+                        local active = selectedSet[value] == true
+                        item.Text = (active and "  [x] " or "  [ ] ") .. value
+                        item.TextColor3 = active and theme.Accent or theme.Text
+                    end
+                end
+
+                local function emit(silent)
+                    renderTrigger()
+                    renderItems()
+                    if not silent then
+                        object:_emit(copyArray(object.Value))
+                    end
+                end
+
+                local function close()
+                    if popup then
+                        popup:Destroy()
+                        popup = nil
+                    end
+                    itemButtons = {}
+                    dismissLayer.Visible = false
+                    arrow.Text = "⌄"
+                    if window._openDropdown == multiApi then
+                        window._openDropdown = nil
+                    end
+                end
+
+                function multiApi:Close()
+                    close()
+                end
+
+                function object:SetValue(values, silent)
+                    local nextValues = normalizeSelection(values)
+                    local changed = #nextValues ~= #(self.Value or {})
+                    if not changed then
+                        for index, value in ipairs(nextValues) do
+                            if self.Value[index] ~= value then
+                                changed = true
+                                break
+                            end
+                        end
+                    end
+                    self.Value = nextValues
+                    emit(silent or not changed)
+                    return self
+                end
+
+                function object:SetValues(values)
+                    options.Values = values or {}
+                    options.Provider = nil
+                    return self
+                end
+
+                function object:GetValues()
+                    return copyArray(self.Value)
+                end
+
+                function object:IsSelected(value)
+                    rebuildSet()
+                    return selectedSet[tostring(value or "")] == true
+                end
+
+                function object:Select(value, enabled, silent)
+                    value = tostring(value or "")
+                    if value == "" then
+                        return self
+                    end
+
+                    rebuildSet()
+                    local wantsEnabled = enabled ~= false
+                    if selectedSet[value] == wantsEnabled then
+                        emit(true)
+                        return self
+                    end
+
+                    local nextValues = {}
+                    for _, current in ipairs(self.Value or {}) do
+                        if current ~= value then
+                            nextValues[#nextValues + 1] = current
+                        end
+                    end
+                    if wantsEnabled then
+                        nextValues[#nextValues + 1] = value
+                    end
+                    return self:SetValue(nextValues, silent)
+                end
+
+                function object:Clear(silent)
+                    return self:SetValue({}, silent)
+                end
+
+                function object:SelectAll(silent)
+                    return self:SetValue(getOptions(), silent)
+                end
+
+                function object:Refresh()
+                    getOptions()
+                    return self
+                end
+
+                local function open()
+                    window:_closeDropdown()
+                    dismissLayer.Visible = true
+                    arrow.Text = "⌃"
+
+                    local values = getOptions()
+                    local itemHeight = 34
+                    local controlsHeight = options.ShowControls == false and 0 or 34
+                    local maxVisibleItems = options.MaxVisibleItems or 7
+                    local contentHeight = (#values * itemHeight) + controlsHeight + 8
+                    local popupHeight = math.min(math.max(itemHeight, contentHeight), (maxVisibleItems * itemHeight) + controlsHeight + 8)
+                    local triggerPos = trigger.AbsolutePosition
+                    local triggerSize = trigger.AbsoluteSize
+                    local viewportSize = getViewport()
+
+                    local x = triggerPos.X
+                    local belowY = triggerPos.Y + triggerSize.Y + 6
+                    local aboveY = triggerPos.Y - popupHeight - 6
+                    local spaceBelow = viewportSize.Y - belowY
+                    local y = (spaceBelow >= popupHeight or aboveY < 8) and belowY or aboveY
+
+                    local popupWidth = math.max(triggerSize.X, options.MinPopupWidth or 220)
+                    if x + popupWidth > viewportSize.X - 8 then
+                        x = viewportSize.X - popupWidth - 8
+                    end
+                    x = math.max(8, x)
+                    y = math.max(8, math.min(y, viewportSize.Y - popupHeight - 8))
+
+                    popup = new("ScrollingFrame", {
+                        Name = "MultiSelectPopup",
+                        BackgroundColor3 = theme.Surface3,
+                        BorderSizePixel = 0,
+                        Position = UDim2.fromOffset(x, y),
+                        Size = UDim2.fromOffset(popupWidth, popupHeight),
+                        CanvasSize = UDim2.fromOffset(0, math.max(0, contentHeight)),
+                        ScrollBarThickness = 2,
+                        ScrollBarImageColor3 = theme.Border,
+                        ScrollBarImageTransparency = 0.1,
+                        ZIndex = 910,
+                    }, portal)
+                    corner(popup, 10)
+                    stroke(popup, theme.Border, 0.18, 1)
+                    padding(popup, 4, 4, 4, 4)
+
+                    new("UIListLayout", {
+                        Padding = UDim.new(0, 0),
+                        SortOrder = Enum.SortOrder.LayoutOrder,
+                    }, popup)
+
+                    if controlsHeight > 0 then
+                        local controlsRow = new("Frame", {
+                            BackgroundTransparency = 1,
+                            Size = UDim2.new(1, 0, 0, controlsHeight),
+                            ZIndex = 911,
+                        }, popup)
+
+                        local function actionButton(text, xScale, widthScale, callback)
+                            local button = new("TextButton", {
+                                BackgroundColor3 = theme.Surface2,
+                                BorderSizePixel = 0,
+                                Position = UDim2.new(xScale, 2, 0, 2),
+                                Size = UDim2.new(widthScale, -4, 1, -6),
+                                Font = Enum.Font.GothamMedium,
+                                Text = text,
+                                TextSize = 10,
+                                TextColor3 = theme.Text,
+                                AutoButtonColor = false,
+                                ZIndex = 912,
+                            }, controlsRow)
+                            corner(button, 7)
+                            window:_connect(button.MouseButton1Click, callback)
+                        end
+
+                        actionButton("All", 0, 0.33, function()
+                            object:SelectAll()
+                        end)
+                        actionButton("Clear", 0.33, 0.34, function()
+                            object:Clear()
+                        end)
+                        actionButton("Done", 0.67, 0.33, close)
+                    end
+
+                    if #values == 0 then
+                        new("TextLabel", {
+                            BackgroundTransparency = 1,
+                            Size = UDim2.new(1, 0, 0, itemHeight),
+                            Font = Enum.Font.Gotham,
+                            Text = tostring(options.EmptyText or "No options"),
+                            TextSize = 10,
+                            TextColor3 = theme.MutedText,
+                            ZIndex = 911,
+                        }, popup)
+                    else
+                        for _, value in ipairs(values) do
+                            local item = new("TextButton", {
+                                BackgroundTransparency = 1,
+                                BorderSizePixel = 0,
+                                Size = UDim2.new(1, 0, 0, itemHeight),
+                                Font = Enum.Font.GothamMedium,
+                                Text = "",
+                                TextSize = 10,
+                                TextXAlignment = Enum.TextXAlignment.Left,
+                                AutoButtonColor = false,
+                                ZIndex = 911,
+                            }, popup)
+                            itemButtons[value] = item
+
+                            window:_connect(item.MouseEnter, function()
+                                item.BackgroundTransparency = 0
+                                item.BackgroundColor3 = theme.Surface2
+                            end)
+                            window:_connect(item.MouseLeave, function()
+                                item.BackgroundTransparency = 1
+                            end)
+                            window:_connect(item.MouseButton1Click, function()
+                                object:Select(value, not object:IsSelected(value))
+                            end)
+                        end
+                    end
+
+                    renderItems()
+                    window._openDropdown = multiApi
+                end
+
+                window:_connect(trigger.MouseButton1Click, function()
+                    if window._openDropdown == multiApi then
                         close()
                     else
                         open()
