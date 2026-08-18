@@ -9,13 +9,13 @@
       - Portal-based dropdowns (no clipping / ZIndex overlap bugs)
       - Slider, Toggle, Dropdown, MultiSelect, Input, Button, Label
       - Decoupled :OnChanged() state API
-      - Rounded border / optional soft image shadow
+      - Rounded border / opt-in soft image shadow
       - Status + Phase pill
       - RightShift (configurable) show/hide
       - Runtime keybind picker
       - Floating restore launcher when hidden
       - Draggable compact launcher button
-      - Rounded shell with synced optional shadow layers
+      - Rounded shell with opt-in synced shadow layers
       - Optional close button / launcher behavior for script-specific flows
       - Mouse + touch support
 
@@ -34,7 +34,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.1.8"
+KiraUI.Version = "0.1.9"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -238,7 +238,7 @@ function KiraUI:CreateWindow(config)
     local launcherRadius = tonumber(config.LauncherRadius) or 16
     local windowRadius = tonumber(config.WindowRadius) or 24
     local controlRadius = tonumber(config.ControlRadius) or 12
-    local shadowEnabled = config.ShadowEnabled ~= false
+    local shadowEnabled = config.ShadowEnabled == true
     local shadowImage = tostring(config.ShadowImage or DEFAULT_SHADOW_IMAGE)
     local shadowOffset = config.ShadowOffset or Vector2.new(0, 10)
     local shadowSpread = tonumber(config.ShadowSpread) or 28
@@ -246,7 +246,7 @@ function KiraUI:CreateWindow(config)
     local backdropEnabled = config.BackdropEnabled == true
     local backdropSpread = tonumber(config.BackdropSpread) or math.max(10, math.floor(shadowSpread * 0.45))
     local backdropTransparency = config.BackdropTransparency or 0.9
-    local launcherShadowEnabled = config.LauncherShadowEnabled ~= false
+    local launcherShadowEnabled = config.LauncherShadowEnabled == true
     local launcherShadowOffset = config.LauncherShadowOffset or Vector2.new(0, 5)
     local launcherShadowSpread = tonumber(config.LauncherShadowSpread) or 14
     local launcherShadowTransparency = config.LauncherShadowTransparency or 0.68
