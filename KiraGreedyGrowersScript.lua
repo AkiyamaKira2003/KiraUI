@@ -9,4 +9,9852 @@ end end
 if not loadstring and load then loadstring = load end
 if not loadstring then loadstring = function(s) return load(s) end end
 
-local ZnQfspAKg,KEcWWkuhM,veanYETtE,KanmBFSlA,ODdZWYTinmZ,uUlvADpf,SgnOPZlC,SXEGHvLF,iQmRpEYWFwX,SbqMasrkcJu,uGHbaWONyeld,aWHLTiHDbNEV,LJBjbByT,wLIXQQGts,yLMtshYhrxOv,HBIdBkGe,ZFnhVTwRF,rByJYxgChhB,dWvsReeLtn,kkAKDAZttOtH,DNMbKtOQh,JotcWSISM,GlVPqsjxvVws,mYjTLNfSDr,XnrMzvwF;ZnQfspAKg=assert;KEcWWkuhM=error;veanYETtE=ipairs;KanmBFSlA=next;ODdZWYTinmZ=pairs;uUlvADpf=pcall;SgnOPZlC=print;SXEGHvLF=rawget;iQmRpEYWFwX=select;SbqMasrkcJu=tonumber;uGHbaWONyeld=tostring;aWHLTiHDbNEV=xpcall;LJBjbByT=math.abs;wLIXQQGts=math.floor;yLMtshYhrxOv=math.huge;HBIdBkGe=math.max;ZFnhVTwRF=math.min;rByJYxgChhB=string.find;dWvsReeLtn=string.lower;kkAKDAZttOtH=string.sub;DNMbKtOQh=string.upper;JotcWSISM=table.concat;GlVPqsjxvVws=table.insert;mYjTLNfSDr=table.sort;XnrMzvwF=os.clock;return(function() local VtOzvkJmkb=ZnQfspAKg(loadstring(game:HttpGet("https://raw.githubusercontent.com/AkiyamaKira2003/KiraUI/refs/heads/main/KiraUI.lua")))();if type(VtOzvkJmkb)~="table" or type(VtOzvkJmkb.CreateWindow)~="function" then KEcWWkuhM("[KiraHub] Invalid Kira UI library returned from URL") end local NWEjFAcI=game:GetService("Players");local LBHXPDPStJ=game:GetService("ReplicatedStorage");local etCIDMWAodR=NWEjFAcI.LocalPlayer;local ajdCwmMJcNo=etCIDMWAodR:WaitForChild("PlayerGui");local hThAnvnTMSpO=(getgenv and getgenv())or _G;if hThAnvnTMSpO.KiraGreedyGrowers and type(hThAnvnTMSpO.KiraGreedyGrowers.Destroy)=="function" then uUlvADpf(function() hThAnvnTMSpO.KiraGreedyGrowers:Destroy() end) end if hThAnvnTMSpO.KiraGarden and type(hThAnvnTMSpO.KiraGarden.Destroy)=="function" then uUlvADpf(function() hThAnvnTMSpO.KiraGarden:Destroy() end) end local fshvbnQtAIC={Alive=true,Connections={},HolderConnections={},Window=nil,};hThAnvnTMSpO.KiraGreedyGrowers=fshvbnQtAIC;hThAnvnTMSpO.KiraGarden=fshvbnQtAIC;function fshvbnQtAIC:Track(connection) if connection then table.insert(self.Connections,connection) end return connection end function fshvbnQtAIC:Destroy() if not self.Alive then return end self.Alive=false;if self.State then self.State.AutoBuy=false;self.State.AutoPlant=false;self.State.AutoHarvest=false;self.State.AutoCollectDead=false;self.State.AutoMutationScan=false;self.State.AutoSellDeadTree=false;self.State.AutoSellFruit=false;self.State.AutoCollectFruit=false;self.State.AutoCompostSeed=false;self.State.AntiAfk=false end if self.DisableAntiAfk then uUlvADpf(self.DisableAntiAfk) end if self.StopAllFeatures then uUlvADpf(self.StopAllFeatures) end for _,connection in veanYETtE(self.Connections)do uUlvADpf(function() connection:Disconnect() end) end for _,DSYkCbiZGtC in ODdZWYTinmZ(self.HolderConnections)do for _,connection in veanYETtE(DSYkCbiZGtC)do uUlvADpf(function() connection:Disconnect() end) end end self.Connections={};self.HolderConnections={};if self.Window and self.Window.Gui and self.Window.Gui.Parent then uUlvADpf(function() self.Window.Gui:Destroy() end) end if hThAnvnTMSpO.KiraGreedyGrowers==self then hThAnvnTMSpO.KiraGreedyGrowers=nil end if hThAnvnTMSpO.KiraGarden==self then hThAnvnTMSpO.KiraGarden=nil end end local rgqyXvbiLFlE=LBHXPDPStJ.Packages._Index["sleitnick_knit@1.6.0"].knit;local ezEBLgXecXw=rgqyXvbiLFlE.Services.PlantRoundService.RF.StartRound;local maXLFXRCKGEt=rgqyXvbiLFlE.Services.PlantRoundService.RF.CollectDeadTree;local MeNCKzfHJ=rgqyXvbiLFlE.Services.ToolService.RE.ToggleEquip;local AGPhNwmOrzrE=rgqyXvbiLFlE.Services.DataService.RE.DataUpdate;local OCHSTdPPMP=nil;uUlvADpf(function() OCHSTdPPMP=rgqyXvbiLFlE.Services.SellStandService.RF.SellTree end);local uENvaEpU=nil;uUlvADpf(function() uENvaEpU=rgqyXvbiLFlE.Services.WeatherService.RE.WeatherChanged end);local zxTdJJRIYF=LBHXPDPStJ:FindFirstChild("CurrentWeather") or LBHXPDPStJ:WaitForChild("CurrentWeather",5);local QKODbcnwh=workspace:WaitForChild("BigField");local cfjGnRWkNtMF=QKODbcnwh:WaitForChild("ConveyorSeeds");local ZKWJWTsAx=QKODbcnwh:WaitForChild("PlayerPlots");local TLDNAtPoWKo={AutoBuy=false,AutoPlant=false,AutoHarvest=false,AutoCollectDead=true,AutoMutationScan=false,AutoSellDeadTree=false,AutoSellFruit=false,AutoCollectFruit=false,AutoCompostSeed=false,CollectAllFruit=false,AntiAfk=false,BuyRarity="ALL",BuyRarities={"ALL"},BuySeed="ALL",BuySeeds={"ALL"},BuyDelay=0.15,PlantSeed="Fig",PlantSeeds={"Fig"},CompostSeed="Oak",CompostSeeds={"Oak"},Fertilizer="Magic",UseWorm=false,WormTypes={"Worm"},WormSortMode="Lowest",WormMultiplierMin=5,WormMultiplierMax=10,WormSettingsLocked=true,WormTypesLocked=true,WormPriorityLocked=true,WormSettings={},AllowMutatedSeeds=true,PlantOnlyDuringWeather=false,HarvestMultiplier=20,HarvestMultiplierLocked=true,HarvestMultipliers={},PlantRoundScanInterval=0.08,SellDelay=0.15,CompostDelay=0.25,MinFruitMutations=5,FruitCollectInterval=1,FruitCollectDelay=0.1,MutationScanInterval=2,Debug=false,};fshvbnQtAIC.State=TLDNAtPoWKo;local cBzlOwFDf={Phase="IDLE",Status="Starting...",MyPlot=nil,PurchaseCount=0,PlantCount=0,FruitListedCount=0,LastPlantContext=nil,LastPurchase=nil,LastInventorySource="none",HarvestCount=0,DeadCollectCount=0,FruitCollectCount=0,LastCollectedFruit=nil,LastHarvest=nil,SellDeadTreeCount=0,LastSoldDeadTree=nil,SellFruitCount=0,LastSoldFruit=nil,CompostCount=0,CompostGiveCount=0,CompostCollectCount=0,CompostTeleportCount=0,CompostDistance=0,CompostMode="UNKNOWN",CompostAnchor=nil,CompostPrompt=nil,CompostAnchorPrompt=nil,LastCompostSeed=nil,LastCompostAction=nil,LastCompostLeashNotice=0,WormCount=0,LastWormSource="none",LastUsedWorm=nil,CurrentPlantRound=nil,CurrentMultiplier=0,CurrentSeed=nil,CurrentHarvestTarget=20,CurrentWeather="Normal",WeatherActive=false,AntiAfkMode="off",AntiAfkDisabledCount=0,};fshvbnQtAIC.Runtime=cBzlOwFDf;local QOCyPsnx={"Basic","Better","Premium","Super","Magic",};local ykTMUBaeT={{Name="Apple",PriceText="$200"},{Name="Avocado",PriceText="$20K"},{Name="Banana",PriceText="$3B"},{Name="Blooming",PriceText="$750B"},{Name="Cherry",PriceText="$2.50M"},{Name="Coconut",PriceText="$10M"},{Name="Diamond",PriceText="$1Qi"},{Name="Dragon Fruit",PriceText="$7B"},{Name="Elder",PriceText="$5Oc"},{Name="Fig",PriceText="$500"},{Name="Glowing",PriceText="$500B"},{Name="Glowshroom",PriceText="$3.50Oc"},{Name="Lemon",PriceText="$15K"},{Name="Magic",PriceText="$500T"},{Name="Mango",PriceText="$5M"},{Name="Money",PriceText="$14Sx"},{Name="Mushroom",PriceText="$7Sx"},{Name="Oak",PriceText="Free"},{Name="Orange",PriceText="$10K"},{Name="Peach",PriceText="$350"},{Name="Pine",PriceText="$25"},{Name="Pizza",PriceText="$850T"},{Name="Starfruit",PriceText="$4.50B"},{Name="Void",PriceText="$1.75Qi"},};local lsqKbhtiF={};local VncGbOvYGv={};local bzKuaxLf={};local MaeOmFaYgkb={"ALL"};local HjbaGyItKmM={};local JxyqNnykdjd={};local edGMtCZvFZ={};local wXslwVduJd={};local HyKBegAhF={"COMMON","UNCOMMON","RARE","EPIC","LEGENDARY","MYTHIC",};local waKaZUkc={"ALL"};local gbuVKCvU={};for xJEdnwduH,YzpfXEzkjsJn in veanYETtE(HyKBegAhF)do gbuVKCvU[YzpfXEzkjsJn]=xJEdnwduH;waKaZUkc[#waKaZUkc+1]=YzpfXEzkjsJn end local RgpnnxCCCbHM={[""]=1,k=1e3,m=1e6,b=1e9,t=1e12,q=1e15,qa=1e15,qi=1e18,sx=1e21,sp=1e24,oc=1e27,no=1e30,dc=1e33,de=1e33,};local function CfQLzFyx(IpCmOXKp) IpCmOXKp=uGHbaWONyeld(IpCmOXKp or "");IpCmOXKp=IpCmOXKp:gsub("<.->","");IpCmOXKp=IpCmOXKp:gsub(",","");IpCmOXKp=IpCmOXKp:gsub("%s+","");if IpCmOXKp=="" then return nil end local RpXNQvEer=string.lower(IpCmOXKp);if RpXNQvEer=="free" or string.find(RpXNQvEer,"free",1,true)then return 0 end IpCmOXKp=IpCmOXKp:gsub("[%$€£¥]","");local nlRVTXnIJP,VvybrMXlCw=IpCmOXKp:match("([%+%-]?[%d%.]+)([%a]*)");local piyYXrqJ=SbqMasrkcJu(nlRVTXnIJP);if not piyYXrqJ then return nil end local xJQgSeNIDqnE=RgpnnxCCCbHM[string.lower(uGHbaWONyeld(VvybrMXlCw or ""))];if not xJQgSeNIDqnE then return nil end return piyYXrqJ*xJQgSeNIDqnE end local function wZEdEusXxz(lsmMNuktk) return wXslwVduJd[uGHbaWONyeld(lsmMNuktk or "")] or math.huge end local function kTezQRgyuHGF(a,b) local qUEbomjZdvH=uGHbaWONyeld(a or "");local ngIzTlEboYU=uGHbaWONyeld(b or "");local wxizZnSSGE=wZEdEusXxz(qUEbomjZdvH);local rWHkASLOiXR=wZEdEusXxz(ngIzTlEboYU);if wxizZnSSGE~=rWHkASLOiXR then return wxizZnSSGE<rWHkASLOiXR end return qUEbomjZdvH<ngIzTlEboYU end local function EYaULJTaEMuC(a,b) return kTezQRgyuHGF(HjbaGyItKmM[uGHbaWONyeld(a or "")]or a,HjbaGyItKmM[uGHbaWONyeld(b or "")]or b) end for _,seed in veanYETtE(ykTMUBaeT)do local uYQUqJVp=seed.Name.." Seed ("..seed.PriceText..")";lsqKbhtiF[#lsqKbhtiF+1]=seed.Name;VncGbOvYGv[#VncGbOvYGv+1]=uYQUqJVp;bzKuaxLf[#bzKuaxLf+1]=uYQUqJVp;MaeOmFaYgkb[#MaeOmFaYgkb+1]=uYQUqJVp;HjbaGyItKmM[uYQUqJVp]=seed.Name;JxyqNnykdjd[seed.Name]=uYQUqJVp;edGMtCZvFZ[seed.Name]=seed.PriceText;wXslwVduJd[seed.Name]=CfQLzFyx(seed.PriceText) end table.sort(lsqKbhtiF,kTezQRgyuHGF);table.sort(VncGbOvYGv,EYaULJTaEMuC);table.sort(bzKuaxLf,EYaULJTaEMuC);table.sort(MaeOmFaYgkb,function(a,b) if a==b then return false elseif a=="ALL" then return true elseif b=="ALL" then return false end return EYaULJTaEMuC(a,b) end);local function miEUxvqqgGQ(ufdLsSTNsvH) local YMNJkrnTuv={};for _,PtWWWeZjj in veanYETtE(ufdLsSTNsvH or{})do YMNJkrnTuv[#YMNJkrnTuv+1]=PtWWWeZjj end return YMNJkrnTuv end local function wyPuhuvfHF(ufdLsSTNsvH) if type(ufdLsSTNsvH)~="table" then ufdLsSTNsvH=ufdLsSTNsvH==nil and{}or{ufdLsSTNsvH} end local YMNJkrnTuv={};local HJNxDXempQZ={};local PBePvLYH=false;for _,PtWWWeZjj in veanYETtE(ufdLsSTNsvH)do local IpCmOXKp=uGHbaWONyeld(PtWWWeZjj or "");if IpCmOXKp=="ALL" then PBePvLYH=true;break end local lsmMNuktk=HjbaGyItKmM[IpCmOXKp]or IpCmOXKp;if lsmMNuktk~="" and JxyqNnykdjd[lsmMNuktk] and not HJNxDXempQZ[lsmMNuktk]then HJNxDXempQZ[lsmMNuktk]=true;YMNJkrnTuv[#YMNJkrnTuv+1]=lsmMNuktk end end if PBePvLYH then YMNJkrnTuv=miEUxvqqgGQ(lsqKbhtiF) end table.sort(YMNJkrnTuv,kTezQRgyuHGF);return YMNJkrnTuv end local function TTOzkithLytq(ufdLsSTNsvH) TLDNAtPoWKo.BuySeeds=wyPuhuvfHF(ufdLsSTNsvH);TLDNAtPoWKo.BuySeed=#TLDNAtPoWKo.BuySeeds==#lsqKbhtiF and "ALL" or(TLDNAtPoWKo.BuySeeds[1]or "NONE");return miEUxvqqgGQ(TLDNAtPoWKo.BuySeeds) end local function fCnCPKSDRV() if type(TLDNAtPoWKo.BuySeeds)~="table" then return TTOzkithLytq(TLDNAtPoWKo.BuySeed or "ALL") end return wyPuhuvfHF(TLDNAtPoWKo.BuySeeds) end local function NwBOsqBEP(ufdLsSTNsvH) local vLySZjFLGYxC={};for _,lsmMNuktk in veanYETtE(wyPuhuvfHF(ufdLsSTNsvH))do vLySZjFLGYxC[#vLySZjFLGYxC+1]=JxyqNnykdjd[lsmMNuktk]or lsmMNuktk end return vLySZjFLGYxC end local function jMTEAwDpEK() local unRIgYnrSl=fCnCPKSDRV();if#unRIgYnrSl==#lsqKbhtiF then return "all seeds" elseif#unRIgYnrSl==0 then return "no seeds selected" end return table.concat(unRIgYnrSl,", ") end local function ZrszQDjJi(ufdLsSTNsvH) if type(ufdLsSTNsvH)~="table" then ufdLsSTNsvH=ufdLsSTNsvH==nil and{}or{ufdLsSTNsvH} end local YMNJkrnTuv={};local HJNxDXempQZ={};local PBePvLYH=false;for _,PtWWWeZjj in veanYETtE(ufdLsSTNsvH)do local YzpfXEzkjsJn=string.upper(uGHbaWONyeld(PtWWWeZjj or ""));if YzpfXEzkjsJn=="ALL" then PBePvLYH=true;break end if gbuVKCvU[YzpfXEzkjsJn]and not HJNxDXempQZ[YzpfXEzkjsJn]then HJNxDXempQZ[YzpfXEzkjsJn]=true;YMNJkrnTuv[#YMNJkrnTuv+1]=YzpfXEzkjsJn end end if PBePvLYH then YMNJkrnTuv=miEUxvqqgGQ(HyKBegAhF) end table.sort(YMNJkrnTuv,function(a,b) return(gbuVKCvU[a]or math.huge)<(gbuVKCvU[b]or math.huge) end);return YMNJkrnTuv end local function APPRCbhGihY(ufdLsSTNsvH) TLDNAtPoWKo.BuyRarities=ZrszQDjJi(ufdLsSTNsvH);TLDNAtPoWKo.BuyRarity=#TLDNAtPoWKo.BuyRarities==#HyKBegAhF and "ALL" or(TLDNAtPoWKo.BuyRarities[1]or "NONE");return miEUxvqqgGQ(TLDNAtPoWKo.BuyRarities) end local function pvKdpZUlrK() if type(TLDNAtPoWKo.BuyRarities)~="table" then return APPRCbhGihY(TLDNAtPoWKo.BuyRarity or "ALL") end return ZrszQDjJi(TLDNAtPoWKo.BuyRarities) end local function uldAoJnHkD() local unRIgYnrSl=pvKdpZUlrK();if#unRIgYnrSl==#HyKBegAhF then return "all rarities" elseif#unRIgYnrSl==0 then return "no rarities selected" end return table.concat(unRIgYnrSl,", ") end local function bjgKxxgrfKXl(ufdLsSTNsvH,fallbackSeed) if type(ufdLsSTNsvH)~="table" then ufdLsSTNsvH=ufdLsSTNsvH==nil and{}or{ufdLsSTNsvH} end local YMNJkrnTuv={};local HJNxDXempQZ={};for _,PtWWWeZjj in veanYETtE(ufdLsSTNsvH)do local IpCmOXKp=uGHbaWONyeld(PtWWWeZjj or "");local lsmMNuktk=HjbaGyItKmM[IpCmOXKp]or IpCmOXKp;if lsmMNuktk~="" and JxyqNnykdjd[lsmMNuktk] and not HJNxDXempQZ[lsmMNuktk]then HJNxDXempQZ[lsmMNuktk]=true;YMNJkrnTuv[#YMNJkrnTuv+1]=lsmMNuktk end end if#YMNJkrnTuv==0 and fallbackSeed then YMNJkrnTuv[1]=fallbackSeed==true and(TLDNAtPoWKo.PlantSeed or "Fig")or fallbackSeed end table.sort(YMNJkrnTuv,kTezQRgyuHGF);return YMNJkrnTuv end local function QKjWlZOxCt(ufdLsSTNsvH) TLDNAtPoWKo.PlantSeeds=bjgKxxgrfKXl(ufdLsSTNsvH);TLDNAtPoWKo.PlantSeed=TLDNAtPoWKo.PlantSeeds[1]or TLDNAtPoWKo.PlantSeed;return miEUxvqqgGQ(TLDNAtPoWKo.PlantSeeds) end local function WCKhEtDy() if type(TLDNAtPoWKo.PlantSeeds)~="table" then return QKjWlZOxCt({TLDNAtPoWKo.PlantSeed or "Fig"}) end return miEUxvqqgGQ(TLDNAtPoWKo.PlantSeeds) end local function LpWfhsbtJNYi(ufdLsSTNsvH) local vLySZjFLGYxC={};for _,lsmMNuktk in veanYETtE(bjgKxxgrfKXl(ufdLsSTNsvH))do vLySZjFLGYxC[#vLySZjFLGYxC+1]=JxyqNnykdjd[lsmMNuktk]or lsmMNuktk end return vLySZjFLGYxC end local function iHqtNIBiJTS(ufdLsSTNsvH) return bjgKxxgrfKXl(ufdLsSTNsvH) end local function ECsEWqEFqswH(ufdLsSTNsvH) TLDNAtPoWKo.CompostSeeds=bjgKxxgrfKXl(ufdLsSTNsvH,TLDNAtPoWKo.CompostSeed or "Oak");TLDNAtPoWKo.CompostSeed=TLDNAtPoWKo.CompostSeeds[1] or TLDNAtPoWKo.CompostSeed or "Oak";return miEUxvqqgGQ(TLDNAtPoWKo.CompostSeeds) end local function DrjUAmlBSUs() if type(TLDNAtPoWKo.CompostSeeds)~="table" then return ECsEWqEFqswH({TLDNAtPoWKo.CompostSeed or "Oak"}) end return miEUxvqqgGQ(TLDNAtPoWKo.CompostSeeds) end local function CruZAMnSLdPN(ufdLsSTNsvH) local vLySZjFLGYxC={};for _,lsmMNuktk in veanYETtE(bjgKxxgrfKXl(ufdLsSTNsvH))do vLySZjFLGYxC[#vLySZjFLGYxC+1]=JxyqNnykdjd[lsmMNuktk]or lsmMNuktk end return vLySZjFLGYxC end local function wTJZswOn(ufdLsSTNsvH) return bjgKxxgrfKXl(ufdLsSTNsvH) end local function yJjEtPtLsDA() local unRIgYnrSl=DrjUAmlBSUs();if#unRIgYnrSl==0 then return "no seeds selected" end return table.concat(unRIgYnrSl,", ") end TTOzkithLytq(TLDNAtPoWKo.BuySeeds or TLDNAtPoWKo.BuySeed or "ALL");APPRCbhGihY(TLDNAtPoWKo.BuyRarities or TLDNAtPoWKo.BuyRarity or "ALL");QKjWlZOxCt(TLDNAtPoWKo.PlantSeeds or{TLDNAtPoWKo.PlantSeed or "Fig"});ECsEWqEFqswH(TLDNAtPoWKo.CompostSeeds or{TLDNAtPoWKo.CompostSeed or "Oak"});local function bazZfEPDocqG(PtWWWeZjj,JHHCtsZoh) local IpCmOXKp=uGHbaWONyeld(PtWWWeZjj or "");local nlRVTXnIJP=IpCmOXKp:match("%-?%d+%.?%d*") or IpCmOXKp:match("%-?%.%d+");local piyYXrqJ=SbqMasrkcJu(nlRVTXnIJP) or SbqMasrkcJu(JHHCtsZoh) or SbqMasrkcJu(TLDNAtPoWKo.HarvestMultiplier) or 20;piyYXrqJ=math.max(0.01,piyYXrqJ);return math.floor(piyYXrqJ*100+0.5)/100 end local function ruXJxjCHTbC(PtWWWeZjj) TLDNAtPoWKo.HarvestMultiplier=bazZfEPDocqG(PtWWWeZjj,TLDNAtPoWKo.HarvestMultiplier);cBzlOwFDf.CurrentHarvestTarget=TLDNAtPoWKo.HarvestMultiplier;return TLDNAtPoWKo.HarvestMultiplier end local function SNnBGCLvHvec(ufdLsSTNsvH) local YMNJkrnTuv={};for xbrZbULKJpu,PtWWWeZjj in ODdZWYTinmZ(ufdLsSTNsvH or{})do local lsmMNuktk=uGHbaWONyeld(xbrZbULKJpu or "");if JxyqNnykdjd[lsmMNuktk]then YMNJkrnTuv[lsmMNuktk]=bazZfEPDocqG(PtWWWeZjj,TLDNAtPoWKo.HarvestMultiplier) end end return YMNJkrnTuv end local function HsyiTzmKTXC(PtWWWeZjj) if type(PtWWWeZjj)=="table" then if PtWWWeZjj.Locked~=nil then TLDNAtPoWKo.HarvestMultiplierLocked=PtWWWeZjj.Locked==true end ruXJxjCHTbC(PtWWWeZjj.Shared or PtWWWeZjj.Default);if type(PtWWWeZjj.Values)=="table" then TLDNAtPoWKo.HarvestMultipliers=SNnBGCLvHvec(PtWWWeZjj.Values) end else ruXJxjCHTbC(PtWWWeZjj) end return{Locked=TLDNAtPoWKo.HarvestMultiplierLocked,Shared=TLDNAtPoWKo.HarvestMultiplier,Values=SNnBGCLvHvec(TLDNAtPoWKo.HarvestMultipliers),} end local function ToqIbVzdeXwp(lsmMNuktk) local nJqSviaCyyV=bazZfEPDocqG(TLDNAtPoWKo.HarvestMultiplier,20);if TLDNAtPoWKo.HarvestMultiplierLocked then return nJqSviaCyyV end lsmMNuktk=uGHbaWONyeld(lsmMNuktk or "");return bazZfEPDocqG(TLDNAtPoWKo.HarvestMultipliers[lsmMNuktk],nJqSviaCyyV) end local function pycXaBhSPu() local aVtlynJOjgAh={};local unRIgYnrSl=WCKhEtDy();table.sort(unRIgYnrSl,kTezQRgyuHGF);for _,lsmMNuktk in veanYETtE(unRIgYnrSl)do aVtlynJOjgAh[#aVtlynJOjgAh+1]={Key=lsmMNuktk,Text=JxyqNnykdjd[lsmMNuktk]or lsmMNuktk,} end return aVtlynJOjgAh end local function RJSGeSbOxr() if TLDNAtPoWKo.HarvestMultiplierLocked then return "locked at "..uGHbaWONyeld(TLDNAtPoWKo.HarvestMultiplier).."x" end return "custom per seed" end HsyiTzmKTXC({Locked=TLDNAtPoWKo.HarvestMultiplierLocked,Shared=TLDNAtPoWKo.HarvestMultiplier,Values=TLDNAtPoWKo.HarvestMultipliers,});local arCRGYHnEpD={VerifyPlant=nil,};fshvbnQtAIC.Adapters=arCRGYHnEpD;local function UWXHJnpLRs(...) if TLDNAtPoWKo.Debug then SgnOPZlC("[KiraHub]",...) end end local function ZNOMJJYC(IpCmOXKp,tone) cBzlOwFDf.Status=uGHbaWONyeld(IpCmOXKp or "");if fshvbnQtAIC.Window then fshvbnQtAIC.Window:SetStatus(cBzlOwFDf.Status,tone) end UWXHJnpLRs(cBzlOwFDf.Status) end local function mtEBVbBpifWV(IpCmOXKp,tone) cBzlOwFDf.Phase=uGHbaWONyeld(IpCmOXKp or "IDLE");if fshvbnQtAIC.Window then fshvbnQtAIC.Window:SetPhase(cBzlOwFDf.Phase,tone) end end local function URXDpHjBQWVb(title,IpCmOXKp,tone,duration) if fshvbnQtAIC.Window and type(fshvbnQtAIC.Window.Notify)=="function" then fshvbnQtAIC.Window:Notify({Title=title or "Kira Hub",Text=uGHbaWONyeld(IpCmOXKp or ""),Tone=tone,Duration=duration,}) end end local sJsLsAKNiQNB={Connection=nil,DisabledConnections={},};local function oInuPAbDkXuD(connection,methodName) local EJGgOEIJ,ypZLQbUZ=uUlvADpf(function() return connection[methodName] end);if EJGgOEIJ and type(ypZLQbUZ)=="function" then return ypZLQbUZ end return nil end local function PKBhTelCx() if sJsLsAKNiQNB.Connection then uUlvADpf(function() sJsLsAKNiQNB.Connection:Disconnect() end) end sJsLsAKNiQNB.Connection=nil end local function xIGLUNUxWJE() for _,connection in veanYETtE(sJsLsAKNiQNB.DisabledConnections)do local JLCQjxLeh=oInuPAbDkXuD(connection,"Enable");if JLCQjxLeh then uUlvADpf(function() JLCQjxLeh(connection) end) end end sJsLsAKNiQNB.DisabledConnections={} end local function xmWMzGSZlMg() local EJGgOEIJ,cFdGNVkSCG=uUlvADpf(function() return game:GetService("VirtualUser") end);if not EJGgOEIJ or not cFdGNVkSCG then return end uUlvADpf(function() cFdGNVkSCG:CaptureController();cFdGNVkSCG:ClickButton2(Vector2.new()) end) end local function ByXRqrlwTBLB() PKBhTelCx();xIGLUNUxWJE();local ZLxvmdyX=0;local RLkqowQYhoeO=getconnections or get_signal_cons;if type(RLkqowQYhoeO)=="function" then local EJGgOEIJ,DSYkCbiZGtC=uUlvADpf(function() return RLkqowQYhoeO(etCIDMWAodR.Idled) end);if EJGgOEIJ and type(DSYkCbiZGtC)=="table" then for _,connection in ODdZWYTinmZ(DSYkCbiZGtC)do local nfEaiJmuH=oInuPAbDkXuD(connection,"Disable");local JLCQjxLeh=oInuPAbDkXuD(connection,"Enable");if connection and nfEaiJmuH and JLCQjxLeh then local yuwgIgrahi=uUlvADpf(function() nfEaiJmuH(connection) end);if yuwgIgrahi then ZLxvmdyX+=1;table.insert(sJsLsAKNiQNB.DisabledConnections,connection) end end end end end sJsLsAKNiQNB.Connection=etCIDMWAodR.Idled:Connect(function() xmWMzGSZlMg() end);cBzlOwFDf.AntiAfkDisabledCount=ZLxvmdyX;cBzlOwFDf.AntiAfkMode=ZLxvmdyX>0 and "idle guard + click" or "idle click" end local function YdKkxLzIK() PKBhTelCx();xIGLUNUxWJE();cBzlOwFDf.AntiAfkDisabledCount=0;cBzlOwFDf.AntiAfkMode="off";if TLDNAtPoWKo then TLDNAtPoWKo.AntiAfk=false end end fshvbnQtAIC.DisableAntiAfk=YdKkxLzIK;local function olxhtNCJ(vTLRGmTD,silent) TLDNAtPoWKo.AntiAfk=vTLRGmTD==true;if TLDNAtPoWKo.AntiAfk then ByXRqrlwTBLB();if not silent then ZNOMJJYC("Anti-AFK enabled") end else YdKkxLzIK();if not silent then ZNOMJJYC("Anti-AFK disabled") end end end local QOjPywsyk={};local function uUEyNxlr(fBBRHrrWC) QOjPywsyk[fBBRHrrWC]=(QOjPywsyk[fBBRHrrWC]or 0)+1 end local function AzqTepsUHo(fBBRHrrWC,runner) QOjPywsyk[fBBRHrrWC]=(QOjPywsyk[fBBRHrrWC]or 0)+1;local SBeyZdiCVnxh=QOjPywsyk[fBBRHrrWC];task.spawn(function() local function eHPGDafMmf() return(not fshvbnQtAIC.Alive)or QOjPywsyk[fBBRHrrWC]~=SBeyZdiCVnxh end local EJGgOEIJ,qtFnxqcHneA=aWHLTiHDbNEV(function() runner(eHPGDafMmf) end,debug.traceback);if not EJGgOEIJ and fshvbnQtAIC.Alive then warn("[KiraHub:"..uGHbaWONyeld(fBBRHrrWC).."]",qtFnxqcHneA) end end) end local function AvsKZPPdnJ(seconds,eHPGDafMmf) local zkiSlLRkxM=os.clock()+math.max(0,SbqMasrkcJu(seconds)or 0);while os.clock()<zkiSlLRkxM do if eHPGDafMmf and eHPGDafMmf()then return false end task.wait(math.min(0.05,math.max(0.01,zkiSlLRkxM-os.clock()))) end return true end local function zupWtudcdaO(PtWWWeZjj) local IpCmOXKp=uGHbaWONyeld(PtWWWeZjj or "");IpCmOXKp=IpCmOXKp:match("^%s*(.-)%s*$")or "";if IpCmOXKp=="" then return "Normal" end return IpCmOXKp end local function hWqrVjtD(PtWWWeZjj) return string.lower(zupWtudcdaO(PtWWWeZjj))~="normal" end local function ceLnAmECuf(PtWWWeZjj) local zrynaZULKS=zupWtudcdaO(PtWWWeZjj);cBzlOwFDf.CurrentWeather=zrynaZULKS;cBzlOwFDf.WeatherActive=hWqrVjtD(zrynaZULKS);return cBzlOwFDf.CurrentWeather,cBzlOwFDf.WeatherActive end local function tZvIJSONZrt() local PtWWWeZjj=nil;if zxTdJJRIYF then uUlvADpf(function() PtWWWeZjj=zxTdJJRIYF.Value end) end return ceLnAmECuf(PtWWWeZjj) end local function dTxffcpwj() local zrynaZULKS,manPHYAxcH=tZvIJSONZrt();if not TLDNAtPoWKo.PlantOnlyDuringWeather then return true,zrynaZULKS end return manPHYAxcH,zrynaZULKS end local function vAEGgZpWPPP(eHPGDafMmf) if not TLDNAtPoWKo.PlantOnlyDuringWeather then return true end local WfnpzugCFjT=nil;while fshvbnQtAIC.Alive and TLDNAtPoWKo.AutoPlant and not eHPGDafMmf()do if not TLDNAtPoWKo.PlantOnlyDuringWeather then return true end local manPHYAxcH,zrynaZULKS=dTxffcpwj();if manPHYAxcH then ZNOMJJYC("Weather active: "..zrynaZULKS.."; planting allowed");return true end if zrynaZULKS~=WfnpzugCFjT then mtEBVbBpifWV("WAIT WEATHER","warning");ZNOMJJYC("Waiting for weather before planting (current: "..zrynaZULKS..")","warning");WfnpzugCFjT=zrynaZULKS end if not AvsKZPPdnJ(0.25,eHPGDafMmf)then return false end end return false end tZvIJSONZrt();if uENvaEpU and uENvaEpU.OnClientEvent then fshvbnQtAIC:Track(uENvaEpU.OnClientEvent:Connect(function(zrynaZULKS) local tDoMBzIfg=cBzlOwFDf.CurrentWeather;local wwcpoECkJG,manPHYAxcH=ceLnAmECuf(zrynaZULKS);if wwcpoECkJG~=tDoMBzIfg and TLDNAtPoWKo.AutoPlant and TLDNAtPoWKo.PlantOnlyDuringWeather then if manPHYAxcH then ZNOMJJYC("Weather active: "..wwcpoECkJG) else ZNOMJJYC("Weather ended; next plant waits for weather","warning") end end end)) end if zxTdJJRIYF then fshvbnQtAIC:Track(zxTdJJRIYF:GetPropertyChangedSignal("Value"):Connect(function() local tDoMBzIfg=cBzlOwFDf.CurrentWeather;local wwcpoECkJG,manPHYAxcH=tZvIJSONZrt();if wwcpoECkJG~=tDoMBzIfg and TLDNAtPoWKo.AutoPlant and TLDNAtPoWKo.PlantOnlyDuringWeather then if manPHYAxcH then ZNOMJJYC("Weather active: "..wwcpoECkJG) else ZNOMJJYC("Weather ended; next plant waits for weather","warning") end end end)) end local function PfgwmbFXH() uUEyNxlr("AutoBuy");uUEyNxlr("AutoPlant");uUEyNxlr("AutoSellDeadTree");uUEyNxlr("AutoSellFruit");uUEyNxlr("AutoCollectFruit");uUEyNxlr("AutoCompostSeed");uUEyNxlr("CompostMovementGuard");uUEyNxlr("AutoMutationScan");uUEyNxlr("RoundMonitor");uUEyNxlr("ManualPlant") end fshvbnQtAIC.StopAllFeatures=PfgwmbFXH;local SWyJgAsOVIgK={};SWyJgAsOVIgK.__index=SWyJgAsOVIgK;function SWyJgAsOVIgK.new(fBBRHrrWC) return setmetatable({Name=fBBRHrrWC,Owner=nil,},SWyJgAsOVIgK) end function SWyJgAsOVIgK:Acquire(owner,eHPGDafMmf,timeout) local jnhykVzBmq=os.clock();while fshvbnQtAIC.Alive and self.Owner~=nil and self.Owner~=owner do if eHPGDafMmf and eHPGDafMmf()then return false end if timeout and(os.clock()-jnhykVzBmq)>=timeout then return false end task.wait(0.02) end if not fshvbnQtAIC.Alive or(eHPGDafMmf and eHPGDafMmf())then return false end self.Owner=owner;return true end function SWyJgAsOVIgK:Release(owner) if self.Owner==owner then self.Owner=nil end end local YdCOPJCy=SWyJgAsOVIgK.new("Equipment");local SgUCvZnxry=SWyJgAsOVIgK.new("Action");local YOsJOgdnqkY=SWyJgAsOVIgK.new("Plant");local KDyzjSBNROqk=SWyJgAsOVIgK.new("PlantRound");local hONLvePvS={PlantIntent=false,CriticalAction=nil,CriticalOwner=nil,};fshvbnQtAIC.Coordinator=hONLvePvS;function hONLvePvS:IsPlantBusy() return self.PlantIntent or self.CriticalAction=="PLANTING" end function hONLvePvS:WaitPlantClear(eHPGDafMmf) while fshvbnQtAIC.Alive and self:IsPlantBusy()do if eHPGDafMmf and eHPGDafMmf()then return false end task.wait(0.025) end return fshvbnQtAIC.Alive and not(eHPGDafMmf and eHPGDafMmf()) end function hONLvePvS:AcquireBackgroundEquipment(owner,eHPGDafMmf) if not self:WaitPlantClear(eHPGDafMmf)then return false end while fshvbnQtAIC.Alive do if not SgUCvZnxry:Acquire(owner,eHPGDafMmf)then return false end if not YdCOPJCy:Acquire(owner,eHPGDafMmf)then SgUCvZnxry:Release(owner);return false end if not self:IsPlantBusy()then return true end YdCOPJCy:Release(owner);SgUCvZnxry:Release(owner);if not self:WaitPlantClear(eHPGDafMmf)then return false end end return false end function hONLvePvS:ReleaseBackgroundEquipment(owner) YdCOPJCy:Release(owner);SgUCvZnxry:Release(owner) end function hONLvePvS:AcquireAction(owner,eHPGDafMmf,timeout) if not self:WaitPlantClear(eHPGDafMmf)then return false end if not SgUCvZnxry:Acquire(owner,eHPGDafMmf,timeout)then return false end if self:IsPlantBusy()and self.CriticalOwner~=owner then SgUCvZnxry:Release(owner);return false end return true end function hONLvePvS:ReleaseAction(owner) SgUCvZnxry:Release(owner) end function hONLvePvS:BeginPlant(owner,eHPGDafMmf) if not YOsJOgdnqkY:Acquire(owner,eHPGDafMmf)then return false end self.PlantIntent=true;self.CriticalOwner=owner;mtEBVbBpifWV("PLANT QUEUED","warning");if not SgUCvZnxry:Acquire(owner,eHPGDafMmf)then self.PlantIntent=false;self.CriticalOwner=nil;YOsJOgdnqkY:Release(owner);mtEBVbBpifWV("IDLE");return false end if not YdCOPJCy:Acquire(owner,eHPGDafMmf)then SgUCvZnxry:Release(owner);self.PlantIntent=false;self.CriticalOwner=nil;YOsJOgdnqkY:Release(owner);mtEBVbBpifWV("IDLE");return false end self.CriticalAction="PLANTING";mtEBVbBpifWV("PLANTING","warning");return true end function hONLvePvS:EndPlant(owner) if self.CriticalOwner~=owner then return end self.CriticalAction=nil;self.CriticalOwner=nil;YdCOPJCy:Release(owner);SgUCvZnxry:Release(owner);self.PlantIntent=false;YOsJOgdnqkY:Release(owner);mtEBVbBpifWV("IDLE") end local function klMYKcVhM() return etCIDMWAodR.Character end local function pgaQZNmdOSpc() local aYJmMMga=klMYKcVhM();if not aYJmMMga then return nil end return aYJmMMga:FindFirstChildOfClass("Humanoid") end local function xqMPKmZFg() local aYJmMMga=klMYKcVhM();if not aYJmMMga then return nil end return aYJmMMga:FindFirstChildOfClass("Tool") end local function DZnpetDwcKH() local VZxKamHoJXXM={};local aYJmMMga=klMYKcVhM();if not aYJmMMga then return VZxKamHoJXXM end for _,child in veanYETtE(aYJmMMga:GetChildren())do if child:IsA("Tool")then VZxKamHoJXXM[#VZxKamHoJXXM+1]=child end end return VZxKamHoJXXM end local function nJyKDUmaGk(PtWWWeZjj) return string.lower(uGHbaWONyeld(PtWWWeZjj or "")) end local function LZbzxSnPKwZI(fBBRHrrWC) fBBRHrrWC=uGHbaWONyeld(fBBRHrrWC or "");fBBRHrrWC=fBBRHrrWC:gsub("%b()","");fBBRHrrWC=fBBRHrrWC:gsub("[_%s%-]*[Ss][Ee][Ee][Dd].*$","");fBBRHrrWC=fBBRHrrWC:gsub("^%s+",""):gsub("%s+$","");return fBBRHrrWC end local aCWHPTIm={Inventory=nil,Source="none",LastUpdate=0,Version=0,};fshvbnQtAIC.Inventory=aCWHPTIm;local function hhlfqTFEdFdZ(tbl,xbrZbULKJpu) if type(tbl)~="table" then return nil end local EJGgOEIJ,PtWWWeZjj=uUlvADpf(SXEGHvLF,tbl,xbrZbULKJpu);if EJGgOEIJ then return PtWWWeZjj end return nil end local function eaDsYcns(tbl) if type(tbl)~="table" then return function() return nil end end local xbrZbULKJpu=nil;return function() local EJGgOEIJ,YWkdojaQohjm,BZZIgQIq=uUlvADpf(KanmBFSlA,tbl,xbrZbULKJpu);if not EJGgOEIJ or YWkdojaQohjm==nil then return nil end xbrZbULKJpu=YWkdojaQohjm;return YWkdojaQohjm,BZZIgQIq end end local function OadjwfPrk(PtWWWeZjj,tgxxqOUF) if type(PtWWWeZjj)~="table" then return PtWWWeZjj end tgxxqOUF=tgxxqOUF or{};if tgxxqOUF[PtWWWeZjj]then return tgxxqOUF[PtWWWeZjj] end local bimeTcQQS={};tgxxqOUF[PtWWWeZjj]=bimeTcQQS;for xbrZbULKJpu,child in eaDsYcns(PtWWWeZjj)do bimeTcQQS[OadjwfPrk(xbrZbULKJpu,tgxxqOUF)]=OadjwfPrk(child,tgxxqOUF) end return bimeTcQQS end do local cXHVdYWGR={RawWorms=nil,Worms={},Source="none",Authoritative=false,LastUpdate=0,Reservations={},};local WgPAfsstSGe={"Worm","DewyWorm","ShockedWorm","DustyWorm","FrostedWorm","InfestedWorm","RadioactiveWorm","ChargedWorm","SlimyWorm","GoldenWorm","ScaledWorm","CosmicWorm",};local PFggUvKUgouQ={Worm={Display="Worm",Mutation="None",IsMutated=false,},DewyWorm={Display="Dewy Worm",Mutation="Dewy",IsMutated=true,},ShockedWorm={Display="Shocked Worm",Mutation="Shocked",IsMutated=true,},DustyWorm={Display="Dusty Worm",Mutation="Dusty",IsMutated=true,},FrostedWorm={Display="Frosted Worm",Mutation="Frosted",IsMutated=true,},InfestedWorm={Display="Infested Worm",Mutation="Infested",IsMutated=true,},RadioactiveWorm={Display="Radioactive Worm",Mutation="Radioactive",IsMutated=true,},ChargedWorm={Display="Charged Worm",Mutation="Charged",IsMutated=true,},SlimyWorm={Display="Slimy Worm",Mutation="Slimy",IsMutated=true,},GoldenWorm={Display="Golden Worm",Mutation="Golden",IsMutated=true,},ScaledWorm={Display="Scaled Worm",Mutation="Scaled",IsMutated=true,},CosmicWorm={Display="Cosmic Worm",Mutation="Cosmic",IsMutated=true,},};local HJxofKeCDPz={};local UdZbNcPh={};for _,OcLsncDvjLq in veanYETtE(WgPAfsstSGe)do local CDQXyBinB=PFggUvKUgouQ[OcLsncDvjLq];local uYQUqJVp=CDQXyBinB and CDQXyBinB.Display or OcLsncDvjLq;HJxofKeCDPz[#HJxofKeCDPz+1]=uYQUqJVp;UdZbNcPh[uYQUqJVp]=OcLsncDvjLq end fshvbnQtAIC.WormBridge=cXHVdYWGR;fshvbnQtAIC.Worms=cXHVdYWGR;fshvbnQtAIC.WormTypes=WgPAfsstSGe;fshvbnQtAIC.WormLabels=HJxofKeCDPz;local function FvmGDmwB(OcLsncDvjLq) OcLsncDvjLq=uGHbaWONyeld(OcLsncDvjLq or "");local CDQXyBinB=PFggUvKUgouQ[OcLsncDvjLq];if CDQXyBinB then return CDQXyBinB end local rrgjhycHRe=OcLsncDvjLq:match("^(.-)Worm$");if OcLsncDvjLq=="Worm" then rrgjhycHRe="None" elseif not rrgjhycHRe or rrgjhycHRe=="" then rrgjhycHRe=OcLsncDvjLq end return{Display=OcLsncDvjLq=="Worm" and "Worm" or(rrgjhycHRe.." Worm"),Mutation=rrgjhycHRe,IsMutated=OcLsncDvjLq~="Worm",} end local function vRPwTMqNiKi(IyBbcUdv) return type(IyBbcUdv)=="table" and type(hhlfqTFEdFdZ(IyBbcUdv,"id"))=="string" and type(hhlfqTFEdFdZ(IyBbcUdv,"wormType"))=="string" and SbqMasrkcJu(hhlfqTFEdFdZ(IyBbcUdv,"mult"))~=nil end local function jRNNaDfJ(IyBbcUdv) if not vRPwTMqNiKi(IyBbcUdv)then return nil end local OcLsncDvjLq=uGHbaWONyeld(hhlfqTFEdFdZ(IyBbcUdv,"wormType"));local CDQXyBinB=FvmGDmwB(OcLsncDvjLq);return{Id=uGHbaWONyeld(hhlfqTFEdFdZ(IyBbcUdv,"id")),RawType=OcLsncDvjLq,DisplayType=CDQXyBinB.Display,Mutation=CDQXyBinB.Mutation,IsMutated=CDQXyBinB.IsMutated==true,Mult=SbqMasrkcJu(hhlfqTFEdFdZ(IyBbcUdv,"mult")),Raw=IyBbcUdv,} end local function qeucTvdUSyt(tbl) local VZxKamHoJXXM={};local HJNxDXempQZ={};if type(tbl)~="table" then return VZxKamHoJXXM end for _,IyBbcUdv in eaDsYcns(tbl)do local lDSkPMivaZTX=jRNNaDfJ(IyBbcUdv);if lDSkPMivaZTX and not HJNxDXempQZ[lDSkPMivaZTX.Id]then HJNxDXempQZ[lDSkPMivaZTX.Id]=true;VZxKamHoJXXM[#VZxKamHoJXXM+1]=lDSkPMivaZTX end end table.sort(VZxKamHoJXXM,function(a,b) if a.RawType~=b.RawType then return a.RawType<b.RawType end if a.Mult~=b.Mult then return a.Mult<b.Mult end return a.Id<b.Id end);return VZxKamHoJXXM end local function OHqWeSFQU(ufdLsSTNsvH,allowEmpty) if type(ufdLsSTNsvH)~="table" then ufdLsSTNsvH=ufdLsSTNsvH==nil and{}or{ufdLsSTNsvH} end local unRIgYnrSl={};local HJNxDXempQZ={};for _,PtWWWeZjj in veanYETtE(ufdLsSTNsvH)do local IpCmOXKp=uGHbaWONyeld(PtWWWeZjj or "");local OcLsncDvjLq=UdZbNcPh[IpCmOXKp]or IpCmOXKp;if not PFggUvKUgouQ[OcLsncDvjLq]then local YUgryMmKeHj=IpCmOXKp:gsub("%s+","");OcLsncDvjLq=PFggUvKUgouQ[YUgryMmKeHj] and YUgryMmKeHj or(PFggUvKUgouQ[YUgryMmKeHj.."Worm"] and(YUgryMmKeHj.."Worm") or OcLsncDvjLq) end if OcLsncDvjLq~="" and not HJNxDXempQZ[OcLsncDvjLq]then HJNxDXempQZ[OcLsncDvjLq]=true;unRIgYnrSl[#unRIgYnrSl+1]=OcLsncDvjLq end end if#unRIgYnrSl==0 and not allowEmpty then unRIgYnrSl[1]="Worm" end table.sort(unRIgYnrSl,function(a,b) local jTXHrnxWQeO=table.find(WgPAfsstSGe,a)or math.huge;local gYIFwNHwcKX=table.find(WgPAfsstSGe,b)or math.huge;if jTXHrnxWQeO==gYIFwNHwcKX then return a<b end return jTXHrnxWQeO<gYIFwNHwcKX end);return unRIgYnrSl end local function kHpmkJWxh(ufdLsSTNsvH) TLDNAtPoWKo.WormTypes=OHqWeSFQU(ufdLsSTNsvH);return TLDNAtPoWKo.WormTypes end local function WqyqdvYc() TLDNAtPoWKo.WormTypes=OHqWeSFQU(TLDNAtPoWKo.WormTypes);return TLDNAtPoWKo.WormTypes end local function bMlpumwtb(ufdLsSTNsvH,allowEmpty) local vLySZjFLGYxC={};for _,OcLsncDvjLq in veanYETtE(OHqWeSFQU(ufdLsSTNsvH,allowEmpty))do vLySZjFLGYxC[#vLySZjFLGYxC+1]=FvmGDmwB(OcLsncDvjLq).Display end return vLySZjFLGYxC end local function YLreSeztR(PtWWWeZjj) local piyYXrqJ=SbqMasrkcJu(PtWWWeZjj);if not piyYXrqJ then return "?" end return uGHbaWONyeld(math.floor(piyYXrqJ*100+0.5)/100) end local function znXOXPIDH(lDSkPMivaZTX) if not lDSkPMivaZTX then return "none" end return uGHbaWONyeld(lDSkPMivaZTX.DisplayType).." "..YLreSeztR(lDSkPMivaZTX.Mult).."x" end function cXHVdYWGR:SetRaw(rawWorms,vJxCNtcGYBX,authoritative) if type(rawWorms)~="table" then return false end local OUVYnefRehQD=qeucTvdUSyt(rawWorms);if#OUVYnefRehQD==0 and authoritative~=true then return false end self.RawWorms=rawWorms;self.Worms=OUVYnefRehQD;self.Source=vJxCNtcGYBX or "unknown";self.Authoritative=authoritative==true;self.LastUpdate=os.clock();cBzlOwFDf.WormCount=#OUVYnefRehQD;cBzlOwFDf.LastWormSource=self.Source;if self.Authoritative then local HTkXCwZQRor={};for _,lDSkPMivaZTX in veanYETtE(OUVYnefRehQD)do HTkXCwZQRor[lDSkPMivaZTX.Id]=true end for id,nqOWjsembIcY in ODdZWYTinmZ(self.Reservations)do if nqOWjsembIcY.State~="CONSUMED" and HTkXCwZQRor[id]then self.Reservations[id]=nil end end end return true end function cXHVdYWGR:GetAll() return self.Worms end function cXHVdYWGR:GetCount() return#self.Worms end function cXHVdYWGR:GetById(id) id=uGHbaWONyeld(id or "");for _,lDSkPMivaZTX in veanYETtE(self.Worms)do if lDSkPMivaZTX.Id==id then return lDSkPMivaZTX end end return nil end function cXHVdYWGR:GetByType(OcLsncDvjLq) local VZxKamHoJXXM={};for _,lDSkPMivaZTX in veanYETtE(self.Worms)do if lDSkPMivaZTX.RawType==OcLsncDvjLq then VZxKamHoJXXM[#VZxKamHoJXXM+1]=lDSkPMivaZTX end end return VZxKamHoJXXM end function cXHVdYWGR:IsOwned(id) return self:GetById(id)~=nil end function cXHVdYWGR:Resolve(WdljNFWSXs) WdljNFWSXs=type(WdljNFWSXs)=="table" and WdljNFWSXs or nil;local MVytjtnaNRH={};local mueEIYxxlY=WdljNFWSXs and OHqWeSFQU(WdljNFWSXs.Types,true) or WqyqdvYc();if#mueEIYxxlY==0 then return nil end for _,OcLsncDvjLq in veanYETtE(mueEIYxxlY)do MVytjtnaNRH[OcLsncDvjLq]=true end local LGezdduAgaO={};local sUhUPqZnBH=WdljNFWSXs and SbqMasrkcJu(WdljNFWSXs.MinMult) or SbqMasrkcJu(TLDNAtPoWKo.WormMultiplierMin) or 0;local ecUZIczDurH=WdljNFWSXs and SbqMasrkcJu(WdljNFWSXs.MaxMult) or SbqMasrkcJu(TLDNAtPoWKo.WormMultiplierMax) or math.huge;if sUhUPqZnBH>ecUZIczDurH then sUhUPqZnBH,ecUZIczDurH=ecUZIczDurH,sUhUPqZnBH end for _,lDSkPMivaZTX in veanYETtE(self.Worms)do if MVytjtnaNRH[lDSkPMivaZTX.RawType] and lDSkPMivaZTX.Mult>=sUhUPqZnBH and lDSkPMivaZTX.Mult<=ecUZIczDurH and not self.Reservations[lDSkPMivaZTX.Id]then LGezdduAgaO[#LGezdduAgaO+1]=lDSkPMivaZTX end end table.sort(LGezdduAgaO,function(a,b) if a.Mult==b.Mult then return a.Id<b.Id end local INXzNivuJle=WdljNFWSXs and WdljNFWSXs.SortMode or TLDNAtPoWKo.WormSortMode;if INXzNivuJle=="Highest" then return a.Mult>b.Mult end return a.Mult<b.Mult end);return LGezdduAgaO[1] end function cXHVdYWGR:Reserve(lDSkPMivaZTX,owner) if not lDSkPMivaZTX or not lDSkPMivaZTX.Id then return false end if self.Reservations[lDSkPMivaZTX.Id]then return false end self.Reservations[lDSkPMivaZTX.Id]={State="PENDING",Owner=owner or "AutoPlant",At=os.clock(),};return true end function cXHVdYWGR:Mark(id,state) id=uGHbaWONyeld(id or "");if id=="" then return end self.Reservations[id]={State=uGHbaWONyeld(state or "UNCERTAIN"),Owner="AutoPlant",At=os.clock(),} end function cXHVdYWGR:Release(id) id=uGHbaWONyeld(id or "");local nqOWjsembIcY=self.Reservations[id];if nqOWjsembIcY and nqOWjsembIcY.State=="PENDING" then self.Reservations[id]=nil end end function cXHVdYWGR:GetSummary() local TLZDJjoJXI={};for _,lDSkPMivaZTX in veanYETtE(self.Worms)do local sWvYBGURc=TLZDJjoJXI[lDSkPMivaZTX.RawType];if not sWvYBGURc then sWvYBGURc={RawType=lDSkPMivaZTX.RawType,Display=lDSkPMivaZTX.DisplayType,Mutation=lDSkPMivaZTX.Mutation,Count=0,Lowest=nil,Highest=nil,};TLZDJjoJXI[lDSkPMivaZTX.RawType]=sWvYBGURc end sWvYBGURc.Count+=1;sWvYBGURc.Lowest=sWvYBGURc.Lowest and math.min(sWvYBGURc.Lowest,lDSkPMivaZTX.Mult) or lDSkPMivaZTX.Mult;sWvYBGURc.Highest=sWvYBGURc.Highest and math.max(sWvYBGURc.Highest,lDSkPMivaZTX.Mult) or lDSkPMivaZTX.Mult end return TLZDJjoJXI end function cXHVdYWGR:GetSummaryText() local HqIlrUPKo={"Worms: "..uGHbaWONyeld(self:GetCount()).." | Source: "..uGHbaWONyeld(self.Source),};local TLZDJjoJXI=self:GetSummary();for _,OcLsncDvjLq in veanYETtE(WgPAfsstSGe)do local sWvYBGURc=TLZDJjoJXI[OcLsncDvjLq];if sWvYBGURc then HqIlrUPKo[#HqIlrUPKo+1]=sWvYBGURc.Display..": "..uGHbaWONyeld(sWvYBGURc.Count).." ("..YLreSeztR(sWvYBGURc.Lowest).."x-"..YLreSeztR(sWvYBGURc.Highest).."x)" end end if#HqIlrUPKo==1 then HqIlrUPKo[#HqIlrUPKo+1]="No Worm detected yet." end return table.concat(HqIlrUPKo,"\n") end function cXHVdYWGR:Bootstrap() if type(getgc)~="function" then return false end local EJGgOEIJ,QdbQUKGnphK=uUlvADpf(getgc,true);if not EJGgOEIJ then EJGgOEIJ,QdbQUKGnphK=uUlvADpf(getgc) end if not EJGgOEIJ or type(QdbQUKGnphK)~="table" then return false end local DzzrozKYJz=nil;local PgVGubeeK={};for _,hDRHyHXwKm in eaDsYcns(QdbQUKGnphK)do if type(hDRHyHXwKm)=="table" then local OUVYnefRehQD=qeucTvdUSyt(hDRHyHXwKm);if#OUVYnefRehQD>#PgVGubeeK then DzzrozKYJz=hDRHyHXwKm;PgVGubeeK=OUVYnefRehQD end end end if DzzrozKYJz and#PgVGubeeK>0 then return self:SetRaw(DzzrozKYJz,"getgc",false) end return false end local function VHoFBpCRsYp(evFESHvJD,path) local LdGNrJxJ=false;local OUVYnefRehQD=hhlfqTFEdFdZ(evFESHvJD,"Worms");if type(OUVYnefRehQD)=="table" then LdGNrJxJ=cXHVdYWGR:SetRaw(OUVYnefRehQD,"DataUpdate.Worms",true) or LdGNrJxJ end if type(path)=="table" and hhlfqTFEdFdZ(path,1)=="Worms" then LdGNrJxJ=cXHVdYWGR:SetRaw(evFESHvJD,"DataUpdate path Worms",true) or LdGNrJxJ end return LdGNrJxJ end fshvbnQtAIC.SyncWormDataUpdate=VHoFBpCRsYp;fshvbnQtAIC.NormalizeWormTypeSelection=OHqWeSFQU;fshvbnQtAIC.SetWormTypeSelection=kHpmkJWxh;fshvbnQtAIC.GetWormTypeSelection=WqyqdvYc;fshvbnQtAIC.WormTypesToLabels=bMlpumwtb;fshvbnQtAIC.FormatWorm=znXOXPIDH;fshvbnQtAIC.FormatMultiplier=YLreSeztR end local function AgfhECWToMo() local LGezdduAgaO={hThAnvnTMSpO.KiraFullInventory,hThAnvnTMSpO.KiraInventory,};for _,api in veanYETtE(LGezdduAgaO)do if type(api)=="table" and api~=aCWHPTIm then if type(api.IsReady)=="function" then local EJGgOEIJ,uMfNlLyaQti=uUlvADpf(function() return api:IsReady() end);if EJGgOEIJ and uMfNlLyaQti then return api end end local vvVIBDGUMigx=type(api.GetInventory)=="function" and api.GetInventory or type(api.Get)=="function" and api.Get or nil;if vvVIBDGUMigx then local EJGgOEIJ,GKtbXevoURb=uUlvADpf(function() return vvVIBDGUMigx(api) end);if EJGgOEIJ and type(GKtbXevoURb)=="table" and(type(hhlfqTFEdFdZ(GKtbXevoURb,"Hotbar"))=="table" or type(hhlfqTFEdFdZ(GKtbXevoURb,"Storage"))=="table")then return api end end end end return nil end local function DswPFjSfu(GKtbXevoURb) if type(GKtbXevoURb)~="table" then return false end return type(hhlfqTFEdFdZ(GKtbXevoURb,"Hotbar"))=="table" or type(hhlfqTFEdFdZ(GKtbXevoURb,"Storage"))=="table" end local function YTSxERowbwZR(GKtbXevoURb,vJxCNtcGYBX) if not DswPFjSfu(GKtbXevoURb)then return false end aCWHPTIm.Inventory=OadjwfPrk(GKtbXevoURb);aCWHPTIm.Source=vJxCNtcGYBX or "unknown";aCWHPTIm.LastUpdate=os.clock();aCWHPTIm.Version=(aCWHPTIm.Version or 0)+1;cBzlOwFDf.LastInventorySource=aCWHPTIm.Source;return true end local function stlUMOaKTfm(update) if type(update)~="table" then return end if type(aCWHPTIm.Inventory)~="table" then aCWHPTIm.Inventory={} end local gPugwnFJFnNO=false;for branch,branchData in eaDsYcns(update)do aCWHPTIm.Inventory[branch]=OadjwfPrk(branchData);gPugwnFJFnNO=true end if gPugwnFJFnNO then aCWHPTIm.Source="DataUpdate";aCWHPTIm.LastUpdate=os.clock();aCWHPTIm.Version=(aCWHPTIm.Version or 0)+1;cBzlOwFDf.LastInventorySource="DataUpdate" end end function fshvbnQtAIC.InventoryPathParts(path) local AfrMnueZgzD={};if type(path)~="table" then return AfrMnueZgzD end for xJEdnwduH=1,12 do local PtWWWeZjj=hhlfqTFEdFdZ(path,xJEdnwduH);if PtWWWeZjj==nil then break end AfrMnueZgzD[#AfrMnueZgzD+1]=PtWWWeZjj end return AfrMnueZgzD end function fshvbnQtAIC.InventoryPathText(AfrMnueZgzD) local IpCmOXKp={};for _,ROfCweaW in veanYETtE(AfrMnueZgzD or{})do IpCmOXKp[#IpCmOXKp+1]=uGHbaWONyeld(ROfCweaW) end return table.concat(IpCmOXKp,".") end function fshvbnQtAIC.ApplyInventoryPathUpdate(evFESHvJD,path) local AfrMnueZgzD=fshvbnQtAIC.InventoryPathParts(path);if AfrMnueZgzD[1]~="Inventory" or AfrMnueZgzD[2]==nil then return false end if type(aCWHPTIm.Inventory)~="table" then aCWHPTIm.Inventory={} end if#AfrMnueZgzD==2 then aCWHPTIm.Inventory[AfrMnueZgzD[2]]=OadjwfPrk(evFESHvJD) else local NkNtaoIuyS=aCWHPTIm.Inventory;for xJEdnwduH=2,#AfrMnueZgzD-1 do local xbrZbULKJpu=AfrMnueZgzD[xJEdnwduH];local LRiwiZusxW=hhlfqTFEdFdZ(NkNtaoIuyS,xbrZbULKJpu);if type(LRiwiZusxW)~="table" then LRiwiZusxW={};NkNtaoIuyS[xbrZbULKJpu]=LRiwiZusxW end NkNtaoIuyS=LRiwiZusxW end NkNtaoIuyS[AfrMnueZgzD[#AfrMnueZgzD]]=OadjwfPrk(evFESHvJD) end aCWHPTIm.Source="DataUpdate-direct:"..fshvbnQtAIC.InventoryPathText(AfrMnueZgzD);aCWHPTIm.LastUpdate=os.clock();aCWHPTIm.Version=(aCWHPTIm.Version or 0)+1;cBzlOwFDf.LastInventorySource=aCWHPTIm.Source;return true end fshvbnQtAIC:Track(AGPhNwmOrzrE.OnClientEvent:Connect(function(evFESHvJD,path) if type(evFESHvJD)=="table" and type(fshvbnQtAIC.SyncWormDataUpdate)=="function" then fshvbnQtAIC.SyncWormDataUpdate(evFESHvJD,path) end if type(evFESHvJD)=="table" then local GKtbXevoURb=hhlfqTFEdFdZ(evFESHvJD,"Inventory");if type(GKtbXevoURb)=="table" then stlUMOaKTfm(GKtbXevoURb) end end fshvbnQtAIC.ApplyInventoryPathUpdate(evFESHvJD,path) end));local function FNaodVHC(yBZIhordjZ) if type(yBZIhordjZ)~="function" then return nil end if type(getupvalues)=="function" then local EJGgOEIJ,ufdLsSTNsvH=uUlvADpf(getupvalues,yBZIhordjZ);if EJGgOEIJ and type(ufdLsSTNsvH)=="table" then return ufdLsSTNsvH end end if debug and type(debug.getupvalues)=="function" then local EJGgOEIJ,ufdLsSTNsvH=uUlvADpf(debug.getupvalues,yBZIhordjZ);if EJGgOEIJ and type(ufdLsSTNsvH)=="table" then return ufdLsSTNsvH end end return nil end local function hXQBPiNs(xBMzMakXswu) local tgxxqOUF={};local oIMcFnstNAp=0;local function pvWTYdytr(PtWWWeZjj,depth) if type(PtWWWeZjj)~="table" or tgxxqOUF[PtWWWeZjj]then return nil end tgxxqOUF[PtWWWeZjj]=true;oIMcFnstNAp+=1;if oIMcFnstNAp>2500 then return nil end local GKtbXevoURb=hhlfqTFEdFdZ(PtWWWeZjj,"Inventory");if DswPFjSfu(GKtbXevoURb)then return GKtbXevoURb end if DswPFjSfu(PtWWWeZjj)then return PtWWWeZjj end if depth>=5 then return nil end for _,child in eaDsYcns(PtWWWeZjj)do if type(child)=="table" then local AXsMZDqGhS=pvWTYdytr(child,depth+1);if AXsMZDqGhS then return AXsMZDqGhS end end end return nil end return pvWTYdytr(xBMzMakXswu,0) end local function YQhovmXr() local htsBEZOUK=AgfhECWToMo();if htsBEZOUK and type(htsBEZOUK.GetInventory)=="function" then local EJGgOEIJ,GKtbXevoURb=uUlvADpf(function() return htsBEZOUK:GetInventory() end);if EJGgOEIJ and YTSxERowbwZR(GKtbXevoURb,"KiraInventory")then return true end end if type(getconnections)~="function" then return false end local EJGgOEIJ,DSYkCbiZGtC=uUlvADpf(getconnections,AGPhNwmOrzrE.OnClientEvent);if not EJGgOEIJ or type(DSYkCbiZGtC)~="table" then return false end for connectionIndex,connection in veanYETtE(DSYkCbiZGtC)do local yBZIhordjZ=nil;uUlvADpf(function() yBZIhordjZ=connection.Function end);if type(yBZIhordjZ)~="function" then uUlvADpf(function() yBZIhordjZ=connection.Callback end) end if type(yBZIhordjZ)=="function" then local HlpUYOZw=FNaodVHC(yBZIhordjZ);if type(HlpUYOZw)=="table" then for upvalueName,PtWWWeZjj in eaDsYcns(HlpUYOZw)do if type(PtWWWeZjj)=="table" then local GKtbXevoURb=hXQBPiNs(PtWWWeZjj);if GKtbXevoURb then return YTSxERowbwZR(GKtbXevoURb,"existing-cache:"..uGHbaWONyeld(connectionIndex)..":"..uGHbaWONyeld(upvalueName)) end end end end end end return false end YQhovmXr();if fshvbnQtAIC.WormBridge then fshvbnQtAIC.WormBridge:Bootstrap() end local function rkhbHUDbax(xBMzMakXswu,path,callback,tgxxqOUF) if type(xBMzMakXswu)~="table" then return end tgxxqOUF=tgxxqOUF or{};if tgxxqOUF[xBMzMakXswu]then return end tgxxqOUF[xBMzMakXswu]=true;local wKGDwIXKXV=hhlfqTFEdFdZ(xBMzMakXswu,"itemType") or hhlfqTFEdFdZ(xBMzMakXswu,"ItemType");local JfcjeQELl=hhlfqTFEdFdZ(xBMzMakXswu,"id") or hhlfqTFEdFdZ(xBMzMakXswu,"itemId") or hhlfqTFEdFdZ(xBMzMakXswu,"ItemId");if wKGDwIXKXV~=nil or JfcjeQELl~=nil then callback(xBMzMakXswu,path) end for xbrZbULKJpu,child in eaDsYcns(xBMzMakXswu)do if type(child)=="table" then rkhbHUDbax(child,path.."."..uGHbaWONyeld(xbrZbULKJpu),callback,tgxxqOUF) end end end function aCWHPTIm:IsReady() local htsBEZOUK=AgfhECWToMo();if htsBEZOUK then return true end return type(self.Inventory)=="table" end function aCWHPTIm:GetInventory() local htsBEZOUK=AgfhECWToMo();if htsBEZOUK and type(htsBEZOUK.GetInventory)=="function" then local EJGgOEIJ,GKtbXevoURb=uUlvADpf(function() return htsBEZOUK:GetInventory() end);if EJGgOEIJ and type(GKtbXevoURb)=="table" then self.Source="KiraInventory";local AwGkSgEV=SbqMasrkcJu(htsBEZOUK.LastUpdate);if AwGkSgEV and AwGkSgEV~=self.ExternalLastUpdate then self.ExternalLastUpdate=AwGkSgEV;self.LastUpdate=AwGkSgEV;self.Version=(self.Version or 0)+1 end cBzlOwFDf.LastInventorySource=self.Source;return GKtbXevoURb end end if htsBEZOUK and type(htsBEZOUK.Get)=="function" then local EJGgOEIJ,GKtbXevoURb=uUlvADpf(function() return htsBEZOUK:Get() end);if EJGgOEIJ and type(GKtbXevoURb)=="table" then self.Source="KiraFullInventory";local AwGkSgEV=SbqMasrkcJu(htsBEZOUK.LastUpdate);if AwGkSgEV and AwGkSgEV~=self.ExternalLastUpdate then self.ExternalLastUpdate=AwGkSgEV;self.LastUpdate=AwGkSgEV;self.Version=(self.Version or 0)+1 end cBzlOwFDf.LastInventorySource=self.Source;return GKtbXevoURb end end return self.Inventory and OadjwfPrk(self.Inventory)or nil end function fshvbnQtAIC.GetInventoryVersion() aCWHPTIm:GetInventory();return SbqMasrkcJu(aCWHPTIm.Version)or 0 end function fshvbnQtAIC.WaitForInventoryRefresh(previousVersion,eHPGDafMmf,timeout) local zkiSlLRkxM=os.clock()+(SbqMasrkcJu(timeout)or 2);while fshvbnQtAIC.Alive and not(type(eHPGDafMmf)=="function" and eHPGDafMmf()) and os.clock()<zkiSlLRkxM do if fshvbnQtAIC.GetInventoryVersion()~=previousVersion then return true end task.wait(0.08) end return false end function fshvbnQtAIC.ClearInventoryLocation(IfTslRvIzV,expectedItemId) if not IfTslRvIzV or type(aCWHPTIm.Inventory)~="table" then return false end local qciQaeXfT=hhlfqTFEdFdZ(aCWHPTIm.Inventory,IfTslRvIzV.Container);if type(qciQaeXfT)~="table" then return false end local IyBbcUdv=hhlfqTFEdFdZ(qciQaeXfT,IfTslRvIzV.Index);if IyBbcUdv==nil then return false end local chUTOAmJZMxi=hhlfqTFEdFdZ(IyBbcUdv,"id") or hhlfqTFEdFdZ(IyBbcUdv,"itemId") or hhlfqTFEdFdZ(IyBbcUdv,"ItemId") or hhlfqTFEdFdZ(IyBbcUdv,"Id") or hhlfqTFEdFdZ(IyBbcUdv,"uuid") or hhlfqTFEdFdZ(IyBbcUdv,"UUID");if expectedItemId~=nil and chUTOAmJZMxi~=nil and uGHbaWONyeld(chUTOAmJZMxi)~=uGHbaWONyeld(expectedItemId)then return false end qciQaeXfT[IfTslRvIzV.Index]=nil;return true end local function hXieAZcQMvRM(PtWWWeZjj,depth,tgxxqOUF) depth=depth or 0;tgxxqOUF=tgxxqOUF or{};if depth>4 then return "..." end if type(PtWWWeZjj)~="table" then return uGHbaWONyeld(PtWWWeZjj) end if tgxxqOUF[PtWWWeZjj]then return "<cycle>" end tgxxqOUF[PtWWWeZjj]=true;local AfrMnueZgzD={};for xbrZbULKJpu,child in eaDsYcns(PtWWWeZjj)do AfrMnueZgzD[#AfrMnueZgzD+1]=uGHbaWONyeld(xbrZbULKJpu).."="..hXieAZcQMvRM(child,depth+1,tgxxqOUF) end table.sort(AfrMnueZgzD);tgxxqOUF[PtWWWeZjj]=nil;return "{"..table.concat(AfrMnueZgzD,",").."}" end local function TGOrdAtwLc(IyBbcUdv) if type(IyBbcUdv)~="table" then return "" end local AfrMnueZgzD={};local tgxxqOUF={};local function toeCgVwbHj(PtWWWeZjj,path,depth) if type(PtWWWeZjj)~="table" or tgxxqOUF[PtWWWeZjj] or depth>5 then return end tgxxqOUF[PtWWWeZjj]=true;for xbrZbULKJpu,child in eaDsYcns(PtWWWeZjj)do local BLVKFXOjSqH=nJyKDUmaGk(xbrZbULKJpu);local mcprXUNW=path=="" and uGHbaWONyeld(xbrZbULKJpu) or(path.."."..uGHbaWONyeld(xbrZbULKJpu));if string.find(BLVKFXOjSqH,"mutation",1,true)then local zSxrzFgPEf=child~=nil and child~=false and child~="" and child~=0 and nJyKDUmaGk(child)~="none" and nJyKDUmaGk(child)~="false" and not(type(child)=="table" and KanmBFSlA(child)==nil);if zSxrzFgPEf then AfrMnueZgzD[#AfrMnueZgzD+1]=mcprXUNW.."="..hXieAZcQMvRM(child) end elseif type(child)=="table" then toeCgVwbHj(child,mcprXUNW,depth+1) end end tgxxqOUF[PtWWWeZjj]=nil end toeCgVwbHj(IyBbcUdv,"",0);table.sort(AfrMnueZgzD);return table.concat(AfrMnueZgzD," | ") end local function UoByyZgreHvy(path) path=uGHbaWONyeld(path or "");local qciQaeXfT,MWiMHyPMgK=path:match("^Inventory%.([^%.]+)%.(%d+)$");local xJEdnwduH=SbqMasrkcJu(MWiMHyPMgK);if not qciQaeXfT or not xJEdnwduH then return nil end if qciQaeXfT=="Hotbar" then return{Container="Hotbar",IsHotbar=true,Index=xJEdnwduH,} elseif qciQaeXfT=="Storage" then return{Container="Storage",IsHotbar=false,Index=xJEdnwduH,} end return nil end function aCWHPTIm:GetSeeds() local GKtbXevoURb=self:GetInventory();local VhxXvJfwOSi={};if type(GKtbXevoURb)~="table" then return VhxXvJfwOSi end local function OcslqAqB(IyBbcUdv) local PtWWWeZjj=hhlfqTFEdFdZ(IyBbcUdv,"seedType") or hhlfqTFEdFdZ(IyBbcUdv,"SeedType") or hhlfqTFEdFdZ(IyBbcUdv,"seed") or hhlfqTFEdFdZ(IyBbcUdv,"Seed") or hhlfqTFEdFdZ(IyBbcUdv,"name") or hhlfqTFEdFdZ(IyBbcUdv,"Name") or hhlfqTFEdFdZ(IyBbcUdv,"itemName") or hhlfqTFEdFdZ(IyBbcUdv,"ItemName") or hhlfqTFEdFdZ(IyBbcUdv,"displayName") or hhlfqTFEdFdZ(IyBbcUdv,"DisplayName");if type(PtWWWeZjj)~="string" then return nil end local sTKvAZplZih=LZbzxSnPKwZI(PtWWWeZjj);if sTKvAZplZih=="" or nJyKDUmaGk(sTKvAZplZih)=="seed" then return nil end return sTKvAZplZih end rkhbHUDbax(GKtbXevoURb,"Inventory",function(IyBbcUdv,path) local wKGDwIXKXV=nJyKDUmaGk(hhlfqTFEdFdZ(IyBbcUdv,"itemType") or hhlfqTFEdFdZ(IyBbcUdv,"ItemType"));if wKGDwIXKXV=="seed" then local rrgjhycHRe=TGOrdAtwLc(IyBbcUdv);local IfTslRvIzV=UoByyZgreHvy(path);local sTKvAZplZih=OcslqAqB(IyBbcUdv);if sTKvAZplZih then VhxXvJfwOSi[#VhxXvJfwOSi+1]={SeedType=sTKvAZplZih,Count=SbqMasrkcJu(hhlfqTFEdFdZ(IyBbcUdv,"count") or hhlfqTFEdFdZ(IyBbcUdv,"Count") or 1)or 1,Id=hhlfqTFEdFdZ(IyBbcUdv,"id") or hhlfqTFEdFdZ(IyBbcUdv,"itemId") or hhlfqTFEdFdZ(IyBbcUdv,"ItemId"),Mutation=rrgjhycHRe,IsMutated=rrgjhycHRe~="",Path=path,Location=IfTslRvIzV,Data=OadjwfPrk(IyBbcUdv),} end end end);table.sort(VhxXvJfwOSi,function(a,b) if nJyKDUmaGk(a.SeedType)~=nJyKDUmaGk(b.SeedType)then return nJyKDUmaGk(a.SeedType)<nJyKDUmaGk(b.SeedType) end if a.IsMutated~=b.IsMutated then return not a.IsMutated end return uGHbaWONyeld(a.Path)<uGHbaWONyeld(b.Path) end);return VhxXvJfwOSi end function aCWHPTIm:GetSeedCount(lsmMNuktk) local tgukJtbvcn=nJyKDUmaGk(lsmMNuktk);local DaUPIFdsh=0;for _,seed in veanYETtE(self:GetSeeds())do if nJyKDUmaGk(seed.SeedType)==tgukJtbvcn then DaUPIFdsh+=SbqMasrkcJu(seed.Count)or 0 end end return DaUPIFdsh end function aCWHPTIm:ResolveSeed(lsmMNuktk,QarnXbaa) local tgukJtbvcn=nJyKDUmaGk(lsmMNuktk);local chUTOAmJZMxi=nil;if QarnXbaa then chUTOAmJZMxi=QarnXbaa:GetAttribute("ItemId") or QarnXbaa:GetAttribute("itemId") or QarnXbaa:GetAttribute("id") end local tQBwhCUdg={};for _,seed in veanYETtE(self:GetSeeds())do if nJyKDUmaGk(seed.SeedType)==tgukJtbvcn and(SbqMasrkcJu(seed.Count)or 0)>0 and seed.Location~=nil and(TLDNAtPoWKo.AllowMutatedSeeds or not seed.IsMutated)then local pjGsreUjsmdl=SbqMasrkcJu(seed.Count)or 0;if not seed.IsMutated then pjGsreUjsmdl+=1000000000000000 end if chUTOAmJZMxi~=nil and uGHbaWONyeld(seed.Id)==uGHbaWONyeld(chUTOAmJZMxi)then pjGsreUjsmdl+=1000000000000 end if seed.Location.IsHotbar then pjGsreUjsmdl+=1000000000 end tQBwhCUdg[#tQBwhCUdg+1]={SeedType=seed.SeedType,Count=seed.Count,Id=seed.Id,Mutation=seed.Mutation,IsMutated=seed.IsMutated,Path=seed.Path,Location=seed.Location,Data=seed.Data,Score=pjGsreUjsmdl,} end end table.sort(tQBwhCUdg,function(a,b) if a.Score==b.Score then return uGHbaWONyeld(a.Path)<uGHbaWONyeld(b.Path) end return a.Score>b.Score end);return tQBwhCUdg[1] end fshvbnQtAIC.GetItemMutationSignature=TGOrdAtwLc;fshvbnQtAIC.ParseInventoryLocation=UoByyZgreHvy;do local function MkmjZelTHq(PtWWWeZjj,JHHCtsZoh) local piyYXrqJ=SbqMasrkcJu(uGHbaWONyeld(PtWWWeZjj or ""):match("%-?%d+%.?%d*") or uGHbaWONyeld(PtWWWeZjj or ""):match("%-?%.%d+") or PtWWWeZjj) or SbqMasrkcJu(JHHCtsZoh) or 5;piyYXrqJ=math.max(0,piyYXrqJ);return math.floor(piyYXrqJ*100+0.5)/100 end local function xPNYhSbNZxjf(PtWWWeZjj,JHHCtsZoh) PtWWWeZjj=uGHbaWONyeld(PtWWWeZjj or JHHCtsZoh or "Lowest");if PtWWWeZjj=="Highest" then return "Highest" end return "Lowest" end local function mJrfmQhPwzFJ(PtWWWeZjj,JHHCtsZoh) PtWWWeZjj=type(PtWWWeZjj)=="table" and PtWWWeZjj or{};JHHCtsZoh=type(JHHCtsZoh)=="table" and JHHCtsZoh or{};local sUhUPqZnBH=MkmjZelTHq(PtWWWeZjj.MinMult or PtWWWeZjj.Min or PtWWWeZjj.Minimum,JHHCtsZoh.MinMult or TLDNAtPoWKo.WormMultiplierMin or 5);local ecUZIczDurH=MkmjZelTHq(PtWWWeZjj.MaxMult or PtWWWeZjj.Max or PtWWWeZjj.Maximum,JHHCtsZoh.MaxMult or TLDNAtPoWKo.WormMultiplierMax or 10);if sUhUPqZnBH>ecUZIczDurH then sUhUPqZnBH,ecUZIczDurH=ecUZIczDurH,sUhUPqZnBH end local loQROJgvLDw=PtWWWeZjj.Use~=nil and PtWWWeZjj.Use==true or(PtWWWeZjj.Use==nil and JHHCtsZoh.Use==true);local zJpXZtcisnj=fshvbnQtAIC.NormalizeWormTypeSelection or function(fbgpZkxTxm,allowEmpty) if type(fbgpZkxTxm)~="table" then fbgpZkxTxm=fbgpZkxTxm==nil and{}or{fbgpZkxTxm} end if#fbgpZkxTxm==0 and not allowEmpty then return{"Worm"} end return fbgpZkxTxm end local sjNafHfgdkQ=PtWWWeZjj.Types or PtWWWeZjj.WormTypes or JHHCtsZoh.Types or(loQROJgvLDw and TLDNAtPoWKo.WormTypes or{});local fbgpZkxTxm=zJpXZtcisnj(sjNafHfgdkQ,true);if loQROJgvLDw and#fbgpZkxTxm==0 then fbgpZkxTxm=zJpXZtcisnj(TLDNAtPoWKo.WormTypes or{"Worm"}) elseif not loQROJgvLDw then fbgpZkxTxm=zJpXZtcisnj(fbgpZkxTxm,true) end return{Use=loQROJgvLDw and#fbgpZkxTxm>0,Types=fbgpZkxTxm,SortMode=xPNYhSbNZxjf(PtWWWeZjj.SortMode or PtWWWeZjj.Priority,JHHCtsZoh.SortMode or TLDNAtPoWKo.WormSortMode),MinMult=sUhUPqZnBH,MaxMult=ecUZIczDurH,} end local function esfvjgqUYXky() return mJrfmQhPwzFJ({Use=TLDNAtPoWKo.UseWorm,Types=TLDNAtPoWKo.WormTypes,SortMode=TLDNAtPoWKo.WormSortMode,MinMult=TLDNAtPoWKo.WormMultiplierMin,MaxMult=TLDNAtPoWKo.WormMultiplierMax,}) end local function bsvPICodJ(PtWWWeZjj) local WdljNFWSXs=mJrfmQhPwzFJ(PtWWWeZjj,esfvjgqUYXky());TLDNAtPoWKo.UseWorm=WdljNFWSXs.Use;TLDNAtPoWKo.WormTypes=WdljNFWSXs.Types;TLDNAtPoWKo.WormSortMode=WdljNFWSXs.SortMode;TLDNAtPoWKo.WormMultiplierMin=WdljNFWSXs.MinMult;TLDNAtPoWKo.WormMultiplierMax=WdljNFWSXs.MaxMult;return WdljNFWSXs end function fshvbnQtAIC.GetWormSettingsForSeed(lsmMNuktk) local nJqSviaCyyV=esfvjgqUYXky();TLDNAtPoWKo.WormTypesLocked=TLDNAtPoWKo.WormTypesLocked~=false;TLDNAtPoWKo.WormPriorityLocked=TLDNAtPoWKo.WormPriorityLocked~=false;TLDNAtPoWKo.WormSettingsLocked=TLDNAtPoWKo.WormTypesLocked and TLDNAtPoWKo.WormPriorityLocked;if TLDNAtPoWKo.WormTypesLocked and TLDNAtPoWKo.WormPriorityLocked then return nJqSviaCyyV end if type(TLDNAtPoWKo.WormSettings)~="table" then TLDNAtPoWKo.WormSettings={} end local WdljNFWSXs=mJrfmQhPwzFJ(TLDNAtPoWKo.WormSettings[uGHbaWONyeld(lsmMNuktk or "")],nJqSviaCyyV);if TLDNAtPoWKo.WormTypesLocked then WdljNFWSXs.Use=nJqSviaCyyV.Use;WdljNFWSXs.Types=OadjwfPrk(nJqSviaCyyV.Types) end if TLDNAtPoWKo.WormPriorityLocked then WdljNFWSXs.SortMode=nJqSviaCyyV.SortMode end WdljNFWSXs.MinMult=nJqSviaCyyV.MinMult;WdljNFWSXs.MaxMult=nJqSviaCyyV.MaxMult;return mJrfmQhPwzFJ(WdljNFWSXs,nJqSviaCyyV) end function fshvbnQtAIC.SetWormSettingsForSeed(lsmMNuktk,PtWWWeZjj) local RKACuUwR=uGHbaWONyeld(lsmMNuktk or "");local nJqSviaCyyV=esfvjgqUYXky();local wwcpoECkJG=mJrfmQhPwzFJ(type(TLDNAtPoWKo.WormSettings)=="table" and TLDNAtPoWKo.WormSettings[RKACuUwR] or nil,nJqSviaCyyV);local WdljNFWSXs=mJrfmQhPwzFJ(PtWWWeZjj,wwcpoECkJG);TLDNAtPoWKo.WormTypesLocked=TLDNAtPoWKo.WormTypesLocked~=false;TLDNAtPoWKo.WormPriorityLocked=TLDNAtPoWKo.WormPriorityLocked~=false;TLDNAtPoWKo.WormSettingsLocked=TLDNAtPoWKo.WormTypesLocked and TLDNAtPoWKo.WormPriorityLocked;if TLDNAtPoWKo.WormTypesLocked and TLDNAtPoWKo.WormPriorityLocked then return bsvPICodJ(WdljNFWSXs) end if type(TLDNAtPoWKo.WormSettings)~="table" then TLDNAtPoWKo.WormSettings={} end if TLDNAtPoWKo.WormTypesLocked then WdljNFWSXs.Use=wwcpoECkJG.Use;WdljNFWSXs.Types=wwcpoECkJG.Types end if TLDNAtPoWKo.WormPriorityLocked then WdljNFWSXs.SortMode=wwcpoECkJG.SortMode end WdljNFWSXs.MinMult=nJqSviaCyyV.MinMult;WdljNFWSXs.MaxMult=nJqSviaCyyV.MaxMult;TLDNAtPoWKo.WormSettings[RKACuUwR]=WdljNFWSXs;return fshvbnQtAIC.GetWormSettingsForSeed(RKACuUwR) end function fshvbnQtAIC.GetSharedWormSettings() return esfvjgqUYXky() end function fshvbnQtAIC.SetSharedWormSettings(PtWWWeZjj) return bsvPICodJ(PtWWWeZjj) end function fshvbnQtAIC.ExportWormSettingsState() TLDNAtPoWKo.WormTypesLocked=TLDNAtPoWKo.WormTypesLocked~=false;TLDNAtPoWKo.WormPriorityLocked=TLDNAtPoWKo.WormPriorityLocked~=false;TLDNAtPoWKo.WormSettingsLocked=TLDNAtPoWKo.WormTypesLocked and TLDNAtPoWKo.WormPriorityLocked;return{Locked=TLDNAtPoWKo.WormSettingsLocked==true,TypesLocked=TLDNAtPoWKo.WormTypesLocked==true,PriorityLocked=TLDNAtPoWKo.WormPriorityLocked==true,Shared=esfvjgqUYXky(),Values=OadjwfPrk(TLDNAtPoWKo.WormSettings or{}),} end function fshvbnQtAIC.ApplyWormSettingsState(PtWWWeZjj) if type(PtWWWeZjj)=="table" then local xhKytNevN=PtWWWeZjj.Locked~=false;local kXRzvgHXwyxB=PtWWWeZjj.TypesLocked;if kXRzvgHXwyxB==nil then kXRzvgHXwyxB=PtWWWeZjj.WormTypesLocked end local eKSkfPPyy=PtWWWeZjj.PriorityLocked;if eKSkfPPyy==nil then eKSkfPPyy=PtWWWeZjj.WormPriorityLocked end TLDNAtPoWKo.WormTypesLocked=kXRzvgHXwyxB==nil and xhKytNevN or kXRzvgHXwyxB==true;TLDNAtPoWKo.WormPriorityLocked=eKSkfPPyy==nil and xhKytNevN or eKSkfPPyy==true;TLDNAtPoWKo.WormSettingsLocked=TLDNAtPoWKo.WormTypesLocked and TLDNAtPoWKo.WormPriorityLocked;bsvPICodJ(PtWWWeZjj.Shared or PtWWWeZjj.Default or PtWWWeZjj);TLDNAtPoWKo.WormSettings={};if type(PtWWWeZjj.Values)=="table" then local nJqSviaCyyV=esfvjgqUYXky();for lsmMNuktk,WdljNFWSXs in ODdZWYTinmZ(PtWWWeZjj.Values)do TLDNAtPoWKo.WormSettings[uGHbaWONyeld(lsmMNuktk)]=mJrfmQhPwzFJ(WdljNFWSXs,nJqSviaCyyV) end end end return fshvbnQtAIC.ExportWormSettingsState() end end local function GmpDMBtRVkw(grIugrUBSNbw) if not grIugrUBSNbw then return nil end return grIugrUBSNbw:GetAttribute("ItemId") or grIugrUBSNbw:GetAttribute("itemId") or grIugrUBSNbw:GetAttribute("Id") or grIugrUBSNbw:GetAttribute("id") end local function mmxnGWQd(grIugrUBSNbw,lsmMNuktk,expectedItemId) if not grIugrUBSNbw or not grIugrUBSNbw:IsA("Tool")then return false end if grIugrUBSNbw:GetAttribute("IsSeed")==false then return false end local tgukJtbvcn=nJyKDUmaGk(lsmMNuktk);local vgXlGfJVfbB=grIugrUBSNbw:GetAttribute("SeedType") or grIugrUBSNbw:GetAttribute("Seed") or grIugrUBSNbw:GetAttribute("SeedName") or grIugrUBSNbw:GetAttribute("Item");local XBDQRFUXMeKb=false;if vgXlGfJVfbB~=nil then XBDQRFUXMeKb=nJyKDUmaGk(vgXlGfJVfbB)==tgukJtbvcn else local vwburqcFwh=nJyKDUmaGk(grIugrUBSNbw.Name);XBDQRFUXMeKb=vwburqcFwh==tgukJtbvcn or vwburqcFwh==tgukJtbvcn.." seed" or(string.sub(vwburqcFwh,1,#tgukJtbvcn)==tgukJtbvcn and string.find(string.sub(vwburqcFwh,#tgukJtbvcn+1),"seed",1,true)~=nil) end if not XBDQRFUXMeKb then return false end if expectedItemId~=nil then local nqkusLYWzBgp=GmpDMBtRVkw(grIugrUBSNbw);if nqkusLYWzBgp==nil or uGHbaWONyeld(nqkusLYWzBgp)~=uGHbaWONyeld(expectedItemId)then return false end end return true end local function PWfMBRviip(lsmMNuktk,expectedItemId,timeout) local zkiSlLRkxM=os.clock()+(SbqMasrkcJu(timeout)or 1.5);while fshvbnQtAIC.Alive and os.clock()<zkiSlLRkxM do local CSrMkhjAHppN=DZnpetDwcKH();if#CSrMkhjAHppN==1 then local onBXZdEhBMd=CSrMkhjAHppN[1];if mmxnGWQd(onBXZdEhBMd,lsmMNuktk,expectedItemId)then return onBXZdEhBMd end end task.wait(0.025) end return nil end local function UlvsGTYHbbf(lsmMNuktk,KdIMFIifT) local aYJmMMga=klMYKcVhM();if not aYJmMMga then return false,"character missing" end if not KdIMFIifT or not KdIMFIifT.Location then return false,"inventory location missing" end local VVQxprhSiG=KdIMFIifT.Id;local wwcpoECkJG=xqMPKmZFg();if wwcpoECkJG and mmxnGWQd(wwcpoECkJG,lsmMNuktk,VVQxprhSiG)then return true end local IfTslRvIzV=KdIMFIifT.Location;local EJGgOEIJ,qtFnxqcHneA=uUlvADpf(function() MeNCKzfHJ:FireServer(IfTslRvIzV.IsHotbar,IfTslRvIzV.Index) end);if not EJGgOEIJ then return false,"ToggleEquip failed: "..uGHbaWONyeld(qtFnxqcHneA) end local onBXZdEhBMd=PWfMBRviip(lsmMNuktk,VVQxprhSiG,1.75);if not onBXZdEhBMd then return false,"ToggleEquip did not produce exact SeedType + ItemId" end return true end local function euNHnYIhQPb(lsmMNuktk) local wwcpoECkJG=xqMPKmZFg();local KdIMFIifT=aCWHPTIm:ResolveSeed(lsmMNuktk,wwcpoECkJG);if not KdIMFIifT then local tPwScSHj=aCWHPTIm:GetSeedCount(lsmMNuktk);if tPwScSHj>0 and not TLDNAtPoWKo.AllowMutatedSeeds then return nil,nil,"Only mutated "..uGHbaWONyeld(lsmMNuktk).." seeds are available" end return nil,nil,"Seed not found in your bag: "..uGHbaWONyeld(lsmMNuktk) end if wwcpoECkJG and mmxnGWQd(wwcpoECkJG,lsmMNuktk,KdIMFIifT.Id)then return wwcpoECkJG,KdIMFIifT end if not UlvsGTYHbbf(lsmMNuktk,KdIMFIifT)then return nil,KdIMFIifT,"Could not equip exact inventory seed "..uGHbaWONyeld(lsmMNuktk).." ("..uGHbaWONyeld(KdIMFIifT.Path)..", id="..uGHbaWONyeld(KdIMFIifT.Id)..")" end local onBXZdEhBMd=PWfMBRviip(lsmMNuktk,KdIMFIifT.Id,1.5);if not onBXZdEhBMd then return nil,KdIMFIifT,"Equipped Tool did not match SeedType + ItemId" end return onBXZdEhBMd,KdIMFIifT end local function icaoavey(lsmMNuktk,expectedItemId) local cJDThGED={0,0.05,0.05};for xJEdnwduH,ptGKxxnFQJIu in veanYETtE(cJDThGED)do if ptGKxxnFQJIu>0 then task.wait(ptGKxxnFQJIu) end local CSrMkhjAHppN=DZnpetDwcKH();local grIugrUBSNbw=CSrMkhjAHppN[1];if#CSrMkhjAHppN~=1 or not grIugrUBSNbw or not mmxnGWQd(grIugrUBSNbw,lsmMNuktk,expectedItemId)then return false,"seed verify #"..uGHbaWONyeld(xJEdnwduH).." failed (equipped tools="..uGHbaWONyeld(#CSrMkhjAHppN)..")" end end return true end local function HLgKtmFAAZmj(PtWWWeZjj,qyCbjqbYsQR) if type(PtWWWeZjj)~="string" then return false end return string.find(string.lower(PtWWWeZjj),string.lower(qyCbjqbYsQR),1,true)~=nil end local function dieQAZAcdj(IyBbcUdv) return hhlfqTFEdFdZ(IyBbcUdv,"id") or hhlfqTFEdFdZ(IyBbcUdv,"itemId") or hhlfqTFEdFdZ(IyBbcUdv,"ItemId") or hhlfqTFEdFdZ(IyBbcUdv,"Id") or hhlfqTFEdFdZ(IyBbcUdv,"uuid") or hhlfqTFEdFdZ(IyBbcUdv,"UUID") end local function TIwyOQfhBRf(IyBbcUdv) if type(IyBbcUdv)~="table" then return nil end local wKGDwIXKXV=nJyKDUmaGk(hhlfqTFEdFdZ(IyBbcUdv,"itemType") or hhlfqTFEdFdZ(IyBbcUdv,"ItemType"));local ykrisuwEJX=hhlfqTFEdFdZ(IyBbcUdv,"isDead") or hhlfqTFEdFdZ(IyBbcUdv,"IsDead") or hhlfqTFEdFdZ(IyBbcUdv,"Dead");if wKGDwIXKXV=="tree" and ykrisuwEJX~=nil then if ykrisuwEJX~=true then return nil end local hguGucvStW=hhlfqTFEdFdZ(IyBbcUdv,"seedType") or hhlfqTFEdFdZ(IyBbcUdv,"SeedType") or hhlfqTFEdFdZ(IyBbcUdv,"treeType") or hhlfqTFEdFdZ(IyBbcUdv,"TreeType") or "Tree";return{TreeType=hguGucvStW,DisplayName="Dead "..uGHbaWONyeld(hguGucvStW).." Tree",Multiplier=SbqMasrkcJu(hhlfqTFEdFdZ(IyBbcUdv,"multiplier") or hhlfqTFEdFdZ(IyBbcUdv,"Multiplier") or hhlfqTFEdFdZ(IyBbcUdv,"mult") or hhlfqTFEdFdZ(IyBbcUdv,"Mult")),WoodValue=SbqMasrkcJu(hhlfqTFEdFdZ(IyBbcUdv,"woodValue") or hhlfqTFEdFdZ(IyBbcUdv,"WoodValue")),ItemId=dieQAZAcdj(IyBbcUdv),Raw=IyBbcUdv,} end local spaaPGIQMBw=false;local LIRNCRFC=false;local hguGucvStW=nil;local xJQgSeNIDqnE=nil;local wbnEtBqPQbv=nil;local JfcjeQELl=dieQAZAcdj(IyBbcUdv);local function NAkOJdUjGj(PtWWWeZjj) PtWWWeZjj=uGHbaWONyeld(PtWWWeZjj or "");if PtWWWeZjj=="" or#PtWWWeZjj>80 then return false end return HLgKtmFAAZmj(PtWWWeZjj,"dead") or HLgKtmFAAZmj(PtWWWeZjj,"tree") or PtWWWeZjj:match("%([%d%.]+%s*[xX]%)")~=nil end local function EvMskxFam(PtWWWeZjj) PtWWWeZjj=uGHbaWONyeld(PtWWWeZjj or "");if NAkOJdUjGj(PtWWWeZjj)and not wbnEtBqPQbv then wbnEtBqPQbv=PtWWWeZjj end if HLgKtmFAAZmj(PtWWWeZjj,"tree")then spaaPGIQMBw=true end if HLgKtmFAAZmj(PtWWWeZjj,"dead")then LIRNCRFC=true end local MZsrSQAjobux=PtWWWeZjj:match("[Dd]ead%s+(.+)%s+[Tt]ree") or PtWWWeZjj:match("(.+)%s+[Tt]ree");if MZsrSQAjobux and MZsrSQAjobux~="" and not hguGucvStW then hguGucvStW=MZsrSQAjobux end local BUtnBlKDH=PtWWWeZjj:match("%(([%d%.]+)%s*[xX]%)");if BUtnBlKDH and not xJQgSeNIDqnE then xJQgSeNIDqnE=SbqMasrkcJu(BUtnBlKDH) end end local function toeCgVwbHj(PtWWWeZjj,xbrZbULKJpu,depth,tgxxqOUF) if depth>5 then return end local BLVKFXOjSqH=string.lower(uGHbaWONyeld(xbrZbULKJpu or ""));if type(PtWWWeZjj)=="string" then local IpCmOXKp=string.lower(PtWWWeZjj);if string.find(IpCmOXKp,"tree",1,true)then spaaPGIQMBw=true end if string.find(IpCmOXKp,"dead",1,true)then LIRNCRFC=true end if BLVKFXOjSqH=="treetype" or BLVKFXOjSqH=="tree" or BLVKFXOjSqH=="seedtype" or BLVKFXOjSqH=="name" or BLVKFXOjSqH=="displayname" then EvMskxFam(PtWWWeZjj);if not hguGucvStW and BLVKFXOjSqH~="name" and BLVKFXOjSqH~="displayname" then hguGucvStW=PtWWWeZjj end else EvMskxFam(PtWWWeZjj) end if(BLVKFXOjSqH=="id" or BLVKFXOjSqH=="itemid" or BLVKFXOjSqH=="uuid")and not JfcjeQELl then JfcjeQELl=PtWWWeZjj end elseif type(PtWWWeZjj)=="boolean" then if PtWWWeZjj==true and(BLVKFXOjSqH=="dead" or BLVKFXOjSqH=="isdead" or string.find(BLVKFXOjSqH,"dead",1,true))then LIRNCRFC=true end if PtWWWeZjj==true and string.find(BLVKFXOjSqH,"tree",1,true)then spaaPGIQMBw=true end elseif type(PtWWWeZjj)=="number" then if string.find(BLVKFXOjSqH,"mult",1,true) or BLVKFXOjSqH=="multiplier" then xJQgSeNIDqnE=xJQgSeNIDqnE or PtWWWeZjj end elseif type(PtWWWeZjj)=="table" then tgxxqOUF=tgxxqOUF or{};if tgxxqOUF[PtWWWeZjj]then return end tgxxqOUF[PtWWWeZjj]=true;local YMmhuctqFu=0;for childKey,childValue in eaDsYcns(PtWWWeZjj)do YMmhuctqFu+=1;if YMmhuctqFu>120 then break end toeCgVwbHj(childValue,childKey,depth+1,tgxxqOUF) end tgxxqOUF[PtWWWeZjj]=nil end end EvMskxFam(hhlfqTFEdFdZ(IyBbcUdv,"name") or hhlfqTFEdFdZ(IyBbcUdv,"Name") or hhlfqTFEdFdZ(IyBbcUdv,"displayName") or hhlfqTFEdFdZ(IyBbcUdv,"DisplayName") or hhlfqTFEdFdZ(IyBbcUdv,"treeType") or hhlfqTFEdFdZ(IyBbcUdv,"TreeType") or hhlfqTFEdFdZ(IyBbcUdv,"seedType") or hhlfqTFEdFdZ(IyBbcUdv,"SeedType"));toeCgVwbHj(IyBbcUdv,"",0,{});if hhlfqTFEdFdZ(IyBbcUdv,"isDead")==true or hhlfqTFEdFdZ(IyBbcUdv,"IsDead")==true or hhlfqTFEdFdZ(IyBbcUdv,"Dead")==true then LIRNCRFC=true end if HLgKtmFAAZmj(hhlfqTFEdFdZ(IyBbcUdv,"itemType"),"tree") or HLgKtmFAAZmj(hhlfqTFEdFdZ(IyBbcUdv,"ItemType"),"tree") or hhlfqTFEdFdZ(IyBbcUdv,"TreeType")~=nil or hhlfqTFEdFdZ(IyBbcUdv,"treeType")~=nil then spaaPGIQMBw=true end if not spaaPGIQMBw or not LIRNCRFC then return nil end return{TreeType=hguGucvStW or "Unknown",DisplayName=wbnEtBqPQbv,Multiplier=xJQgSeNIDqnE,ItemId=JfcjeQELl,Raw=IyBbcUdv,} end local function hDCjnTvc(vgsLowTWAR) if not vgsLowTWAR then return "Dead Tree" end local fBBRHrrWC=uGHbaWONyeld(vgsLowTWAR.DisplayName or "");if fBBRHrrWC=="" then fBBRHrrWC=uGHbaWONyeld(vgsLowTWAR.TreeType or "Tree") end if not HLgKtmFAAZmj(fBBRHrrWC,"dead")then fBBRHrrWC="Dead "..fBBRHrrWC end if not HLgKtmFAAZmj(fBBRHrrWC,"tree")then fBBRHrrWC=fBBRHrrWC.." Tree" end if vgsLowTWAR.Multiplier and not fBBRHrrWC:match("%([%d%.]+%s*[xX]%)")then fBBRHrrWC=fBBRHrrWC.." ("..uGHbaWONyeld(vgsLowTWAR.Multiplier).."x)" end return fBBRHrrWC end local function nGeJGDHYA() if not aCWHPTIm:IsReady()then YQhovmXr() end local GKtbXevoURb=aCWHPTIm:GetInventory();local JwvPnUXQIS={};if type(GKtbXevoURb)~="table" then return JwvPnUXQIS end rkhbHUDbax(GKtbXevoURb,"Inventory",function(IyBbcUdv,path) local IfTslRvIzV=UoByyZgreHvy(path);if not IfTslRvIzV then return end local vgsLowTWAR=TIwyOQfhBRf(IyBbcUdv);if vgsLowTWAR then vgsLowTWAR.Index=IfTslRvIzV.Index;vgsLowTWAR.IsHotbar=IfTslRvIzV.IsHotbar;vgsLowTWAR.Container=IfTslRvIzV.Container;vgsLowTWAR.Path=path;vgsLowTWAR.Location=IfTslRvIzV;JwvPnUXQIS[#JwvPnUXQIS+1]=vgsLowTWAR end end);table.sort(JwvPnUXQIS,function(a,b) return uGHbaWONyeld(a.Path)<uGHbaWONyeld(b.Path) end);return JwvPnUXQIS end fshvbnQtAIC.GetDeadTrees=nGeJGDHYA;fshvbnQtAIC.PrintDeadTrees=function() local iCIxmInC=nGeJGDHYA();SgnOPZlC("");SgnOPZlC("===== KIRA DEAD TREES =====");for xJEdnwduH,vgsLowTWAR in veanYETtE(iCIxmInC)do SgnOPZlC(xJEdnwduH,vgsLowTWAR.Path,"|",hDCjnTvc(vgsLowTWAR),"| ID:",uGHbaWONyeld(vgsLowTWAR.ItemId)) end SgnOPZlC("Total:",#iCIxmInC);SgnOPZlC("===========================") end local function kmFhbDBmykTh(grIugrUBSNbw,vgsLowTWAR,allowLoose) if not grIugrUBSNbw or not grIugrUBSNbw:IsA("Tool")or not vgsLowTWAR then return false end local VVQxprhSiG=vgsLowTWAR.ItemId;local nqkusLYWzBgp=GmpDMBtRVkw(grIugrUBSNbw);if VVQxprhSiG~=nil then if nqkusLYWzBgp~=nil then return uGHbaWONyeld(nqkusLYWzBgp)==uGHbaWONyeld(VVQxprhSiG) end if allowLoose~=true then return false end end local vwburqcFwh=uGHbaWONyeld(grIugrUBSNbw.Name or "");if HLgKtmFAAZmj(vwburqcFwh,"dead") and HLgKtmFAAZmj(vwburqcFwh,"tree")then return true end if grIugrUBSNbw:GetAttribute("IsDead")==true or grIugrUBSNbw:GetAttribute("Dead")==true then if grIugrUBSNbw:GetAttribute("TreeType")~=nil or grIugrUBSNbw:GetAttribute("treeType")~=nil or HLgKtmFAAZmj(vwburqcFwh,"tree")then return true end end return false end local function sONGYtILv(vgsLowTWAR,timeout) local zkiSlLRkxM=os.clock()+(SbqMasrkcJu(timeout)or 2);while fshvbnQtAIC.Alive and os.clock()<zkiSlLRkxM do local CSrMkhjAHppN=DZnpetDwcKH();if#CSrMkhjAHppN==1 and kmFhbDBmykTh(CSrMkhjAHppN[1],vgsLowTWAR,true)then return CSrMkhjAHppN[1] end task.wait(0.03) end return nil end local function brpljcZjs() local KjfnvTNyk=pgaQZNmdOSpc();if KjfnvTNyk then uUlvADpf(function() KjfnvTNyk:UnequipTools() end) end task.wait(0.05) end local function WyjIiCMQyP(vgsLowTWAR) if not vgsLowTWAR or not vgsLowTWAR.Location then return nil,"inventory location missing" end local wwcpoECkJG=xqMPKmZFg();if kmFhbDBmykTh(wwcpoECkJG,vgsLowTWAR,false)then return wwcpoECkJG end brpljcZjs();local EJGgOEIJ,qtFnxqcHneA=uUlvADpf(function() MeNCKzfHJ:FireServer(vgsLowTWAR.Location.IsHotbar,vgsLowTWAR.Location.Index) end);if not EJGgOEIJ then return nil,"Equip failed: "..uGHbaWONyeld(qtFnxqcHneA) end local onBXZdEhBMd=sONGYtILv(vgsLowTWAR,2);if not onBXZdEhBMd then return nil,"Could not equip "..hDCjnTvc(vgsLowTWAR) end return onBXZdEhBMd end local function boTKNwFGWs(vgsLowTWAR,eHPGDafMmf) if not OCHSTdPPMP then return false,"Sell service was not found" end if not hONLvePvS:AcquireBackgroundEquipment("AutoSellDeadTree",eHPGDafMmf)then return false,"cancelled" end local EJGgOEIJ,xMrdhHFKt=aWHLTiHDbNEV(function() local grIugrUBSNbw,PkgdcaiBXvl=WyjIiCMQyP(vgsLowTWAR);if not grIugrUBSNbw then KEcWWkuhM(PkgdcaiBXvl or "Could not equip dead tree") end if vgsLowTWAR.ItemId~=nil then local nqkusLYWzBgp=GmpDMBtRVkw(grIugrUBSNbw);if nqkusLYWzBgp~=nil and uGHbaWONyeld(nqkusLYWzBgp)~=uGHbaWONyeld(vgsLowTWAR.ItemId)then KEcWWkuhM("Equipped item changed before selling") end end mtEBVbBpifWV("SELLING","warning");ZNOMJJYC("Selling "..hDCjnTvc(vgsLowTWAR).."...","warning");local VZxKamHoJXXM=OCHSTdPPMP:InvokeServer();cBzlOwFDf.SellDeadTreeCount+=1;cBzlOwFDf.LastSoldDeadTree={Name=hDCjnTvc(vgsLowTWAR),Path=vgsLowTWAR.Path,Result=VZxKamHoJXXM,};fshvbnQtAIC.ClearInventoryLocation(vgsLowTWAR.Location,vgsLowTWAR.ItemId);return VZxKamHoJXXM end,debug.traceback);hONLvePvS:ReleaseBackgroundEquipment("AutoSellDeadTree");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end if not EJGgOEIJ then local DtGvzXShoJ=uGHbaWONyeld(xMrdhHFKt):match("^[^\n]+") or uGHbaWONyeld(xMrdhHFKt);ZNOMJJYC("Sell dead tree failed: "..DtGvzXShoJ,"danger");return false,DtGvzXShoJ end return true,xMrdhHFKt end local function ySpPMNTVD(eHPGDafMmf) local zWNggjdRVwh={};while fshvbnQtAIC.Alive and TLDNAtPoWKo.AutoSellDeadTree and not eHPGDafMmf()do if not aCWHPTIm:IsReady()then YQhovmXr();ZNOMJJYC("Waiting for bag data before selling...","warning");if not AvsKZPPdnJ(0.5,eHPGDafMmf)then break end else local vTvYcdqSKFS=os.clock();local iCIxmInC=nGeJGDHYA();local unRIgYnrSl=nil;for _,tree in veanYETtE(iCIxmInC)do local ziRYzylERU=zWNggjdRVwh[tree.Path];if not ziRYzylERU or ziRYzylERU<=vTvYcdqSKFS then unRIgYnrSl=tree;break end end if unRIgYnrSl then local FiHivZWNmv=fshvbnQtAIC.GetInventoryVersion();local QpFfPFRgE=boTKNwFGWs(unRIgYnrSl,eHPGDafMmf);if QpFfPFRgE then ZNOMJJYC("Sold "..hDCjnTvc(unRIgYnrSl).." | total "..uGHbaWONyeld(cBzlOwFDf.SellDeadTreeCount),"success");fshvbnQtAIC.WaitForInventoryRefresh(FiHivZWNmv,eHPGDafMmf,2);if not AvsKZPPdnJ(TLDNAtPoWKo.SellDelay,eHPGDafMmf)then break end else zWNggjdRVwh[unRIgYnrSl.Path]=os.clock()+5;if not AvsKZPPdnJ(0.35,eHPGDafMmf)then break end end else if#iCIxmInC==0 then ZNOMJJYC("No dead trees in your bag") else ZNOMJJYC("Waiting before retrying dead tree sales","warning") end if not AvsKZPPdnJ(1,eHPGDafMmf)then break end end end end hONLvePvS:ReleaseBackgroundEquipment("AutoSellDeadTree");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end end local function aurtqtUTk() local ufdLsSTNsvH={};for _,uYQUqJVp in veanYETtE(VncGbOvYGv)do ufdLsSTNsvH[#ufdLsSTNsvH+1]=uYQUqJVp end return ufdLsSTNsvH end fshvbnQtAIC.GetAvailableSeeds=aurtqtUTk;local QclMyzmvXFIp=0;local function mUwNsfocJSBz() local unRIgYnrSl=WCKhEtDy();if#unRIgYnrSl==0 then return nil,"No plant seed selected" end for offset=1,#unRIgYnrSl do local xJEdnwduH=((QclMyzmvXFIp+offset-1)%#unRIgYnrSl)+1;local lsmMNuktk=unRIgYnrSl[xJEdnwduH];if aCWHPTIm:GetSeedCount(lsmMNuktk)>0 then local jRnTHuiBDg=aCWHPTIm:ResolveSeed(lsmMNuktk,xqMPKmZFg());if jRnTHuiBDg then QclMyzmvXFIp=xJEdnwduH;TLDNAtPoWKo.PlantSeed=lsmMNuktk;return lsmMNuktk end end end return nil,"None of the selected seeds are available in your bag" end local function kuMeqDsfnWpu() for _,sWDxvMiokm in veanYETtE(ZKWJWTsAx:GetChildren())do local DsCENvLepFhR=SbqMasrkcJu(sWDxvMiokm:GetAttribute("OwnerUserId"));if DsCENvLepFhR==etCIDMWAodR.UserId then cBzlOwFDf.MyPlot=sWDxvMiokm;return sWDxvMiokm end end cBzlOwFDf.MyPlot=nil;return nil end fshvbnQtAIC.FindMyPlot=kuMeqDsfnWpu;local bOxgInXxaUps=nil;local function gztwjrRF() local htrplfFqVhw=0;local wLWdAsqJDOL=10;local uExlAToZkJbq=11;local oKgKcovHuZT=6;local YOJgDjObr=3;local function hKizyxPYgno(lsmMNuktk,QarnXbaa) local tgukJtbvcn=nJyKDUmaGk(lsmMNuktk);local chUTOAmJZMxi=QarnXbaa and GmpDMBtRVkw(QarnXbaa);local tQBwhCUdg={};for _,seed in veanYETtE(aCWHPTIm:GetSeeds())do if nJyKDUmaGk(seed.SeedType)==tgukJtbvcn and(SbqMasrkcJu(seed.Count)or 0)>0 and seed.Location~=nil then local pjGsreUjsmdl=SbqMasrkcJu(seed.Count)or 0;if chUTOAmJZMxi~=nil and uGHbaWONyeld(seed.Id)==uGHbaWONyeld(chUTOAmJZMxi)then pjGsreUjsmdl+=1000000000000 end if seed.Location.IsHotbar then pjGsreUjsmdl+=1000000000 end tQBwhCUdg[#tQBwhCUdg+1]={SeedType=seed.SeedType,Count=seed.Count,Id=seed.Id,Mutation=seed.Mutation,IsMutated=seed.IsMutated,Path=seed.Path,Location=seed.Location,Data=seed.Data,Score=pjGsreUjsmdl,} end end table.sort(tQBwhCUdg,function(a,b) if a.Score==b.Score then return uGHbaWONyeld(a.Path)<uGHbaWONyeld(b.Path) end return a.Score>b.Score end);return tQBwhCUdg[1] end local function AsJrKSaZf() local unRIgYnrSl=DrjUAmlBSUs();if#unRIgYnrSl==0 then return nil,"No compost seed selected" end local wwcpoECkJG=xqMPKmZFg();if wwcpoECkJG then for _,lsmMNuktk in veanYETtE(unRIgYnrSl)do if mmxnGWQd(wwcpoECkJG,lsmMNuktk,nil)then TLDNAtPoWKo.CompostSeed=lsmMNuktk;return lsmMNuktk end end end for offset=1,#unRIgYnrSl do local xJEdnwduH=((htrplfFqVhw+offset-1)%#unRIgYnrSl)+1;local lsmMNuktk=unRIgYnrSl[xJEdnwduH];if aCWHPTIm:GetSeedCount(lsmMNuktk)>0 then local jRnTHuiBDg=hKizyxPYgno(lsmMNuktk,xqMPKmZFg());if jRnTHuiBDg then htrplfFqVhw=xJEdnwduH;TLDNAtPoWKo.CompostSeed=lsmMNuktk;return lsmMNuktk end end end return nil,"None of the selected compost seeds are in your bag" end local function iVgrIKKVKCS() local aYJmMMga=klMYKcVhM();if not aYJmMMga then return nil end return aYJmMMga:FindFirstChild("HumanoidRootPart") or aYJmMMga.PrimaryPart end local function zQQwUMyWuAMU(WaRaFCIApaVi) if not WaRaFCIApaVi then return nil,nil end local MTCispDX=WaRaFCIApaVi.Parent;if MTCispDX and MTCispDX:IsA("BasePart")then return MTCispDX.Position,MTCispDX end if MTCispDX and MTCispDX:IsA("Attachment")then local pfDoyzjUevRT=MTCispDX:FindFirstAncestorWhichIsA("BasePart");return MTCispDX.WorldPosition,pfDoyzjUevRT end local ROfCweaW=WaRaFCIApaVi:FindFirstAncestorWhichIsA("BasePart");if ROfCweaW then return ROfCweaW.Position,ROfCweaW end return nil,nil end local function UUDfiijqehU() local sWDxvMiokm=kuMeqDsfnWpu();if not sWDxvMiokm then return nil,"My plot was not found" end local ViEFpHVv=sWDxvMiokm:FindFirstChild("CompostBin") or sWDxvMiokm:FindFirstChild("CompostBin",true);local WaRaFCIApaVi=nil;if ViEFpHVv then local KkeAaFfZCg=ViEFpHVv:FindFirstChild("PromptPart");if KkeAaFfZCg then WaRaFCIApaVi=KkeAaFfZCg:FindFirstChild("CompostPrompt") or KkeAaFfZCg:FindFirstChildWhichIsA("ProximityPrompt",true) end WaRaFCIApaVi=WaRaFCIApaVi or ViEFpHVv:FindFirstChild("CompostPrompt",true) or ViEFpHVv:FindFirstChildWhichIsA("ProximityPrompt",true) end WaRaFCIApaVi=WaRaFCIApaVi or sWDxvMiokm:FindFirstChild("CompostPrompt",true);if WaRaFCIApaVi and WaRaFCIApaVi:IsA("ProximityPrompt")then return WaRaFCIApaVi end return nil,"Compost prompt was not found" end local function gFWsYhCstWY(WaRaFCIApaVi) local IpCmOXKp=uGHbaWONyeld(WaRaFCIApaVi and WaRaFCIApaVi.ActionText or "");local RpXNQvEer=string.lower(IpCmOXKp);if string.find(RpXNQvEer,"collect",1,true)then return "collect",IpCmOXKp end if string.find(RpXNQvEer,"give",1,true)then return "give",IpCmOXKp end return "unknown",IpCmOXKp end local function TnvwJHLhSOh(WaRaFCIApaVi) local YJKQiiJOwpuw,IpCmOXKp=gFWsYhCstWY(WaRaFCIApaVi);cBzlOwFDf.CompostMode=string.upper(YJKQiiJOwpuw);cBzlOwFDf.LastCompostAction=IpCmOXKp~="" and IpCmOXKp or cBzlOwFDf.LastCompostAction;return YJKQiiJOwpuw,IpCmOXKp end local function sNbcCOWtPt(WaRaFCIApaVi) local xBMzMakXswu=iVgrIKKVKCS();if not xBMzMakXswu then return nil,"character root missing" end local rNiAixZAwWo,ROfCweaW=zQQwUMyWuAMU(WaRaFCIApaVi);if not rNiAixZAwWo then return nil,"compost prompt position missing" end local BLnVhhpOG=SbqMasrkcJu(WaRaFCIApaVi.MaxActivationDistance) or 12;local IXrQYHWwNG=(xBMzMakXswu.Position-rNiAixZAwWo).Magnitude;cBzlOwFDf.CompostPrompt=WaRaFCIApaVi;cBzlOwFDf.CompostDistance=math.floor(IXrQYHWwNG*10+0.5)/10;return{Root=xBMzMakXswu,Position=rNiAixZAwWo,Part=ROfCweaW,MaxDistance=BLnVhhpOG,Distance=IXrQYHWwNG,} end local function LcgcDsiC(vgsLowTWAR) local xBMzMakXswu=vgsLowTWAR.Root;local rNiAixZAwWo=vgsLowTWAR.Position;local ROfCweaW=vgsLowTWAR.Part;local gpCvscCicXii=xBMzMakXswu.Position-rNiAixZAwWo;local MKvWhzmnnLTO=Vector3.new(gpCvscCicXii.X,0,gpCvscCicXii.Z);if MKvWhzmnnLTO.Magnitude<1 and ROfCweaW then local QxKvtMde=ROfCweaW.CFrame.LookVector;MKvWhzmnnLTO=Vector3.new(-QxKvtMde.X,0,-QxKvtMde.Z) end if MKvWhzmnnLTO.Magnitude<0.1 then MKvWhzmnnLTO=Vector3.new(0,0,-1) end local RSCjLkdPKH=math.min(oKgKcovHuZT,math.max(4,(vgsLowTWAR.MaxDistance or 12)*0.5));local mljVJyaaX=MKvWhzmnnLTO.Unit;local qyCbjqbYsQR=rNiAixZAwWo+(mljVJyaaX*RSCjLkdPKH);local WvvLUWJkZs=xBMzMakXswu.Position.Y;local KWDinpNtQUdd=Vector3.new(qyCbjqbYsQR.X,WvvLUWJkZs,qyCbjqbYsQR.Z);local xsjNDYLqw=Vector3.new(rNiAixZAwWo.X,WvvLUWJkZs,rNiAixZAwWo.Z);return CFrame.new(KWDinpNtQUdd,xsjNDYLqw) end local function IpICvoeFHm(WaRaFCIApaVi,vgsLowTWAR) if cBzlOwFDf.CompostAnchorPrompt~=WaRaFCIApaVi or typeof(cBzlOwFDf.CompostAnchor)~="CFrame" then cBzlOwFDf.CompostAnchorPrompt=WaRaFCIApaVi;cBzlOwFDf.CompostAnchor=LcgcDsiC(vgsLowTWAR) end return cBzlOwFDf.CompostAnchor end local function KsLaOwoGma(WaRaFCIApaVi,vgsLowTWAR) local xBMzMakXswu=vgsLowTWAR.Root;local KjfnvTNyk=pgaQZNmdOSpc();if KjfnvTNyk then uUlvADpf(function() KjfnvTNyk.Sit=false end) end uUlvADpf(function() xBMzMakXswu.AssemblyLinearVelocity=Vector3.zero;xBMzMakXswu.AssemblyAngularVelocity=Vector3.zero end);xBMzMakXswu.CFrame=IpICvoeFHm(WaRaFCIApaVi,vgsLowTWAR);cBzlOwFDf.CompostTeleportCount+=1;local vTvYcdqSKFS=os.clock();if vTvYcdqSKFS-(cBzlOwFDf.LastCompostLeashNotice or 0)>YOJgDjObr then cBzlOwFDf.LastCompostLeashNotice=vTvYcdqSKFS;URXDpHjBQWVb("Auto Compost Seed","Auto Compost đang chạy. Hãy ở gần Compost Bin cho đến khi tắt.","warning",3.5) end end local function GTrXXjTrNka(WaRaFCIApaVi,limit,eHPGDafMmf) local vgsLowTWAR,VKMdHztXY=sNbcCOWtPt(WaRaFCIApaVi);if not vgsLowTWAR then return false,VKMdHztXY end local BLnVhhpOG=SbqMasrkcJu(vgsLowTWAR.MaxDistance) or 12;local rdMNRMJG=math.min(SbqMasrkcJu(limit)or wLWdAsqJDOL,math.max(3,BLnVhhpOG-1));if vgsLowTWAR.Distance<=rdMNRMJG then return true,false end if not hONLvePvS:WaitPlantClear(eHPGDafMmf)then return false,"waiting for planting to finish" end vgsLowTWAR,VKMdHztXY=sNbcCOWtPt(WaRaFCIApaVi);if not vgsLowTWAR then return false,VKMdHztXY end KsLaOwoGma(WaRaFCIApaVi,vgsLowTWAR);ZNOMJJYC("Returned to compost area","warning");return true,true end local function NvndYFZJrYdV(eHPGDafMmf) while fshvbnQtAIC.Alive and TLDNAtPoWKo.AutoCompostSeed and not eHPGDafMmf()do local WaRaFCIApaVi=UUDfiijqehU();if WaRaFCIApaVi then TnvwJHLhSOh(WaRaFCIApaVi);GTrXXjTrNka(WaRaFCIApaVi,uExlAToZkJbq,eHPGDafMmf) else cBzlOwFDf.CompostMode="MISSING";cBzlOwFDf.CompostDistance=0;cBzlOwFDf.CompostAnchor=nil;cBzlOwFDf.CompostPrompt=nil;cBzlOwFDf.CompostAnchorPrompt=nil end task.wait(0.15) end end local function koszYMqgxBc(WaRaFCIApaVi) if not WaRaFCIApaVi then return false,"CompostPrompt missing" end if type(fireproximityprompt)~="function" then return false,"fireproximityprompt unavailable" end local EJGgOEIJ,qtFnxqcHneA=uUlvADpf(function() fireproximityprompt(WaRaFCIApaVi) end);if not EJGgOEIJ then return false,uGHbaWONyeld(qtFnxqcHneA) end return true end local function PuQTfNJci(WaRaFCIApaVi) mtEBVbBpifWV("COMPOST","warning");ZNOMJJYC("Collecting compost...","warning");local pErpaHMjZSYF,QkrMioABXb=koszYMqgxBc(WaRaFCIApaVi);if not pErpaHMjZSYF then KEcWWkuhM(QkrMioABXb) end cBzlOwFDf.CompostCollectCount+=1;cBzlOwFDf.CompostCount+=1;cBzlOwFDf.LastCompostAction="Collect";cBzlOwFDf.LastCompostSeed=nil;return "collect" end local function SDYNKxXuxkoi(lsmMNuktk) local wwcpoECkJG=xqMPKmZFg();if wwcpoECkJG and mmxnGWQd(wwcpoECkJG,lsmMNuktk,nil)then return wwcpoECkJG,nil,nil end local KdIMFIifT=hKizyxPYgno(lsmMNuktk,wwcpoECkJG);if not KdIMFIifT then return nil,nil,"Seed not found in your bag: "..uGHbaWONyeld(lsmMNuktk) end local DmfAEnMRS,PkgdcaiBXvl=UlvsGTYHbbf(lsmMNuktk,KdIMFIifT);if not DmfAEnMRS then return nil,KdIMFIifT,PkgdcaiBXvl or("Could not equip compost seed "..uGHbaWONyeld(lsmMNuktk)) end local onBXZdEhBMd=PWfMBRviip(lsmMNuktk,KdIMFIifT.Id,1.5);if not onBXZdEhBMd then return nil,KdIMFIifT,"Compost seed was not equipped" end return onBXZdEhBMd,KdIMFIifT end local function DfqvSLyy(lsmMNuktk) local wwcpoECkJG=xqMPKmZFg();if not wwcpoECkJG then return false,"You are not holding a seed" end if not mmxnGWQd(wwcpoECkJG,lsmMNuktk,nil)then return false,"You are not holding "..uGHbaWONyeld(lsmMNuktk).." seed" end return true end local function MhOyvFiGt(eHPGDafMmf) local WaRaFCIApaVi,QLrYfSbr=UUDfiijqehU();if not WaRaFCIApaVi then return false,QLrYfSbr end local YJKQiiJOwpuw=TnvwJHLhSOh(WaRaFCIApaVi);local lsmMNuktk=nil;local PzArmXNnEzX=nil;if YJKQiiJOwpuw=="unknown" then ZNOMJJYC("Waiting for Compost Bin prompt...","warning");return false,"Compost prompt is not ready" end if YJKQiiJOwpuw~="collect" then lsmMNuktk,PzArmXNnEzX=AsJrKSaZf();if not lsmMNuktk then return false,PzArmXNnEzX end end if not hONLvePvS:AcquireBackgroundEquipment("AutoCompostSeed",eHPGDafMmf)then return false,"cancelled" end local rXGZOqcWQ=nil;local EJGgOEIJ,hqvfJEkXmfGX=aWHLTiHDbNEV(function() WaRaFCIApaVi,QLrYfSbr=UUDfiijqehU();if not WaRaFCIApaVi then KEcWWkuhM(QLrYfSbr) end YJKQiiJOwpuw=TnvwJHLhSOh(WaRaFCIApaVi);local cluOqkoL,WJcQCgejo=GTrXXjTrNka(WaRaFCIApaVi,wLWdAsqJDOL,eHPGDafMmf);if not cluOqkoL then KEcWWkuhM(WJcQCgejo or "Could not move into compost range") end if WJcQCgejo==true then task.wait(0.08) end if YJKQiiJOwpuw=="unknown" then ZNOMJJYC("Waiting for Compost Bin prompt...","warning");return "wait" end if YJKQiiJOwpuw=="collect" then rXGZOqcWQ=fshvbnQtAIC.GetInventoryVersion();return PuQTfNJci(WaRaFCIApaVi) end lsmMNuktk,PzArmXNnEzX=AsJrKSaZf();if not lsmMNuktk then KEcWWkuhM(PzArmXNnEzX) end mtEBVbBpifWV("COMPOST","warning");ZNOMJJYC("Composting "..uGHbaWONyeld(lsmMNuktk).." seed...","warning");local onBXZdEhBMd,KdIMFIifT,PkgdcaiBXvl=SDYNKxXuxkoi(lsmMNuktk);if not onBXZdEhBMd then KEcWWkuhM(PkgdcaiBXvl or "Could not equip compost seed") end task.wait(0.08);WaRaFCIApaVi,QLrYfSbr=UUDfiijqehU();if not WaRaFCIApaVi then KEcWWkuhM(QLrYfSbr) end YJKQiiJOwpuw=TnvwJHLhSOh(WaRaFCIApaVi);cluOqkoL,WJcQCgejo=GTrXXjTrNka(WaRaFCIApaVi,wLWdAsqJDOL,eHPGDafMmf);if not cluOqkoL then KEcWWkuhM(WJcQCgejo or "Could not move into compost range") end if WJcQCgejo==true then task.wait(0.08) end YJKQiiJOwpuw=TnvwJHLhSOh(WaRaFCIApaVi);if YJKQiiJOwpuw=="collect" then rXGZOqcWQ=fshvbnQtAIC.GetInventoryVersion();return PuQTfNJci(WaRaFCIApaVi) elseif YJKQiiJOwpuw~="give" then ZNOMJJYC("Waiting for Compost Bin prompt...","warning");return "wait" end local djdXdkRYhl,dzBNKOkJw=DfqvSLyy(lsmMNuktk);if not djdXdkRYhl then ZNOMJJYC("Compost waiting: "..uGHbaWONyeld(dzBNKOkJw),"warning");return "wait" end rXGZOqcWQ=fshvbnQtAIC.GetInventoryVersion();local pErpaHMjZSYF,QkrMioABXb=koszYMqgxBc(WaRaFCIApaVi);if not pErpaHMjZSYF then KEcWWkuhM(QkrMioABXb) end cBzlOwFDf.LastCompostAction="Give Seed";cBzlOwFDf.LastCompostSeed=lsmMNuktk;cBzlOwFDf.CompostGiveCount+=1;cBzlOwFDf.CompostCount+=1;ZNOMJJYC("Give Seed fired: "..uGHbaWONyeld(lsmMNuktk));return lsmMNuktk end,debug.traceback);hONLvePvS:ReleaseBackgroundEquipment("AutoCompostSeed");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end if not EJGgOEIJ then local DtGvzXShoJ=uGHbaWONyeld(hqvfJEkXmfGX):match("^[^\n]+") or uGHbaWONyeld(hqvfJEkXmfGX);ZNOMJJYC("Auto Compost failed: "..DtGvzXShoJ,"danger");return false,DtGvzXShoJ end if hqvfJEkXmfGX=="wait" then return true,hqvfJEkXmfGX elseif hqvfJEkXmfGX=="collect" then if rXGZOqcWQ~=nil then fshvbnQtAIC.WaitForInventoryRefresh(rXGZOqcWQ,eHPGDafMmf,2) end ZNOMJJYC("Compost collected") else if rXGZOqcWQ~=nil then fshvbnQtAIC.WaitForInventoryRefresh(rXGZOqcWQ,eHPGDafMmf,2) end ZNOMJJYC("Composted "..uGHbaWONyeld(hqvfJEkXmfGX).." seed") end return true,hqvfJEkXmfGX end bOxgInXxaUps=function(eHPGDafMmf) AzqTepsUHo("CompostMovementGuard",NvndYFZJrYdV);URXDpHjBQWVb("Auto Compost Seed","Đã bật Auto Compost Seed. Script sẽ giữ bạn trong vùng compost khi cần.","warning",4);while fshvbnQtAIC.Alive and TLDNAtPoWKo.AutoCompostSeed and not eHPGDafMmf()do local EJGgOEIJ=MhOyvFiGt(eHPGDafMmf);if eHPGDafMmf() or not TLDNAtPoWKo.AutoCompostSeed then break end local ptGKxxnFQJIu=EJGgOEIJ and TLDNAtPoWKo.CompostDelay or 0.75;if not AvsKZPPdnJ(ptGKxxnFQJIu,eHPGDafMmf)then break end end uUEyNxlr("CompostMovementGuard");hONLvePvS:ReleaseBackgroundEquipment("AutoCompostSeed");cBzlOwFDf.CompostAnchor=nil;cBzlOwFDf.CompostPrompt=nil;cBzlOwFDf.CompostAnchorPrompt=nil;if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end end fshvbnQtAIC.GetCompostSeeds=function() return DrjUAmlBSUs() end fshvbnQtAIC.CompostOnce=function() return MhOyvFiGt(function() return not fshvbnQtAIC.Alive end) end end gztwjrRF();local function esvvgQpyGr(ukYHzlmjB) if not ukYHzlmjB then return nil end return SbqMasrkcJu(uGHbaWONyeld(ukYHzlmjB.Name):match("_(%d+)$")) end local function lTGSkMFKrnn(ukYHzlmjB) if not ukYHzlmjB then return nil end local RgvPVOCBSy=ukYHzlmjB:FindFirstChild("MultDisplay");if not RgvPVOCBSy then return nil end return RgvPVOCBSy:FindFirstChild("ProximityPrompt") or RgvPVOCBSy:FindFirstChildWhichIsA("ProximityPrompt",true) end local function YDPPNscmbA(ukYHzlmjB) if not ukYHzlmjB or not ukYHzlmjB.Parent then return false end if string.sub(uGHbaWONyeld(ukYHzlmjB.Name),1,#"PlantRound_")~="PlantRound_" then return false end local JRSnbQasWW="PlantRound_"..uGHbaWONyeld(etCIDMWAodR.UserId).."_";if string.sub(ukYHzlmjB.Name,1,#JRSnbQasWW)==JRSnbQasWW then return true end local WaRaFCIApaVi=lTGSkMFKrnn(ukYHzlmjB);if WaRaFCIApaVi then local RyoaGhuzRIsH=WaRaFCIApaVi:GetAttribute("PlantOwnerID") or WaRaFCIApaVi:GetAttribute("PlantOwnerId");if SbqMasrkcJu(RyoaGhuzRIsH)==etCIDMWAodR.UserId then return true end end local RyoaGhuzRIsH=ukYHzlmjB:GetAttribute("PlantOwnerID") or ukYHzlmjB:GetAttribute("PlantOwnerId");return SbqMasrkcJu(RyoaGhuzRIsH)==etCIDMWAodR.UserId end local function ENGLOpdN() local buMdvbnuct={};for _,child in veanYETtE(QKODbcnwh:GetChildren())do if YDPPNscmbA(child)then buMdvbnuct[#buMdvbnuct+1]=child end end table.sort(buMdvbnuct,function(a,b) return(esvvgQpyGr(a)or 0)<(esvvgQpyGr(b)or 0) end);return buMdvbnuct end local function rREFsExnOGw() local HJNxDXempQZ={};local uBsAYzPXpHL=0;for _,ukYHzlmjB in veanYETtE(ENGLOpdN())do HJNxDXempQZ[ukYHzlmjB]=true;uBsAYzPXpHL=math.max(uBsAYzPXpHL,esvvgQpyGr(ukYHzlmjB)or 0) end return HJNxDXempQZ,uBsAYzPXpHL end local function hXcCshix(IpCmOXKp) IpCmOXKp=uGHbaWONyeld(IpCmOXKp or "");local nlRVTXnIJP=IpCmOXKp:match("([%d]+%.?[%d]*)%s*[xX]") or IpCmOXKp:match("([%d]+%.?[%d]*)");return SbqMasrkcJu(nlRVTXnIJP) end local MycqMzYwJQ=Color3.fromRGB(255,50,50);local function MmjqiuYDnPQ(a,b,tolerance) tolerance=SbqMasrkcJu(tolerance)or(1/255);return math.abs(a.R-b.R)<=tolerance and math.abs(a.G-b.G)<=tolerance and math.abs(a.B-b.B)<=tolerance end local function oKAdTluE(ukYHzlmjB) if not YDPPNscmbA(ukYHzlmjB)then return nil end local RgvPVOCBSy=ukYHzlmjB:FindFirstChild("MultDisplay");local pfCOoCOgU=RgvPVOCBSy and RgvPVOCBSy:FindFirstChild("BillboardGui");local ZFZodHyRuNwe=pfCOoCOgU and pfCOoCOgU:FindFirstChild("MainFrame");local BHdvonneG=ZFZodHyRuNwe and ZFZodHyRuNwe:FindFirstChild("Mult");local kYmMymsKke=ZFZodHyRuNwe and ZFZodHyRuNwe:FindFirstChild("Value");local xJQgSeNIDqnE=nil;if BHdvonneG and(BHdvonneG:IsA("TextLabel") or BHdvonneG:IsA("TextButton") or BHdvonneG:IsA("TextBox"))then xJQgSeNIDqnE=hXcCshix(BHdvonneG.Text) end local gmDUUsitQa=false;if kYmMymsKke and(kYmMymsKke:IsA("TextLabel") or kYmMymsKke:IsA("TextButton") or kYmMymsKke:IsA("TextBox"))then local EngzFsBjYVDZ=uGHbaWONyeld(kYmMymsKke.Text or "");local xFRwStuTinHO=EngzFsBjYVDZ:gsub("%s+","");gmDUUsitQa=MmjqiuYDnPQ(kYmMymsKke.TextColor3,MycqMzYwJQ,2/255) or string.find(xFRwStuTinHO,"255,50,50",1,true)~=nil end local WaRaFCIApaVi=lTGSkMFKrnn(ukYHzlmjB);local RyoaGhuzRIsH=nil;if WaRaFCIApaVi then RyoaGhuzRIsH=WaRaFCIApaVi:GetAttribute("PlantOwnerID") or WaRaFCIApaVi:GetAttribute("PlantOwnerId") end return{Round=ukYHzlmjB,Serial=esvvgQpyGr(ukYHzlmjB),MultDisplay=RgvPVOCBSy,Billboard=pfCOoCOgU,MainFrame=ZFZodHyRuNwe,MultLabel=BHdvonneG,ValueLabel=kYmMymsKke,Multiplier=xJQgSeNIDqnE,Dead=gmDUUsitQa,Prompt=WaRaFCIApaVi,OwnerId=SbqMasrkcJu(RyoaGhuzRIsH),} end local function TOvMqmoWsqh(beforeSet,beforeMaxSerial,timeout) local zkiSlLRkxM=os.clock()+(SbqMasrkcJu(timeout)or 3);while fshvbnQtAIC.Alive and os.clock()<zkiSlLRkxM do local DzzrozKYJz=nil;for _,ukYHzlmjB in veanYETtE(ENGLOpdN())do local OXrKLYwYgOce=esvvgQpyGr(ukYHzlmjB)or 0;if not beforeSet[ukYHzlmjB] or OXrKLYwYgOce>beforeMaxSerial then if not DzzrozKYJz or OXrKLYwYgOce>(esvvgQpyGr(DzzrozKYJz)or 0)then DzzrozKYJz=ukYHzlmjB end end end if DzzrozKYJz then return DzzrozKYJz end task.wait(0.04) end return nil end local function ecNsQKIJI(hGrmnrfwopPD) if hGrmnrfwopPD and hGrmnrfwopPD.PlantRound and hGrmnrfwopPD.PlantRound.Parent and YDPPNscmbA(hGrmnrfwopPD.PlantRound)then return hGrmnrfwopPD.PlantRound end local yjSTKsVG=hGrmnrfwopPD and hGrmnrfwopPD.BeforeRoundSerial or 0;local hDRHyHXwKm=nil;for _,ukYHzlmjB in veanYETtE(ENGLOpdN())do local OXrKLYwYgOce=esvvgQpyGr(ukYHzlmjB)or 0;if OXrKLYwYgOce>yjSTKsVG and(not hDRHyHXwKm or OXrKLYwYgOce>(esvvgQpyGr(hDRHyHXwKm)or 0))then hDRHyHXwKm=ukYHzlmjB end end if hGrmnrfwopPD and hDRHyHXwKm then hGrmnrfwopPD.PlantRound=hDRHyHXwKm end return hDRHyHXwKm end fshvbnQtAIC.GetOwnPlantRounds=ENGLOpdN;fshvbnQtAIC.GetPlantRoundInfo=oKAdTluE;local GcoUOeMvDCWT=setmetatable({},{__mode="k",});local function erKcMeojfUNV(ukYHzlmjB,lsmMNuktk) if ukYHzlmjB and lsmMNuktk then GcoUOeMvDCWT[ukYHzlmjB]=uGHbaWONyeld(lsmMNuktk) end end local function UkBLxSrRPXRg(ukYHzlmjB) if not ukYHzlmjB then return nil end local lsmMNuktk=GcoUOeMvDCWT[ukYHzlmjB];if lsmMNuktk then return lsmMNuktk end local hGrmnrfwopPD=cBzlOwFDf.LastPlantContext;if hGrmnrfwopPD and hGrmnrfwopPD.PlantRound==ukYHzlmjB and hGrmnrfwopPD.Seed then lsmMNuktk=uGHbaWONyeld(hGrmnrfwopPD.Seed);erKcMeojfUNV(ukYHzlmjB,lsmMNuktk);return lsmMNuktk end return nil end local function spEmThilUyv(ukYHzlmjB) return ToqIbVzdeXwp(UkBLxSrRPXRg(ukYHzlmjB)) end fshvbnQtAIC.GetHarvestTargetForSeed=ToqIbVzdeXwp;fshvbnQtAIC.GetHarvestTargetForRound=spEmThilUyv;local function gTpmdMnISCy(IpCmOXKp) IpCmOXKp=uGHbaWONyeld(IpCmOXKp or "");IpCmOXKp=IpCmOXKp:gsub("<.->","");IpCmOXKp=IpCmOXKp:gsub("&amp;","&");IpCmOXKp=IpCmOXKp:gsub("&lt;","<");IpCmOXKp=IpCmOXKp:gsub("&gt;",">");IpCmOXKp=IpCmOXKp:gsub("^%s+",""):gsub("%s+$","");return IpCmOXKp end local function eUOcyKlvufUF(IpCmOXKp) IpCmOXKp=uGHbaWONyeld(IpCmOXKp or "");IpCmOXKp=IpCmOXKp:gsub("&","&amp;");IpCmOXKp=IpCmOXKp:gsub("<","&lt;");IpCmOXKp=IpCmOXKp:gsub(">","&gt;");return IpCmOXKp end local function LmcSnvsiFihc(IpCmOXKp) return(uGHbaWONyeld(IpCmOXKp or ""):match("^%s*(.-)%s*$"))or "" end local function WieYyqPmvaz(IpCmOXKp) IpCmOXKp=LmcSnvsiFihc(IpCmOXKp);if IpCmOXKp=="" then return "" end if IpCmOXKp:find("<font",1,true) or IpCmOXKp:find("<b>",1,true) or IpCmOXKp:find("<i>",1,true) or IpCmOXKp:find("<u>",1,true) or IpCmOXKp:find("<s>",1,true)then return IpCmOXKp end return eUOcyKlvufUF(IpCmOXKp) end local function xZfgKutOVQgd(IpCmOXKp) IpCmOXKp=gTpmdMnISCy(IpCmOXKp);IpCmOXKp=IpCmOXKp:gsub("[\r\n]+",",");IpCmOXKp=IpCmOXKp:gsub("%s*[%+,%|]%s*",",");IpCmOXKp=IpCmOXKp:gsub("%s*,%s*",",");local ufdLsSTNsvH={};local HJNxDXempQZ={};for ROfCweaW in IpCmOXKp:gmatch("[^,]+")do local PtWWWeZjj=LmcSnvsiFihc(ROfCweaW);PtWWWeZjj=LmcSnvsiFihc(PtWWWeZjj:gsub("^[Mm]utations?:%s*",""));local xbrZbULKJpu=nJyKDUmaGk(PtWWWeZjj);if PtWWWeZjj~="" and xbrZbULKJpu~="none" and xbrZbULKJpu~="normal" and xbrZbULKJpu~="no mutation" and xbrZbULKJpu~="no mutations" and xbrZbULKJpu~="mutation" and xbrZbULKJpu~="mutations" and not HJNxDXempQZ[xbrZbULKJpu]then HJNxDXempQZ[xbrZbULKJpu]=true;ufdLsSTNsvH[#ufdLsSTNsvH+1]=PtWWWeZjj end end return ufdLsSTNsvH end local vpZFtPOnu={"Dewy","Dusty","Frosted","Shocked","Radioactive","Golden","Cosmic",};local function NSNwtfUx(IpCmOXKp) local AfrMnueZgzD=xZfgKutOVQgd(IpCmOXKp);if#AfrMnueZgzD>1 then return#AfrMnueZgzD,AfrMnueZgzD end local BubbAchyhZoI=gTpmdMnISCy(IpCmOXKp);local gCKpuFUpex=string.lower(BubbAchyhZoI);local AXsMZDqGhS={};local HJNxDXempQZ={};for _,mutationName in veanYETtE(vpZFtPOnu)do local xbrZbULKJpu=nJyKDUmaGk(mutationName);if string.find(gCKpuFUpex,xbrZbULKJpu,1,true)and not HJNxDXempQZ[xbrZbULKJpu]then AXsMZDqGhS[#AXsMZDqGhS+1]=mutationName;HJNxDXempQZ[xbrZbULKJpu]=true end end if#AXsMZDqGhS>0 then return#AXsMZDqGhS,AXsMZDqGhS end return#AfrMnueZgzD,AfrMnueZgzD end local function ZVchZkqvIb(PtWWWeZjj) if PtWWWeZjj==nil then return nil end if typeof(PtWWWeZjj)=="number" then local IpCmOXKp=uGHbaWONyeld(math.floor(PtWWWeZjj*100+0.5)/100);return IpCmOXKp end local IpCmOXKp=LmcSnvsiFihc(PtWWWeZjj);if IpCmOXKp=="" then return nil end return IpCmOXKp end local function vnLFcXlgKHL(instance,names) if not instance then return nil end for _,fBBRHrrWC in veanYETtE(names)do local PtWWWeZjj=instance:GetAttribute(fBBRHrrWC);local YdFWQkPZjseK=ZVchZkqvIb(PtWWWeZjj);if YdFWQkPZjseK then return YdFWQkPZjseK end end return nil end local function zPqgjGlZtZdP(xBMzMakXswu,names,patterns) if not xBMzMakXswu then return nil end local tgukJtbvcn={};for _,fBBRHrrWC in veanYETtE(names or{})do tgukJtbvcn[string.lower(fBBRHrrWC)]=true end for _,obj in veanYETtE(xBMzMakXswu:GetDescendants())do if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox")then local IpCmOXKp=gTpmdMnISCy(obj.Text);if IpCmOXKp~="" then local JEGdTgOH=string.lower(obj.Name);if tgukJtbvcn[JEGdTgOH]then return IpCmOXKp end for _,pattern in veanYETtE(patterns or{})do if string.find(string.lower(IpCmOXKp),pattern,1,true)then return IpCmOXKp end end end end end return nil end local function iEPVzqdTBjAJ(ZFZodHyRuNwe,MSdVlYAXGv) local IpCmOXKp=zPqgjGlZtZdP(ZFZodHyRuNwe,{"Fruit Money","FruitMoney","Value","FruitValue","Money",},{"$/min","fruit $","value",});if IpCmOXKp then return IpCmOXKp end return vnLFcXlgKHL(MSdVlYAXGv,{"FruitValue","Value","FruitMoney","Money","CoinsPerMinute",}) end local function ncdSWKvRCe(MSdVlYAXGv,fallbackText) local JHHCtsZoh=LmcSnvsiFihc(gTpmdMnISCy(fallbackText));if JHHCtsZoh~="" and nJyKDUmaGk(JHHCtsZoh)~="none" then return JHHCtsZoh end local vJxCNtcGYBX=vnLFcXlgKHL(MSdVlYAXGv,{"FruitMutation","Mutations","Mutation",});if vJxCNtcGYBX then return vJxCNtcGYBX end local MTCispDX=MSdVlYAXGv and MSdVlYAXGv.Parent;for _=1,4 do if not MTCispDX then break end vJxCNtcGYBX=vnLFcXlgKHL(MTCispDX,{"FruitMutation","Mutations","Mutation",});if vJxCNtcGYBX then return vJxCNtcGYBX end MTCispDX=MTCispDX.Parent end return fallbackText end local function MUWFUPsyodoM() local sWDxvMiokm=kuMeqDsfnWpu();if not sWDxvMiokm then return{},"My plot was not found" end local kJrEeFspdIwv=ajdCwmMJcNo:FindFirstChild("PlotBillboards");if not kJrEeFspdIwv then return{},"PlotBillboards was not found" end local JwvPnUXQIS={};for _,pfCOoCOgU in veanYETtE(kJrEeFspdIwv:GetDescendants())do if pfCOoCOgU:IsA("BillboardGui") and pfCOoCOgU.Name=="FruitBillboard_WithPrompt" and pfCOoCOgU.Adornee and pfCOoCOgU.Adornee.Name=="FruitSpawn" and pfCOoCOgU.Adornee:IsDescendantOf(sWDxvMiokm)then local ZFZodHyRuNwe=pfCOoCOgU:FindFirstChild("MainFrame");if ZFZodHyRuNwe then local HopIvovEMyj=ZFZodHyRuNwe:FindFirstChild("Name");local rGKLdGdl=ZFZodHyRuNwe:FindFirstChild("Mutations");local aGVJNYSnyNI="Unknown";local rrgjhycHRe="None";local JKZpbtKbxSrm="None";if HopIvovEMyj and(HopIvovEMyj:IsA("TextLabel")or HopIvovEMyj:IsA("TextButton")or HopIvovEMyj:IsA("TextBox"))then aGVJNYSnyNI=gTpmdMnISCy(HopIvovEMyj.Text) end if rGKLdGdl and(rGKLdGdl:IsA("TextLabel")or rGKLdGdl:IsA("TextButton")or rGKLdGdl:IsA("TextBox")) and rGKLdGdl.Text~="" then local EvZRpjeXS=gTpmdMnISCy(rGKLdGdl.Text);if EvZRpjeXS~="" then rrgjhycHRe=EvZRpjeXS;JKZpbtKbxSrm=WieYyqPmvaz(rGKLdGdl.Text) end end local MSdVlYAXGv=pfCOoCOgU.Adornee;local UoLPnWJgjGBr=ncdSWKvRCe(MSdVlYAXGv,rrgjhycHRe);local TyjTxErfQ,qcqyMTGZe=NSNwtfUx(UoLPnWJgjGBr);if#qcqyMTGZe>0 then rrgjhycHRe=table.concat(qcqyMTGZe," + ") else local VaumFiuAklS=LmcSnvsiFihc(gTpmdMnISCy(UoLPnWJgjGBr));if VaumFiuAklS~="" and nJyKDUmaGk(VaumFiuAklS)~="none" then rrgjhycHRe=VaumFiuAklS else rrgjhycHRe="None" end end if JKZpbtKbxSrm=="None" and rrgjhycHRe~="None" then JKZpbtKbxSrm=eUOcyKlvufUF(rrgjhycHRe) end local EngzFsBjYVDZ=iEPVzqdTBjAJ(ZFZodHyRuNwe,MSdVlYAXGv);local ChCqfPGevPyK=vnLFcXlgKHL(MSdVlYAXGv,{"FruitSizeMult","SizeMultiplier","SizeMult",});table.insert(JwvPnUXQIS,{Name=aGVJNYSnyNI,Mutation=rrgjhycHRe,MutationRichText=JKZpbtKbxSrm,MutationSource=UoLPnWJgjGBr,MutationParts=qcqyMTGZe,MutationCount=TyjTxErfQ,FruitValue=EngzFsBjYVDZ,SizeMultiplier=ChCqfPGevPyK,FruitSpawn=MSdVlYAXGv,Billboard=pfCOoCOgU,Plot=sWDxvMiokm,}) end end end table.sort(JwvPnUXQIS,function(a,b) if a.Name==b.Name then return a.Mutation<b.Mutation end return a.Name<b.Name end);cBzlOwFDf.FruitListedCount=#JwvPnUXQIS;return JwvPnUXQIS end fshvbnQtAIC.ScanMyMutations=MUWFUPsyodoM;local function NuPZSGHEG() local ziRYzylERU=setmetatable({},{__mode="k",});local function AMkelgLP(vgsLowTWAR) local MSdVlYAXGv=vgsLowTWAR and vgsLowTWAR.FruitSpawn;if not MSdVlYAXGv or not MSdVlYAXGv.Parent then return nil end return MSdVlYAXGv:FindFirstChild("ProximityPrompt") or MSdVlYAXGv:FindFirstChildWhichIsA("ProximityPrompt",true) end local function RdVarWLeD(vgsLowTWAR,WaRaFCIApaVi) local MSdVlYAXGv=vgsLowTWAR and vgsLowTWAR.FruitSpawn;if not MSdVlYAXGv or not MSdVlYAXGv.Parent then return true end if vgsLowTWAR.Billboard and not vgsLowTWAR.Billboard.Parent then return true end if WaRaFCIApaVi and not WaRaFCIApaVi.Parent then return true end local EJGgOEIJ,vTLRGmTD=uUlvADpf(function() return WaRaFCIApaVi and WaRaFCIApaVi.Enabled end);if EJGgOEIJ and vTLRGmTD==false then return true end return false end local function tsErTTnwNr(vgsLowTWAR,WaRaFCIApaVi,timeout) local zkiSlLRkxM=os.clock()+(SbqMasrkcJu(timeout)or 0.75);while fshvbnQtAIC.Alive and os.clock()<zkiSlLRkxM do if RdVarWLeD(vgsLowTWAR,WaRaFCIApaVi)then return true end task.wait(0.04) end return RdVarWLeD(vgsLowTWAR,WaRaFCIApaVi) end local function UKBZwyVw(vgsLowTWAR) if TLDNAtPoWKo.CollectAllFruit then return true end local NtBJNjzdLq=math.max(0,math.floor((SbqMasrkcJu(TLDNAtPoWKo.MinFruitMutations)or 0)+0.5));return(SbqMasrkcJu(vgsLowTWAR.MutationCount)or 0)>=NtBJNjzdLq end local function TQRSEuOtm(vgsLowTWAR,eHPGDafMmf) if not vgsLowTWAR or not vgsLowTWAR.FruitSpawn or not vgsLowTWAR.FruitSpawn.Parent then return false,"fruit-missing" end if not UKBZwyVw(vgsLowTWAR)then return false,"filtered" end local IkEEJxqEFPCS=ziRYzylERU[vgsLowTWAR.FruitSpawn]or 0;if IkEEJxqEFPCS>os.clock()then return false,"cooldown" end local WaRaFCIApaVi=AMkelgLP(vgsLowTWAR);if not WaRaFCIApaVi then ziRYzylERU[vgsLowTWAR.FruitSpawn]=os.clock()+1;return false,"prompt-missing" end if type(fireproximityprompt)~="function" then ZNOMJJYC("Fruit collect needs fireproximityprompt","danger");return false,"fireproximityprompt-unavailable" end if not hONLvePvS:AcquireAction("AutoCollectFruit",eHPGDafMmf,1)then return false,"busy" end if eHPGDafMmf() or not TLDNAtPoWKo.AutoCollectFruit or not vgsLowTWAR.FruitSpawn.Parent or not UKBZwyVw(vgsLowTWAR)then hONLvePvS:ReleaseAction("AutoCollectFruit");return false,"cancelled" end WaRaFCIApaVi=AMkelgLP(vgsLowTWAR);if not WaRaFCIApaVi then hONLvePvS:ReleaseAction("AutoCollectFruit");ziRYzylERU[vgsLowTWAR.FruitSpawn]=os.clock()+1;return false,"prompt-missing" end mtEBVbBpifWV("COLLECT FRUIT","warning");ZNOMJJYC("Collecting "..uGHbaWONyeld(vgsLowTWAR.Name or "fruit").." ("..uGHbaWONyeld(vgsLowTWAR.MutationCount or 0).." mutation(s))","warning");local pErpaHMjZSYF,QkrMioABXb=uUlvADpf(function() fireproximityprompt(WaRaFCIApaVi) end);local evrkuinuGetj=false;if pErpaHMjZSYF then evrkuinuGetj=tsErTTnwNr(vgsLowTWAR,WaRaFCIApaVi,0.75) end hONLvePvS:ReleaseAction("AutoCollectFruit");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end if not pErpaHMjZSYF then ziRYzylERU[vgsLowTWAR.FruitSpawn]=os.clock()+1.5;ZNOMJJYC("Collect fruit failed: "..uGHbaWONyeld(QkrMioABXb),"danger");return false,uGHbaWONyeld(QkrMioABXb) end if not evrkuinuGetj then ziRYzylERU[vgsLowTWAR.FruitSpawn]=os.clock()+1.25;ZNOMJJYC("Collect fruit was not confirmed yet","warning");return false,"unverified" end ziRYzylERU[vgsLowTWAR.FruitSpawn]=nil;cBzlOwFDf.FruitCollectCount+=1;cBzlOwFDf.LastCollectedFruit={Name=vgsLowTWAR.Name,MutationCount=vgsLowTWAR.MutationCount,Mutation=vgsLowTWAR.Mutation,At=os.clock(),};return true,"collected" end local function pheBTpvlSe(eHPGDafMmf) local evFESHvJD,qtFnxqcHneA=MUWFUPsyodoM();if qtFnxqcHneA then return 0,qtFnxqcHneA,0 end table.sort(evFESHvJD,function(a,b) local fEtDKpRxy=SbqMasrkcJu(a.MutationCount)or 0;local ofjTzBGhgLqa=SbqMasrkcJu(b.MutationCount)or 0;if fEtDKpRxy==ofjTzBGhgLqa then return uGHbaWONyeld(a.Name)<uGHbaWONyeld(b.Name) end return fEtDKpRxy>ofjTzBGhgLqa end);local feOfYfcyhSW=0;local BcXpWPjDUI=0;for _,MSdVlYAXGv in veanYETtE(evFESHvJD)do if eHPGDafMmf() or not TLDNAtPoWKo.AutoCollectFruit then break end if UKBZwyVw(MSdVlYAXGv)then feOfYfcyhSW+=1;local EJGgOEIJ=TQRSEuOtm(MSdVlYAXGv,eHPGDafMmf);if EJGgOEIJ then BcXpWPjDUI+=1;if not AvsKZPPdnJ(TLDNAtPoWKo.FruitCollectDelay,eHPGDafMmf)then break end else task.wait(0.02) end end end return BcXpWPjDUI,nil,feOfYfcyhSW end local function yaSjjYVZcw(eHPGDafMmf) local fbIonJdbjLw=0;while fshvbnQtAIC.Alive and TLDNAtPoWKo.AutoCollectFruit and not eHPGDafMmf()do local BcXpWPjDUI,qtFnxqcHneA,feOfYfcyhSW=pheBTpvlSe(eHPGDafMmf);if qtFnxqcHneA then ZNOMJJYC("Fruit collect waiting: "..uGHbaWONyeld(qtFnxqcHneA),"warning") elseif BcXpWPjDUI>0 then ZNOMJJYC("Collected "..uGHbaWONyeld(BcXpWPjDUI).." fruit(s) | total "..uGHbaWONyeld(cBzlOwFDf.FruitCollectCount),"success");fbIonJdbjLw=os.clock() elseif os.clock()-fbIonJdbjLw>=3 then if feOfYfcyhSW>0 then ZNOMJJYC("Fruit matched; waiting before retrying collection","warning") elseif TLDNAtPoWKo.CollectAllFruit then ZNOMJJYC("No fruit ready to collect") else ZNOMJJYC("No fruit has "..uGHbaWONyeld(TLDNAtPoWKo.MinFruitMutations).."+ mutation(s) yet") end fbIonJdbjLw=os.clock() end if not AvsKZPPdnJ(TLDNAtPoWKo.FruitCollectInterval,eHPGDafMmf)then break end end hONLvePvS:ReleaseAction("AutoCollectFruit");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end end return yaSjjYVZcw end local bcsdwSDe=NuPZSGHEG();local function OjdKYEfN() local function HMCkrDIHHamF(fBBRHrrWC) fBBRHrrWC=uGHbaWONyeld(fBBRHrrWC or "");for group in fBBRHrrWC:gmatch("%(([^%)]*)%)")do local YvyJJyEjldG=LmcSnvsiFihc(gTpmdMnISCy(group));if YvyJJyEjldG~="" and not YvyJJyEjldG:match("^[%d%.]+%s*[xX]$")then return YvyJJyEjldG end end return "" end local function dJfFEhbCvZT(PtWWWeZjj) PtWWWeZjj=uGHbaWONyeld(PtWWWeZjj or "");local xJQgSeNIDqnE=PtWWWeZjj:match("%(([%d%.]+)%s*[xX]%)") or PtWWWeZjj:match("([%d%.]+)%s*[xX]");return SbqMasrkcJu(xJQgSeNIDqnE) end local function VWzQxMzhnZU(PtWWWeZjj) PtWWWeZjj=gTpmdMnISCy(PtWWWeZjj);PtWWWeZjj=PtWWWeZjj:gsub("[\r\n]+"," ");PtWWWeZjj=PtWWWeZjj:gsub("%s+"," ");return LmcSnvsiFihc(PtWWWeZjj) end local function vcTqdMBPoKrs(PtWWWeZjj) PtWWWeZjj=VWzQxMzhnZU(PtWWWeZjj);if PtWWWeZjj=="" then return false end if not HLgKtmFAAZmj(PtWWWeZjj,"fruit")then return false end return HLgKtmFAAZmj(PtWWWeZjj,"basket") or HLgKtmFAAZmj(PtWWWeZjj,"crate") or HLgKtmFAAZmj(PtWWWeZjj,"box") or HLgKtmFAAZmj(PtWWWeZjj,"pack") or HLgKtmFAAZmj(PtWWWeZjj,"bundle") or HLgKtmFAAZmj(PtWWWeZjj,"container") end local function JleRWAhoYiO(PtWWWeZjj) PtWWWeZjj=VWzQxMzhnZU(PtWWWeZjj);if PtWWWeZjj=="" or#PtWWWeZjj>180 or nJyKDUmaGk(PtWWWeZjj)=="fruit" or nJyKDUmaGk(PtWWWeZjj)=="fruits" or vcTqdMBPoKrs(PtWWWeZjj) or HLgKtmFAAZmj(PtWWWeZjj,"seed") or(HLgKtmFAAZmj(PtWWWeZjj,"dead") and HLgKtmFAAZmj(PtWWWeZjj,"tree"))then return false end return HLgKtmFAAZmj(PtWWWeZjj,"fruit") end local function ElhyqvQYcVV(IyBbcUdv) local HCBbqcsjQ=hhlfqTFEdFdZ(IyBbcUdv,"mutations") or hhlfqTFEdFdZ(IyBbcUdv,"Mutations") or hhlfqTFEdFdZ(IyBbcUdv,"mutation") or hhlfqTFEdFdZ(IyBbcUdv,"Mutation");if type(HCBbqcsjQ)=="table" then local AfrMnueZgzD={};local HJNxDXempQZ={};for xJEdnwduH=1,#HCBbqcsjQ do local PtWWWeZjj=LmcSnvsiFihc(gTpmdMnISCy(HCBbqcsjQ[xJEdnwduH]));local xbrZbULKJpu=nJyKDUmaGk(PtWWWeZjj);if PtWWWeZjj~="" and xbrZbULKJpu~="none" and not HJNxDXempQZ[xbrZbULKJpu]then HJNxDXempQZ[xbrZbULKJpu]=true;AfrMnueZgzD[#AfrMnueZgzD+1]=PtWWWeZjj end end for _,PtWWWeZjj in eaDsYcns(HCBbqcsjQ)do if type(PtWWWeZjj)~="table" then local IpCmOXKp=LmcSnvsiFihc(gTpmdMnISCy(PtWWWeZjj));local xbrZbULKJpu=nJyKDUmaGk(IpCmOXKp);if IpCmOXKp~="" and xbrZbULKJpu~="none" and not HJNxDXempQZ[xbrZbULKJpu]then HJNxDXempQZ[xbrZbULKJpu]=true;AfrMnueZgzD[#AfrMnueZgzD+1]=IpCmOXKp end end end return table.concat(AfrMnueZgzD," + ") end if HCBbqcsjQ~=nil then return LmcSnvsiFihc(gTpmdMnISCy(HCBbqcsjQ)) end return "" end local function YFFIWxsC(IyBbcUdv) if type(IyBbcUdv)~="table" then return nil end local wKGDwIXKXV=nJyKDUmaGk(hhlfqTFEdFdZ(IyBbcUdv,"itemType") or hhlfqTFEdFdZ(IyBbcUdv,"ItemType"));if wKGDwIXKXV=="seed" or HLgKtmFAAZmj(wKGDwIXKXV,"seed") or TIwyOQfhBRf(IyBbcUdv)~=nil then return nil end local MKOAOKKtJ=hhlfqTFEdFdZ(IyBbcUdv,"fruitName") or hhlfqTFEdFdZ(IyBbcUdv,"FruitName");local ulnHdweH=hhlfqTFEdFdZ(IyBbcUdv,"seedType") or hhlfqTFEdFdZ(IyBbcUdv,"SeedType");local hvTVwVMgND=hhlfqTFEdFdZ(IyBbcUdv,"fruitType") or hhlfqTFEdFdZ(IyBbcUdv,"FruitType");if wKGDwIXKXV=="fruit" or MKOAOKKtJ~=nil or hvTVwVMgND~=nil then local nQDrPHspX=ElhyqvQYcVV(IyBbcUdv);local TyjTxErfQ=0;local qcqyMTGZe={};if nQDrPHspX~="" then TyjTxErfQ,qcqyMTGZe=NSNwtfUx(nQDrPHspX) end local wbnEtBqPQbv=MKOAOKKtJ or hhlfqTFEdFdZ(IyBbcUdv,"name") or hhlfqTFEdFdZ(IyBbcUdv,"Name") or hhlfqTFEdFdZ(IyBbcUdv,"displayName") or hhlfqTFEdFdZ(IyBbcUdv,"DisplayName") or hvTVwVMgND or "Fruit";return{FruitType=ulnHdweH or hvTVwVMgND or wbnEtBqPQbv or "Fruit",DisplayName=wbnEtBqPQbv,Multiplier=SbqMasrkcJu(hhlfqTFEdFdZ(IyBbcUdv,"multiplier") or hhlfqTFEdFdZ(IyBbcUdv,"Multiplier") or hhlfqTFEdFdZ(IyBbcUdv,"mult") or hhlfqTFEdFdZ(IyBbcUdv,"Mult")),SellValue=SbqMasrkcJu(hhlfqTFEdFdZ(IyBbcUdv,"sellValue") or hhlfqTFEdFdZ(IyBbcUdv,"SellValue")),MutationText=nQDrPHspX,MutationCount=TyjTxErfQ,MutationParts=qcqyMTGZe,ItemId=dieQAZAcdj(IyBbcUdv),Raw=IyBbcUdv,} end local ehlkkKXED=false;local VztvGBnMwY=nil;local wbnEtBqPQbv=nil;local xJQgSeNIDqnE=nil;local nQDrPHspX=nil;local JfcjeQELl=dieQAZAcdj(IyBbcUdv);local EfOkMhdKaKxW=false;local function BtlviBTK(PtWWWeZjj) return vcTqdMBPoKrs(PtWWWeZjj) end local function kXThSZhI(PtWWWeZjj) return JleRWAhoYiO(PtWWWeZjj) end local function TNthDbxfnYla(PtWWWeZjj,BLVKFXOjSqH) PtWWWeZjj=uGHbaWONyeld(PtWWWeZjj or "");if PtWWWeZjj=="" then return end if BtlviBTK(PtWWWeZjj)then EfOkMhdKaKxW=true;return end if kXThSZhI(PtWWWeZjj)then ehlkkKXED=true;if not wbnEtBqPQbv then wbnEtBqPQbv=PtWWWeZjj end end if HLgKtmFAAZmj(PtWWWeZjj,"fruit")then ehlkkKXED=true end if not VztvGBnMwY and(BLVKFXOjSqH=="fruittype" or BLVKFXOjSqH=="fruit" or BLVKFXOjSqH=="seedtype")then VztvGBnMwY=PtWWWeZjj end xJQgSeNIDqnE=xJQgSeNIDqnE or dJfFEhbCvZT(PtWWWeZjj);local xLhhgOphmhBz=HMCkrDIHHamF(PtWWWeZjj);if xLhhgOphmhBz~="" and not nQDrPHspX then nQDrPHspX=xLhhgOphmhBz end end local function toeCgVwbHj(PtWWWeZjj,xbrZbULKJpu,depth,tgxxqOUF) if depth>5 then return end local BLVKFXOjSqH=nJyKDUmaGk(xbrZbULKJpu);if type(PtWWWeZjj)=="string" then if BLVKFXOjSqH=="id" or BLVKFXOjSqH=="itemid" or BLVKFXOjSqH=="uuid" then JfcjeQELl=JfcjeQELl or PtWWWeZjj end if string.find(BLVKFXOjSqH,"fruit",1,true)then ehlkkKXED=true end if string.find(BLVKFXOjSqH,"mutation",1,true) and not nQDrPHspX then nQDrPHspX=PtWWWeZjj end TNthDbxfnYla(PtWWWeZjj,BLVKFXOjSqH) elseif type(PtWWWeZjj)=="number" then if string.find(BLVKFXOjSqH,"mult",1,true) or BLVKFXOjSqH=="multiplier" then xJQgSeNIDqnE=xJQgSeNIDqnE or PtWWWeZjj end elseif type(PtWWWeZjj)=="table" then tgxxqOUF=tgxxqOUF or{};if tgxxqOUF[PtWWWeZjj]then return end tgxxqOUF[PtWWWeZjj]=true;local YMmhuctqFu=0;for childKey,childValue in eaDsYcns(PtWWWeZjj)do YMmhuctqFu+=1;if YMmhuctqFu>140 then break end toeCgVwbHj(childValue,childKey,depth+1,tgxxqOUF) end tgxxqOUF[PtWWWeZjj]=nil end end TNthDbxfnYla(hhlfqTFEdFdZ(IyBbcUdv,"name") or hhlfqTFEdFdZ(IyBbcUdv,"Name") or hhlfqTFEdFdZ(IyBbcUdv,"displayName") or hhlfqTFEdFdZ(IyBbcUdv,"DisplayName") or hhlfqTFEdFdZ(IyBbcUdv,"fruitType") or hhlfqTFEdFdZ(IyBbcUdv,"FruitType") or hhlfqTFEdFdZ(IyBbcUdv,"seedType") or hhlfqTFEdFdZ(IyBbcUdv,"SeedType"),"name");toeCgVwbHj(IyBbcUdv,"",0,{});local myolzpwex=wbnEtBqPQbv or hhlfqTFEdFdZ(IyBbcUdv,"name") or hhlfqTFEdFdZ(IyBbcUdv,"Name") or hhlfqTFEdFdZ(IyBbcUdv,"displayName") or hhlfqTFEdFdZ(IyBbcUdv,"DisplayName") or wKGDwIXKXV;if BtlviBTK(myolzpwex) and not VztvGBnMwY and not xJQgSeNIDqnE and not nQDrPHspX then return nil end if HLgKtmFAAZmj(wKGDwIXKXV,"fruit") or hhlfqTFEdFdZ(IyBbcUdv,"fruitType")~=nil or hhlfqTFEdFdZ(IyBbcUdv,"FruitType")~=nil then ehlkkKXED=true end if not ehlkkKXED then return nil end local TyjTxErfQ=0;local qcqyMTGZe={};if nQDrPHspX then TyjTxErfQ,qcqyMTGZe=NSNwtfUx(nQDrPHspX) end return{FruitType=VztvGBnMwY or "Fruit",DisplayName=wbnEtBqPQbv,Multiplier=xJQgSeNIDqnE,MutationText=nQDrPHspX,MutationCount=TyjTxErfQ,MutationParts=qcqyMTGZe,ItemId=JfcjeQELl,Raw=IyBbcUdv,} end local function EvEnvmUMXc(vgsLowTWAR) if not vgsLowTWAR then return "Fruit" end local fBBRHrrWC=LmcSnvsiFihc(vgsLowTWAR.DisplayName or "");if fBBRHrrWC=="" then fBBRHrrWC=uGHbaWONyeld(vgsLowTWAR.FruitType or "Fruit") end if not HLgKtmFAAZmj(fBBRHrrWC,"fruit")then fBBRHrrWC=fBBRHrrWC.." Fruit" end if vgsLowTWAR.Multiplier and not fBBRHrrWC:match("%([%d%.]+%s*[xX]%)")then fBBRHrrWC=fBBRHrrWC.." ("..uGHbaWONyeld(vgsLowTWAR.Multiplier).."x)" end return fBBRHrrWC end local function JXvyhWxX() if not aCWHPTIm:IsReady()then YQhovmXr() end local GKtbXevoURb=aCWHPTIm:GetInventory();local JwvPnUXQIS={};if type(GKtbXevoURb)=="table" then rkhbHUDbax(GKtbXevoURb,"Inventory",function(IyBbcUdv,path) local IfTslRvIzV=UoByyZgreHvy(path);if not IfTslRvIzV then return end local vgsLowTWAR=YFFIWxsC(IyBbcUdv);if vgsLowTWAR then vgsLowTWAR.Index=IfTslRvIzV.Index;vgsLowTWAR.IsHotbar=IfTslRvIzV.IsHotbar;vgsLowTWAR.Container=IfTslRvIzV.Container;vgsLowTWAR.Path=path;vgsLowTWAR.Location=IfTslRvIzV;JwvPnUXQIS[#JwvPnUXQIS+1]=vgsLowTWAR end end) end local CwAZAUGmy={};for _,vgsLowTWAR in veanYETtE(JwvPnUXQIS)do if vgsLowTWAR.ItemId~=nil then CwAZAUGmy[uGHbaWONyeld(vgsLowTWAR.ItemId)]=true end end local function DYmaIpwXP(grIugrUBSNbw) if not grIugrUBSNbw or not grIugrUBSNbw:IsA("Tool")then return false end local fBBRHrrWC=uGHbaWONyeld(grIugrUBSNbw.Name or "");if fBBRHrrWC=="" or HLgKtmFAAZmj(fBBRHrrWC,"seed") or HLgKtmFAAZmj(fBBRHrrWC,"basket") or HLgKtmFAAZmj(fBBRHrrWC,"crate") or HLgKtmFAAZmj(fBBRHrrWC,"box") or HLgKtmFAAZmj(fBBRHrrWC,"pack") or HLgKtmFAAZmj(fBBRHrrWC,"bundle") or HLgKtmFAAZmj(fBBRHrrWC,"container") or(HLgKtmFAAZmj(fBBRHrrWC,"dead") and HLgKtmFAAZmj(fBBRHrrWC,"tree"))then return false end local wKGDwIXKXV=nJyKDUmaGk(grIugrUBSNbw:GetAttribute("ItemType") or grIugrUBSNbw:GetAttribute("itemType"));return HLgKtmFAAZmj(fBBRHrrWC,"fruit") or wKGDwIXKXV=="fruit" or HLgKtmFAAZmj(wKGDwIXKXV,"fruit") or grIugrUBSNbw:GetAttribute("FruitType")~=nil or grIugrUBSNbw:GetAttribute("fruitType")~=nil end local function nhodDchg(grIugrUBSNbw,containerName) if not DYmaIpwXP(grIugrUBSNbw)then return end local JfcjeQELl=GmpDMBtRVkw(grIugrUBSNbw);if JfcjeQELl~=nil and CwAZAUGmy[uGHbaWONyeld(JfcjeQELl)]then return end local WtMoWKaqK="Tool."..uGHbaWONyeld(containerName or "Bag").."."..uGHbaWONyeld(grIugrUBSNbw.Name);if JfcjeQELl==nil and CwAZAUGmy[WtMoWKaqK]then return end CwAZAUGmy[JfcjeQELl~=nil and uGHbaWONyeld(JfcjeQELl)or WtMoWKaqK]=true;local fBBRHrrWC=uGHbaWONyeld(grIugrUBSNbw.Name or "Fruit");local VztvGBnMwY=grIugrUBSNbw:GetAttribute("FruitType") or grIugrUBSNbw:GetAttribute("fruitType") or fBBRHrrWC:match("^%s*(.-)%s+[Ff]ruit") or "Fruit";local nQDrPHspX=grIugrUBSNbw:GetAttribute("Mutations") or grIugrUBSNbw:GetAttribute("Mutation") or HMCkrDIHHamF(fBBRHrrWC);local TyjTxErfQ=0;local qcqyMTGZe={};if nQDrPHspX then TyjTxErfQ,qcqyMTGZe=NSNwtfUx(nQDrPHspX) end JwvPnUXQIS[#JwvPnUXQIS+1]={FruitType=VztvGBnMwY,DisplayName=fBBRHrrWC,Multiplier=SbqMasrkcJu(grIugrUBSNbw:GetAttribute("Multiplier")) or SbqMasrkcJu(grIugrUBSNbw:GetAttribute("multiplier")) or dJfFEhbCvZT(fBBRHrrWC),MutationText=nQDrPHspX,MutationCount=TyjTxErfQ,MutationParts=qcqyMTGZe,ItemId=JfcjeQELl,Tool=grIugrUBSNbw,Path=WtMoWKaqK,Raw=grIugrUBSNbw,} end local aYJmMMga=klMYKcVhM();if aYJmMMga then for _,child in veanYETtE(aYJmMMga:GetChildren())do nhodDchg(child,"Character") end end local WNvWPtHb=etCIDMWAodR:FindFirstChild("Backpack");if WNvWPtHb then for _,child in veanYETtE(WNvWPtHb:GetChildren())do nhodDchg(child,"Backpack") end end table.sort(JwvPnUXQIS,function(a,b) local aWChPozAvaEI=SbqMasrkcJu(a.Multiplier)or 0;local cDVhzSUXbb=SbqMasrkcJu(b.Multiplier)or 0;if aWChPozAvaEI==cDVhzSUXbb then return uGHbaWONyeld(a.Path)<uGHbaWONyeld(b.Path) end return aWChPozAvaEI<cDVhzSUXbb end);return JwvPnUXQIS end local function ztntksWG(grIugrUBSNbw,vgsLowTWAR,allowLoose) if not grIugrUBSNbw or not grIugrUBSNbw:IsA("Tool")or not vgsLowTWAR then return false end local vwburqcFwh=uGHbaWONyeld(grIugrUBSNbw.Name or "");if HLgKtmFAAZmj(vwburqcFwh,"seed") or(HLgKtmFAAZmj(vwburqcFwh,"fruit") and(HLgKtmFAAZmj(vwburqcFwh,"basket") or HLgKtmFAAZmj(vwburqcFwh,"crate") or HLgKtmFAAZmj(vwburqcFwh,"box") or HLgKtmFAAZmj(vwburqcFwh,"pack") or HLgKtmFAAZmj(vwburqcFwh,"bundle") or HLgKtmFAAZmj(vwburqcFwh,"container"))) or(HLgKtmFAAZmj(vwburqcFwh,"dead") and HLgKtmFAAZmj(vwburqcFwh,"tree"))then return false end if vgsLowTWAR.Tool~=nil and grIugrUBSNbw==vgsLowTWAR.Tool then return true end local VVQxprhSiG=vgsLowTWAR.ItemId;local nqkusLYWzBgp=GmpDMBtRVkw(grIugrUBSNbw);if VVQxprhSiG~=nil then if nqkusLYWzBgp~=nil then return uGHbaWONyeld(nqkusLYWzBgp)==uGHbaWONyeld(VVQxprhSiG) end if allowLoose~=true then return false end end if HLgKtmFAAZmj(vwburqcFwh,"fruit")then return true end local SwGbhJkvJCW=nJyKDUmaGk(grIugrUBSNbw:GetAttribute("ItemType") or grIugrUBSNbw:GetAttribute("itemType"));if SwGbhJkvJCW=="fruit" or HLgKtmFAAZmj(SwGbhJkvJCW,"fruit") or grIugrUBSNbw:GetAttribute("FruitType")~=nil or grIugrUBSNbw:GetAttribute("fruitType")~=nil then return true end return false end local function vnbIdbSQ(vgsLowTWAR,timeout) local zkiSlLRkxM=os.clock()+(SbqMasrkcJu(timeout)or 2);while fshvbnQtAIC.Alive and os.clock()<zkiSlLRkxM do local CSrMkhjAHppN=DZnpetDwcKH();if#CSrMkhjAHppN==1 and ztntksWG(CSrMkhjAHppN[1],vgsLowTWAR,true)then return CSrMkhjAHppN[1] end task.wait(0.03) end return nil end local function lFGhLLFfvjyH(vgsLowTWAR) if not vgsLowTWAR then return nil,"fruit info missing" end local wwcpoECkJG=xqMPKmZFg();if ztntksWG(wwcpoECkJG,vgsLowTWAR,false)then return wwcpoECkJG end brpljcZjs();if vgsLowTWAR.Tool and vgsLowTWAR.Tool.Parent then local KjfnvTNyk=pgaQZNmdOSpc();if KjfnvTNyk then uUlvADpf(function() KjfnvTNyk:EquipTool(vgsLowTWAR.Tool) end);local onBXZdEhBMd=vnbIdbSQ(vgsLowTWAR,1);if onBXZdEhBMd then return onBXZdEhBMd end end end if not vgsLowTWAR.Location then return nil,"inventory location missing" end local EJGgOEIJ,qtFnxqcHneA=uUlvADpf(function() MeNCKzfHJ:FireServer(vgsLowTWAR.Location.IsHotbar,vgsLowTWAR.Location.Index) end);if not EJGgOEIJ then return nil,"Equip failed: "..uGHbaWONyeld(qtFnxqcHneA) end local onBXZdEhBMd=vnbIdbSQ(vgsLowTWAR,2);if not onBXZdEhBMd then return nil,"Could not equip "..EvEnvmUMXc(vgsLowTWAR) end return onBXZdEhBMd end local function xuRYZYmVKBBr(vgsLowTWAR) if vgsLowTWAR and vgsLowTWAR.ItemId~=nil then return "id:"..uGHbaWONyeld(vgsLowTWAR.ItemId) end return "path:"..uGHbaWONyeld(vgsLowTWAR and vgsLowTWAR.Path or "") end local function VsVxqNpABjJ(vgsLowTWAR) fshvbnQtAIC.ClearInventoryLocation(vgsLowTWAR and vgsLowTWAR.Location,vgsLowTWAR and vgsLowTWAR.ItemId) end local function SvysPhcPG(vgsLowTWAR,eHPGDafMmf) if not OCHSTdPPMP then return false,"Sell service was not found" end if not hONLvePvS:AcquireBackgroundEquipment("AutoSellFruit",eHPGDafMmf)then return false,"cancelled" end local EJGgOEIJ,xMrdhHFKt=aWHLTiHDbNEV(function() local grIugrUBSNbw,PkgdcaiBXvl=lFGhLLFfvjyH(vgsLowTWAR);if not grIugrUBSNbw then KEcWWkuhM(PkgdcaiBXvl or "Could not equip fruit") end if vgsLowTWAR.ItemId~=nil then local nqkusLYWzBgp=GmpDMBtRVkw(grIugrUBSNbw);if nqkusLYWzBgp~=nil and uGHbaWONyeld(nqkusLYWzBgp)~=uGHbaWONyeld(vgsLowTWAR.ItemId)then KEcWWkuhM("Equipped item changed before selling") end end mtEBVbBpifWV("SELLING","warning");ZNOMJJYC("Selling "..EvEnvmUMXc(vgsLowTWAR).."...","warning");local VZxKamHoJXXM=OCHSTdPPMP:InvokeServer();cBzlOwFDf.SellFruitCount+=1;cBzlOwFDf.LastSoldFruit={Name=EvEnvmUMXc(vgsLowTWAR),Path=vgsLowTWAR.Path,Result=VZxKamHoJXXM,};VsVxqNpABjJ(vgsLowTWAR);return VZxKamHoJXXM end,debug.traceback);hONLvePvS:ReleaseBackgroundEquipment("AutoSellFruit");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end if not EJGgOEIJ then local DtGvzXShoJ=uGHbaWONyeld(xMrdhHFKt):match("^[^\n]+") or uGHbaWONyeld(xMrdhHFKt);ZNOMJJYC("Sell fruit failed: "..DtGvzXShoJ,"danger");return false,DtGvzXShoJ end return true,xMrdhHFKt end local function yaSjjYVZcw(eHPGDafMmf) local zWNggjdRVwh={};while fshvbnQtAIC.Alive and TLDNAtPoWKo.AutoSellFruit and not eHPGDafMmf()do if not aCWHPTIm:IsReady()then YQhovmXr();ZNOMJJYC("Waiting for bag data before selling fruit...","warning");if not AvsKZPPdnJ(0.5,eHPGDafMmf)then break end else local vTvYcdqSKFS=os.clock();local WLTrQsjsrXp=JXvyhWxX();local unRIgYnrSl=nil;for _,MSdVlYAXGv in veanYETtE(WLTrQsjsrXp)do local ziRYzylERU=zWNggjdRVwh[xuRYZYmVKBBr(MSdVlYAXGv)];if not ziRYzylERU or ziRYzylERU<=vTvYcdqSKFS then unRIgYnrSl=MSdVlYAXGv;break end end if unRIgYnrSl then local FiHivZWNmv=fshvbnQtAIC.GetInventoryVersion();local QpFfPFRgE=SvysPhcPG(unRIgYnrSl,eHPGDafMmf);if QpFfPFRgE then ZNOMJJYC("Sold "..EvEnvmUMXc(unRIgYnrSl).." | total "..uGHbaWONyeld(cBzlOwFDf.SellFruitCount),"success");if not fshvbnQtAIC.WaitForInventoryRefresh(FiHivZWNmv,eHPGDafMmf,2)then zWNggjdRVwh[xuRYZYmVKBBr(unRIgYnrSl)]=os.clock()+1.5 end if not AvsKZPPdnJ(TLDNAtPoWKo.SellDelay,eHPGDafMmf)then break end else zWNggjdRVwh[xuRYZYmVKBBr(unRIgYnrSl)]=os.clock()+5;if not AvsKZPPdnJ(0.35,eHPGDafMmf)then break end end else if#WLTrQsjsrXp==0 then ZNOMJJYC("No fruit in your bag") else ZNOMJJYC("Waiting before retrying fruit sales","warning") end if not AvsKZPPdnJ(1,eHPGDafMmf)then break end end end end hONLvePvS:ReleaseBackgroundEquipment("AutoSellFruit");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end end fshvbnQtAIC.GetFruits=JXvyhWxX;fshvbnQtAIC.PrintFruits=function() local WLTrQsjsrXp=JXvyhWxX();SgnOPZlC("");SgnOPZlC("===== KIRA FRUITS =====");for xJEdnwduH,vgsLowTWAR in veanYETtE(WLTrQsjsrXp)do SgnOPZlC(xJEdnwduH,vgsLowTWAR.Path,"|",EvEnvmUMXc(vgsLowTWAR),"| ID:",uGHbaWONyeld(vgsLowTWAR.ItemId)) end SgnOPZlC("Total:",#WLTrQsjsrXp);SgnOPZlC("=======================") end return yaSjjYVZcw end local xjTxUCvBgf=OjdKYEfN();local AluttFoXzo=setmetatable({},{__mode="k",});local rflwbUCrK={};local NUoRcFMojkv={};local BCTBZnKqAA={[""]=1,k=1e3,m=1e6,b=1e9,t=1e12,q=1e15,qa=1e15,qi=1e18,sx=1e21,sp=1e24,oc=1e27,no=1e30,dc=1e33,de=1e33,ud=1e36,dd=1e39,td=1e42,qad=1e45,qid=1e48,sxd=1e51,spd=1e54,ocd=1e57,nod=1e60,vg=1e63,};local function kfwbQXMZDP(IpCmOXKp) IpCmOXKp=uGHbaWONyeld(IpCmOXKp or "");IpCmOXKp=IpCmOXKp:gsub("<.->","");IpCmOXKp=IpCmOXKp:gsub(",","");IpCmOXKp=IpCmOXKp:gsub("%s+","");if IpCmOXKp=="" then return nil end if nJyKDUmaGk(IpCmOXKp)=="free" or string.find(nJyKDUmaGk(IpCmOXKp),"free",1,true)then return 0 end IpCmOXKp=IpCmOXKp:gsub("[%$€£¥]","");local qzluvKXH=SbqMasrkcJu(IpCmOXKp);if qzluvKXH~=nil then return qzluvKXH end local nlRVTXnIJP,VvybrMXlCw=IpCmOXKp:match("([%+%-]?[%d%.]+)([%a]*)");local piyYXrqJ=SbqMasrkcJu(nlRVTXnIJP);if not piyYXrqJ then return nil end VvybrMXlCw=nJyKDUmaGk(VvybrMXlCw);local xJQgSeNIDqnE=BCTBZnKqAA[VvybrMXlCw];if xJQgSeNIDqnE==nil then return nil end return piyYXrqJ*xJQgSeNIDqnE end local function gkuQZUyw() local yLltXYPnvM=etCIDMWAodR:FindFirstChild("leaderstats");if not yLltXYPnvM then return nil,"leaderstats not found" end local function WBZIsYKjarK(stat) if not stat then return nil end local EJGgOEIJ,yZAQoQwYO=uUlvADpf(function() return stat.Value end);if not EJGgOEIJ or yZAQoQwYO==nil then return nil end if typeof(yZAQoQwYO)=="number" then return yZAQoQwYO,uGHbaWONyeld(stat.Name)..": "..uGHbaWONyeld(yZAQoQwYO) end local ZRinCnVKH=kfwbQXMZDP(yZAQoQwYO);if ZRinCnVKH~=nil then return ZRinCnVKH,uGHbaWONyeld(stat.Name)..": "..uGHbaWONyeld(yZAQoQwYO) end return nil end local krmCWoDCH={"Cash","Money","Coins","Coin","Wallet","Gold","$",};for _,WQfqlclr in veanYETtE(krmCWoDCH)do local lnwAaJUcpv,emgznWXlTN=WBZIsYKjarK(yLltXYPnvM:FindFirstChild(WQfqlclr));if lnwAaJUcpv~=nil then return lnwAaJUcpv,emgznWXlTN end end for _,stat in veanYETtE(yLltXYPnvM:GetChildren())do local WQfqlclr=nJyKDUmaGk(stat.Name);if string.find(WQfqlclr,"cash",1,true) or string.find(WQfqlclr,"money",1,true) or string.find(WQfqlclr,"coin",1,true) or string.find(WQfqlclr,"wallet",1,true) or string.find(WQfqlclr,"gold",1,true) or string.find(WQfqlclr,"$",1,true)then local lnwAaJUcpv,emgznWXlTN=WBZIsYKjarK(stat);if lnwAaJUcpv~=nil then return lnwAaJUcpv,emgznWXlTN end end end return nil,"money leaderstat not found" end local function svJpdyNJdlHY() local PNKDTAWELk=ajdCwmMJcNo:FindFirstChild("HUD");local EMmVetpsxoB=PNKDTAWELk and PNKDTAWELk:FindFirstChild("BottomLeft");local CUhjitJNYU=EMmVetpsxoB and EMmVetpsxoB:FindFirstChild("CoinsWallet");local uYQUqJVp=CUhjitJNYU and CUhjitJNYU:FindFirstChild("TextLabel");if uYQUqJVp and(uYQUqJVp:IsA("TextLabel") or uYQUqJVp:IsA("TextButton") or uYQUqJVp:IsA("TextBox"))then return uYQUqJVp end return nil end local function OLVQARBxHEV() local wBAgSGjJ,lFQgwduIZA=gkuQZUyw();if wBAgSGjJ~=nil then return wBAgSGjJ,lFQgwduIZA end local uYQUqJVp=svJpdyNJdlHY();if not uYQUqJVp then return nil,uGHbaWONyeld(lFQgwduIZA or "wallet label not found") end local PtWWWeZjj=kfwbQXMZDP(uYQUqJVp.Text);if PtWWWeZjj==nil then return nil,"could not parse wallet: "..uGHbaWONyeld(uYQUqJVp.Text) end return PtWWWeZjj,uYQUqJVp.Text end local function pXDlNSuJC(holder) if not holder then return nil end local sTKvAZplZih=holder:GetAttribute("SeedType") or holder:GetAttribute("Seed") or holder:GetAttribute("SeedName");local YzpfXEzkjsJn=holder:GetAttribute("Rarity") or "UNKNOWN";local auhClXTCzr=holder:GetAttribute("SpawnId");local pfCOoCOgU=holder:FindFirstChild("BillboardGui");local nVAtAiBy=pfCOoCOgU and pfCOoCOgU:FindFirstChild("Frame");local JgiFAgUwQ=nVAtAiBy and nVAtAiBy:FindFirstChild("Cost");if not JgiFAgUwQ then JgiFAgUwQ=holder:FindFirstChild("Cost",true) end local PWIpkZTvowHk=nil;if JgiFAgUwQ and(JgiFAgUwQ:IsA("TextLabel") or JgiFAgUwQ:IsA("TextButton") or JgiFAgUwQ:IsA("TextBox"))then PWIpkZTvowHk=JgiFAgUwQ.Text end if not PWIpkZTvowHk or PWIpkZTvowHk=="" then PWIpkZTvowHk=edGMtCZvFZ[uGHbaWONyeld(sTKvAZplZih or "")] end local WaRaFCIApaVi=holder:FindFirstChild("ProximityPrompt") or holder:FindFirstChildWhichIsA("ProximityPrompt",true);return{Holder=holder,SeedType=uGHbaWONyeld(sTKvAZplZih or "Unknown Seed"),Rarity=uGHbaWONyeld(YzpfXEzkjsJn),SpawnId=auhClXTCzr,CostObject=JgiFAgUwQ,CostText=PWIpkZTvowHk,Cost=kfwbQXMZDP(PWIpkZTvowHk),Prompt=WaRaFCIApaVi,} end fshvbnQtAIC.GetSeedHolderInfo=pXDlNSuJC;fshvbnQtAIC.ParseGameNumber=kfwbQXMZDP;fshvbnQtAIC.GetCoins=OLVQARBxHEV;local function MhHQTfcS(holderInfo) local unRIgYnrSl=pvKdpZUlrK();if#unRIgYnrSl==#HyKBegAhF then return true end local tgukJtbvcn=nJyKDUmaGk(holderInfo.Rarity);for _,YzpfXEzkjsJn in veanYETtE(unRIgYnrSl)do if nJyKDUmaGk(YzpfXEzkjsJn)==tgukJtbvcn then return true end end return false end local function rqYjyqZGa(holderInfo) local unRIgYnrSl=fCnCPKSDRV();if#unRIgYnrSl==#lsqKbhtiF then return true end local tgukJtbvcn=nJyKDUmaGk(holderInfo.SeedType);for _,lsmMNuktk in veanYETtE(unRIgYnrSl)do if nJyKDUmaGk(lsmMNuktk)==tgukJtbvcn then return true end end return false end local function jntIMjxBFWe(holderInfo) if holderInfo.SpawnId~=nil then return uGHbaWONyeld(holderInfo.SpawnId)..":"..nJyKDUmaGk(holderInfo.SeedType) end return uGHbaWONyeld(holderInfo.Holder)..":"..nJyKDUmaGk(holderInfo.SeedType) end local function GHvgvBlk() rflwbUCrK={} end local function nHLFxVBcTXL() local YMmhuctqFu=0;for _,holder in veanYETtE(cfjGnRWkNtMF:GetChildren())do if holder.Name=="SeedHolder" then YMmhuctqFu+=1 end end return YMmhuctqFu end local function mtZOoYOWAIZy(holder,eHPGDafMmf) if not holder or not holder.Parent or holder.Name~="SeedHolder" then return false,"invalid-holder" end local vgsLowTWAR=pXDlNSuJC(holder);if not vgsLowTWAR then return false,"no-info" end if not MhHQTfcS(vgsLowTWAR) or not rqYjyqZGa(vgsLowTWAR)then return false,"filtered" end if not vgsLowTWAR.Prompt then return false,"prompt-missing" end if vgsLowTWAR.Cost==nil then ZNOMJJYC("Skipped "..vgsLowTWAR.SeedType..": unknown cost "..uGHbaWONyeld(vgsLowTWAR.CostText),"warning");return false,"cost-unreadable" end local lnwAaJUcpv,OvwYLsCDwJB=OLVQARBxHEV();if lnwAaJUcpv==nil then ZNOMJJYC("AutoBuy paused: "..uGHbaWONyeld(OvwYLsCDwJB),"danger");return false,"wallet-unreadable" end if lnwAaJUcpv<vgsLowTWAR.Cost then local xbrZbULKJpu=jntIMjxBFWe(vgsLowTWAR);local vTvYcdqSKFS=os.clock();if vTvYcdqSKFS-(NUoRcFMojkv[xbrZbULKJpu]or 0)>=3 then NUoRcFMojkv[xbrZbULKJpu]=vTvYcdqSKFS;ZNOMJJYC("Not enough money for "..vgsLowTWAR.SeedType.." ("..uGHbaWONyeld(vgsLowTWAR.CostText)..")","warning") end return false,"insufficient" end local xbrZbULKJpu=jntIMjxBFWe(vgsLowTWAR);if AluttFoXzo[holder]==xbrZbULKJpu then return true,"already-purchased" end if(rflwbUCrK[xbrZbULKJpu]or 0)>os.clock()then return false,"cooldown" end if not hONLvePvS:AcquireBackgroundEquipment("AutoBuy",eHPGDafMmf)then return false,"cancelled" end if not holder.Parent or not TLDNAtPoWKo.AutoBuy then hONLvePvS:ReleaseBackgroundEquipment("AutoBuy");return false,"cancelled" end vgsLowTWAR=pXDlNSuJC(holder);if not vgsLowTWAR or not MhHQTfcS(vgsLowTWAR) or not rqYjyqZGa(vgsLowTWAR)then hONLvePvS:ReleaseBackgroundEquipment("AutoBuy");return false,"changed" end local cLisoFvU=OLVQARBxHEV();if cLisoFvU==nil or vgsLowTWAR.Cost==nil or cLisoFvU<vgsLowTWAR.Cost then hONLvePvS:ReleaseBackgroundEquipment("AutoBuy");return false,"insufficient" end local iOzfCnlve=aCWHPTIm:GetSeedCount(vgsLowTWAR.SeedType);local rXGZOqcWQ=fshvbnQtAIC.GetInventoryVersion();mtEBVbBpifWV("BUYING");ZNOMJJYC("Buying "..vgsLowTWAR.SeedType.." ["..vgsLowTWAR.Rarity.."] "..uGHbaWONyeld(vgsLowTWAR.CostText));if type(fireproximityprompt)~="function" then hONLvePvS:ReleaseBackgroundEquipment("AutoBuy");ZNOMJJYC("fireproximityprompt is unavailable","danger");return false,"fireproximityprompt-unavailable" end rflwbUCrK[xbrZbULKJpu]=os.clock()+1.25;local pErpaHMjZSYF,QkrMioABXb=uUlvADpf(function() fireproximityprompt(vgsLowTWAR.Prompt) end);if not pErpaHMjZSYF then hONLvePvS:ReleaseBackgroundEquipment("AutoBuy");ZNOMJJYC("Prompt failed: "..uGHbaWONyeld(QkrMioABXb),"danger");return false,"prompt-error" end local evrkuinuGetj=false;local zkiSlLRkxM=os.clock()+math.max(1.25,TLDNAtPoWKo.BuyDelay+1.0);while fshvbnQtAIC.Alive and os.clock()<zkiSlLRkxM do if not holder.Parent then evrkuinuGetj=true;break end local NqtsslRyStP=aCWHPTIm:GetSeedCount(vgsLowTWAR.SeedType);if NqtsslRyStP>iOzfCnlve then evrkuinuGetj=true;break end local khHiurRU=OLVQARBxHEV();if vgsLowTWAR.Cost>0 and khHiurRU~=nil and khHiurRU<cLisoFvU then evrkuinuGetj=true;break end task.wait(0.04) end hONLvePvS:ReleaseBackgroundEquipment("AutoBuy");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end if not evrkuinuGetj then ZNOMJJYC("Purchase unverified: "..vgsLowTWAR.SeedType,"warning");return false,"unverified" end fshvbnQtAIC.WaitForInventoryRefresh(rXGZOqcWQ,eHPGDafMmf,1.5);AluttFoXzo[holder]=xbrZbULKJpu;cBzlOwFDf.PurchaseCount+=1;cBzlOwFDf.LastPurchase={SeedType=vgsLowTWAR.SeedType,Rarity=vgsLowTWAR.Rarity,SpawnId=vgsLowTWAR.SpawnId,Cost=vgsLowTWAR.Cost,CostText=vgsLowTWAR.CostText,PurchasedAt=os.clock(),};ZNOMJJYC("Bought "..vgsLowTWAR.SeedType.." for "..uGHbaWONyeld(vgsLowTWAR.CostText));return true,"purchased" end local function IZspFpvN(eHPGDafMmf) while fshvbnQtAIC.Alive and TLDNAtPoWKo.AutoBuy and not eHPGDafMmf()do local kvjbgDUdkp=cfjGnRWkNtMF:GetChildren();for _,holder in veanYETtE(kvjbgDUdkp)do if eHPGDafMmf() or not TLDNAtPoWKo.AutoBuy then break end if holder.Name=="SeedHolder" then mtZOoYOWAIZy(holder,eHPGDafMmf);task.wait(0.025) end end task.wait(0.12) end hONLvePvS:ReleaseBackgroundEquipment("AutoBuy") end local function PbWrRHUGh(PtWWWeZjj) for _,ddnuwrlJ in veanYETtE(QOCyPsnx)do if ddnuwrlJ==PtWWWeZjj then return true end end return false end local function JLZixjXni() local GBdvANeLG,zrynaZULKS=dTxffcpwj();if not GBdvANeLG then return nil,"Waiting for weather before planting (current: "..uGHbaWONyeld(zrynaZULKS)..")" end local lsmMNuktk,PzArmXNnEzX=mUwNsfocJSBz();if not lsmMNuktk then return nil,PzArmXNnEzX or "No plant seed selected" end local ddnuwrlJ=TLDNAtPoWKo.Fertilizer;if not PbWrRHUGh(ddnuwrlJ)then return nil,"Invalid fertilizer: "..uGHbaWONyeld(ddnuwrlJ) end local JvvSYDfsMb=aCWHPTIm:GetSeedCount(lsmMNuktk);if JvvSYDfsMb<=0 then return nil,"No "..uGHbaWONyeld(lsmMNuktk).." seed in Inventory" end return{SeedName=lsmMNuktk,Fertilizer=ddnuwrlJ,OwnedCount=JvvSYDfsMb,Weather=zrynaZULKS,} end local function KhgASwFH(owner,eHPGDafMmf) owner=owner or "AutoPlant";local QVHUpyYu,FVFbtCxNFuPl=JLZixjXni();if not QVHUpyYu then ZNOMJJYC("Auto Plant waiting: "..uGHbaWONyeld(FVFbtCxNFuPl),"warning");return false,FVFbtCxNFuPl end if not hONLvePvS:BeginPlant(owner,eHPGDafMmf)then return false,"cancelled" end local lsmMNuktk=QVHUpyYu.SeedName;local ddnuwrlJ=QVHUpyYu.Fertilizer;local dbyVQOwwvF=nil;local koLbQgHvWI=false;local rXGZOqcWQ=nil;local EJGgOEIJ,OLenMhYh=aWHLTiHDbNEV(function() local xioTIdtxGFX,freshError=JLZixjXni();if not xioTIdtxGFX then KEcWWkuhM(freshError) end lsmMNuktk=xioTIdtxGFX.SeedName;ddnuwrlJ=xioTIdtxGFX.Fertilizer;local uWqqwsNpNFbp=type(fshvbnQtAIC.GetWormSettingsForSeed)=="function" and fshvbnQtAIC.GetWormSettingsForSeed(lsmMNuktk) or nil;local JvvSYDfsMb=xioTIdtxGFX.OwnedCount;ZNOMJJYC("Equipping "..uGHbaWONyeld(lsmMNuktk).." (owned x"..uGHbaWONyeld(JvvSYDfsMb)..")...");local onBXZdEhBMd,KdIMFIifT,PkgdcaiBXvl=euNHnYIhQPb(lsmMNuktk);if not onBXZdEhBMd or not KdIMFIifT then KEcWWkuhM(PkgdcaiBXvl or("Seed tool not found/equipped: "..uGHbaWONyeld(lsmMNuktk))) end local evrkuinuGetj,wZdojfnVlWE=icaoavey(lsmMNuktk,KdIMFIifT.Id);if not evrkuinuGetj then KEcWWkuhM(wZdojfnVlWE) end local AWWdXEmFd=DZnpetDwcKH();local aIhMQviTdFvB=AWWdXEmFd[1];if#AWWdXEmFd~=1 or not aIhMQviTdFvB or not mmxnGWQd(aIhMQviTdFvB,lsmMNuktk,KdIMFIifT.Id)then KEcWWkuhM("Equipped seed changed/ambiguous immediately before StartRound") end local KkSHJlpNf,beforeMaxSerial=rREFsExnOGw();local lDSkPMivaZTX=nil;local OlUiFheN=ddnuwrlJ;if uWqqwsNpNFbp and uWqqwsNpNFbp.Use and fshvbnQtAIC.WormBridge then lDSkPMivaZTX=fshvbnQtAIC.WormBridge:Resolve(uWqqwsNpNFbp);if lDSkPMivaZTX and fshvbnQtAIC.WormBridge:Reserve(lDSkPMivaZTX,owner)then dbyVQOwwvF=lDSkPMivaZTX.Id;OlUiFheN="None" else lDSkPMivaZTX=nil end end ZNOMJJYC("Planting "..lsmMNuktk.." + "..(lDSkPMivaZTX and(fshvbnQtAIC.FormatWorm and fshvbnQtAIC.FormatWorm(lDSkPMivaZTX)or "Worm") or ddnuwrlJ)..(uWqqwsNpNFbp and uWqqwsNpNFbp.Use and not lDSkPMivaZTX and " (no matching Worm)" or "").."...");local xMxOtxDLr=os.clock();local QwVvOtEENPT;rXGZOqcWQ=fshvbnQtAIC.GetInventoryVersion();if lDSkPMivaZTX then koLbQgHvWI=true;QwVvOtEENPT=ezEBLgXecXw:InvokeServer(lsmMNuktk,"None",lDSkPMivaZTX.Id) else QwVvOtEENPT=ezEBLgXecXw:InvokeServer(lsmMNuktk,ddnuwrlJ) end if QwVvOtEENPT==false then KEcWWkuhM("StartRound returned false") end local ZdiLxOrkAC=TOvMqmoWsqh(KkSHJlpNf,beforeMaxSerial,3);if not ZdiLxOrkAC then KEcWWkuhM("StartRound returned but no new owned PlantRound appeared") end if lDSkPMivaZTX and dbyVQOwwvF then fshvbnQtAIC.WormBridge:Mark(dbyVQOwwvF,"CONSUMED") end local hGrmnrfwopPD={Seed=lsmMNuktk,SeedItemId=KdIMFIifT.Id,SeedInventoryPath=KdIMFIifT.Path,SeedMutation=KdIMFIifT.Mutation,SeedCountBeforePlant=JvvSYDfsMb,Fertilizer=OlUiFheN,RequestedFertilizer=ddnuwrlJ,UsedWorm=lDSkPMivaZTX~=nil,WormId=lDSkPMivaZTX and lDSkPMivaZTX.Id or nil,WormType=lDSkPMivaZTX and lDSkPMivaZTX.RawType or nil,WormDisplayType=lDSkPMivaZTX and lDSkPMivaZTX.DisplayType or nil,WormMutation=lDSkPMivaZTX and lDSkPMivaZTX.Mutation or nil,WormMult=lDSkPMivaZTX and lDSkPMivaZTX.Mult or nil,WormSettings=uWqqwsNpNFbp and OadjwfPrk(uWqqwsNpNFbp)or nil,HarvestTarget=ToqIbVzdeXwp(lsmMNuktk),StartResponse=QwVvOtEENPT,StartedAt=xMxOtxDLr,InventoryVersionBefore=rXGZOqcWQ,Plot=kuMeqDsfnWpu(),BeforeRoundSerial=beforeMaxSerial,PlantRound=ZdiLxOrkAC,PlantRoundSerial=esvvgQpyGr(ZdiLxOrkAC),};if type(arCRGYHnEpD.VerifyPlant)=="function" then local khAuXuFDjQX,FUSIhpwvhSUu=uUlvADpf(arCRGYHnEpD.VerifyPlant,hGrmnrfwopPD);if not khAuXuFDjQX then KEcWWkuhM("VerifyPlant adapter error: "..uGHbaWONyeld(FUSIhpwvhSUu)) end if FUSIhpwvhSUu==false then KEcWWkuhM("VerifyPlant adapter rejected the plant") end end erKcMeojfUNV(ZdiLxOrkAC,lsmMNuktk);cBzlOwFDf.LastPlantContext=hGrmnrfwopPD;cBzlOwFDf.CurrentPlantRound=ZdiLxOrkAC;cBzlOwFDf.CurrentMultiplier=0;cBzlOwFDf.CurrentSeed=lsmMNuktk;cBzlOwFDf.CurrentHarvestTarget=hGrmnrfwopPD.HarvestTarget;cBzlOwFDf.LastUsedWorm=lDSkPMivaZTX and{Id=lDSkPMivaZTX.Id,Type=lDSkPMivaZTX.RawType,DisplayType=lDSkPMivaZTX.DisplayType,Mutation=lDSkPMivaZTX.Mutation,Mult=lDSkPMivaZTX.Mult,}or nil;cBzlOwFDf.PlantCount=cBzlOwFDf.PlantCount+1;return hGrmnrfwopPD end,debug.traceback);hONLvePvS:EndPlant(owner);if not EJGgOEIJ then if dbyVQOwwvF and fshvbnQtAIC.WormBridge then if koLbQgHvWI then fshvbnQtAIC.WormBridge:Mark(dbyVQOwwvF,"UNCERTAIN") else fshvbnQtAIC.WormBridge:Release(dbyVQOwwvF) end end local DtGvzXShoJ=uGHbaWONyeld(OLenMhYh):match("^[^\n]+")or uGHbaWONyeld(OLenMhYh);ZNOMJJYC("Plant failed: "..DtGvzXShoJ,"danger");return false,DtGvzXShoJ end if rXGZOqcWQ~=nil then fshvbnQtAIC.WaitForInventoryRefresh(rXGZOqcWQ,eHPGDafMmf,2) end ZNOMJJYC("Plant verified: "..uGHbaWONyeld(lsmMNuktk));return true,OLenMhYh end fshvbnQtAIC.PlantOnce=function() return KhgASwFH("ExternalPlant",function() return not fshvbnQtAIC.Alive end) end local GgOLwDLeKijm={};local function KGAVLeIlN(ukYHzlmjB,timeout) local zkiSlLRkxM=os.clock()+(SbqMasrkcJu(timeout)or 1.5);while os.clock()<zkiSlLRkxM do if not ukYHzlmjB or not ukYHzlmjB.Parent then return true end task.wait(0.04) end return not ukYHzlmjB or not ukYHzlmjB.Parent end local function DgxLVlRShej(WaRaFCIApaVi) if not WaRaFCIApaVi then return false,"ProximityPrompt missing" end if type(fireproximityprompt)~="function" then return false,"fireproximityprompt unavailable" end local EJGgOEIJ,qtFnxqcHneA=uUlvADpf(function() fireproximityprompt(WaRaFCIApaVi) end);if not EJGgOEIJ then return false,uGHbaWONyeld(qtFnxqcHneA) end return true end local function xljscWaADLry(ukYHzlmjB,YJKQiiJOwpuw,eHPGDafMmf) if not ukYHzlmjB or not ukYHzlmjB.Parent or not YDPPNscmbA(ukYHzlmjB)then return false,"round-missing" end local ziRYzylERU=GgOLwDLeKijm[ukYHzlmjB]or 0;if ziRYzylERU>os.clock()then return false,"cooldown" end if hONLvePvS:IsPlantBusy()then return false,"plant-busy" end if not hONLvePvS:AcquireAction("RoundMonitor",eHPGDafMmf,1)then return false,"busy" end if not KDyzjSBNROqk:Acquire("RoundMonitor",eHPGDafMmf,1)then hONLvePvS:ReleaseAction("RoundMonitor");return false,"busy" end local vgsLowTWAR=oKAdTluE(ukYHzlmjB);if not vgsLowTWAR then KDyzjSBNROqk:Release("RoundMonitor");hONLvePvS:ReleaseAction("RoundMonitor");return false,"round-invalid" end if vgsLowTWAR.OwnerId~=nil and vgsLowTWAR.OwnerId~=etCIDMWAodR.UserId then KDyzjSBNROqk:Release("RoundMonitor");hONLvePvS:ReleaseAction("RoundMonitor");return false,"wrong-owner" end local mUjDBRLtqMKi=YJKQiiJOwpuw=="dead" and "COLLECT DEAD" or "HARVESTING";local lsmMNuktk=UkBLxSrRPXRg(ukYHzlmjB);local VVyIyeiSVOi=spEmThilUyv(ukYHzlmjB);mtEBVbBpifWV(mUjDBRLtqMKi,YJKQiiJOwpuw=="dead" and "danger" or "warning");local GckIbLVdy=false;local fUkvtQQDTx=nil;local rXGZOqcWQ=fshvbnQtAIC.GetInventoryVersion();if YJKQiiJOwpuw=="dead" then ZNOMJJYC("Collecting dead tree "..ukYHzlmjB.Name.."...","warning");if vgsLowTWAR.Prompt then GckIbLVdy,fUkvtQQDTx=DgxLVlRShej(vgsLowTWAR.Prompt) end if not GckIbLVdy or not KGAVLeIlN(ukYHzlmjB,0.45)then local EJGgOEIJ,VZxKamHoJXXM=uUlvADpf(function() return maXLFXRCKGEt:InvokeServer() end);if EJGgOEIJ and VZxKamHoJXXM~=false then GckIbLVdy=true elseif not GckIbLVdy then fUkvtQQDTx=uGHbaWONyeld(VZxKamHoJXXM) end end else ZNOMJJYC("Harvesting "..ukYHzlmjB.Name.." at "..uGHbaWONyeld(vgsLowTWAR.Multiplier or "?").."x / target "..uGHbaWONyeld(VVyIyeiSVOi).."x...");GckIbLVdy,fUkvtQQDTx=DgxLVlRShej(vgsLowTWAR.Prompt) end local mAVCwuyI=false;if GckIbLVdy then mAVCwuyI=KGAVLeIlN(ukYHzlmjB,1.5) end KDyzjSBNROqk:Release("RoundMonitor");hONLvePvS:ReleaseAction("RoundMonitor");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end if not GckIbLVdy then GgOLwDLeKijm[ukYHzlmjB]=os.clock()+0.75;ZNOMJJYC(mUjDBRLtqMKi.." failed: "..uGHbaWONyeld(fUkvtQQDTx),"danger");return false,fUkvtQQDTx end if not mAVCwuyI then GgOLwDLeKijm[ukYHzlmjB]=os.clock()+0.75;ZNOMJJYC(mUjDBRLtqMKi.." unverified: round still exists","warning");return false,"round-still-exists" end GgOLwDLeKijm[ukYHzlmjB]=nil;fshvbnQtAIC.WaitForInventoryRefresh(rXGZOqcWQ,eHPGDafMmf,1.75);cBzlOwFDf.LastHarvest={Mode=YJKQiiJOwpuw,RoundName=ukYHzlmjB.Name,Seed=lsmMNuktk,Multiplier=vgsLowTWAR.Multiplier,Target=VVyIyeiSVOi,At=os.clock(),};if YJKQiiJOwpuw=="dead" then cBzlOwFDf.DeadCollectCount+=1;ZNOMJJYC("Dead tree collected") else cBzlOwFDf.HarvestCount+=1;ZNOMJJYC("Harvested at "..uGHbaWONyeld(vgsLowTWAR.Multiplier or "?").."x") end if cBzlOwFDf.CurrentPlantRound==ukYHzlmjB then cBzlOwFDf.CurrentPlantRound=nil;cBzlOwFDf.CurrentMultiplier=0;cBzlOwFDf.CurrentSeed=nil;cBzlOwFDf.CurrentHarvestTarget=TLDNAtPoWKo.HarvestMultiplier end return true end local function ybAzjEjzYxFT() return TLDNAtPoWKo.AutoHarvest or TLDNAtPoWKo.AutoCollectDead end local function FHZUxMPjI(eHPGDafMmf) while fshvbnQtAIC.Alive and ybAzjEjzYxFT() and not eHPGDafMmf()do local buMdvbnuct=ENGLOpdN();for _,ukYHzlmjB in veanYETtE(buMdvbnuct)do if eHPGDafMmf() or not ybAzjEjzYxFT()then break end local vgsLowTWAR=oKAdTluE(ukYHzlmjB);if vgsLowTWAR then local VVyIyeiSVOi=spEmThilUyv(ukYHzlmjB);if cBzlOwFDf.CurrentPlantRound==ukYHzlmjB then cBzlOwFDf.CurrentMultiplier=SbqMasrkcJu(vgsLowTWAR.Multiplier)or 0;cBzlOwFDf.CurrentSeed=UkBLxSrRPXRg(ukYHzlmjB);cBzlOwFDf.CurrentHarvestTarget=VVyIyeiSVOi end if vgsLowTWAR.Dead then if TLDNAtPoWKo.AutoCollectDead then xljscWaADLry(ukYHzlmjB,"dead",eHPGDafMmf) end elseif TLDNAtPoWKo.AutoHarvest and vgsLowTWAR.Multiplier~=nil and vgsLowTWAR.Multiplier>=VVyIyeiSVOi then xljscWaADLry(ukYHzlmjB,"live",eHPGDafMmf) end end end task.wait(TLDNAtPoWKo.PlantRoundScanInterval) end KDyzjSBNROqk:Release("RoundMonitor");hONLvePvS:ReleaseAction("RoundMonitor") end local function MATNCGiXgCx() uUEyNxlr("RoundMonitor");if ybAzjEjzYxFT()then AzqTepsUHo("RoundMonitor",FHZUxMPjI) end end local function xquPZrSQYHV(hGrmnrfwopPD,eHPGDafMmf) local ukYHzlmjB=ecNsQKIJI(hGrmnrfwopPD);if not ukYHzlmjB then ZNOMJJYC("The growing plant could not be found after planting","danger");return false end cBzlOwFDf.CurrentPlantRound=ukYHzlmjB;while fshvbnQtAIC.Alive and TLDNAtPoWKo.AutoPlant and not eHPGDafMmf()do if not ukYHzlmjB.Parent then cBzlOwFDf.CurrentPlantRound=nil;cBzlOwFDf.CurrentMultiplier=0;cBzlOwFDf.CurrentSeed=nil;cBzlOwFDf.CurrentHarvestTarget=TLDNAtPoWKo.HarvestMultiplier;mtEBVbBpifWV("IDLE");return true end local vgsLowTWAR=oKAdTluE(ukYHzlmjB);if vgsLowTWAR then local VVyIyeiSVOi=spEmThilUyv(ukYHzlmjB);cBzlOwFDf.CurrentMultiplier=SbqMasrkcJu(vgsLowTWAR.Multiplier)or 0;cBzlOwFDf.CurrentSeed=hGrmnrfwopPD.Seed or UkBLxSrRPXRg(ukYHzlmjB);cBzlOwFDf.CurrentHarvestTarget=VVyIyeiSVOi;if vgsLowTWAR.Dead then mtEBVbBpifWV("DEAD","danger");if TLDNAtPoWKo.AutoCollectDead then ZNOMJJYC("Tree died; waiting for dead-tree collection","warning") else ZNOMJJYC("Tree is dead. Enable Auto Collect Dead to continue.","danger") end elseif TLDNAtPoWKo.AutoHarvest and vgsLowTWAR.Multiplier~=nil and vgsLowTWAR.Multiplier>=VVyIyeiSVOi then mtEBVbBpifWV("READY","warning") else mtEBVbBpifWV("GROWING") end end task.wait(0.08) end return false end local function cgKBGXEF(eHPGDafMmf) while fshvbnQtAIC.Alive and TLDNAtPoWKo.AutoPlant and not eHPGDafMmf()do if not vAEGgZpWPPP(eHPGDafMmf)then break end if eHPGDafMmf()or not TLDNAtPoWKo.AutoPlant then break end local hjWVBjjB,hGrmnrfwopPD=KhgASwFH("AutoPlant",eHPGDafMmf);if eHPGDafMmf()or not TLDNAtPoWKo.AutoPlant then break end if hjWVBjjB then if not xquPZrSQYHV(hGrmnrfwopPD,eHPGDafMmf)then break end else if not AvsKZPPdnJ(0.5,eHPGDafMmf)then break end end end hONLvePvS:EndPlant("AutoPlant");YdCOPJCy:Release("AutoPlant");SgUCvZnxry:Release("AutoPlant");YOsJOgdnqkY:Release("AutoPlant");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end end fshvbnQtAIC.CollectPlantRound=xljscWaADLry;local function ffrgsTJRWMO() local ewZdPbvIsSUT=VtOzvkJmkb:CreateWindow({SingletonName="KiraGreedyGrowersScript",Title="Kira Hub",Subtitle="Greedy Growers Script",Size=Vector2.new(1000,600),MinSize=Vector2.new(600,400),MaxSize=Vector2.new(1400,900),ToggleKey=Enum.KeyCode.RightShift,ShowCloseButton=false,ShadowEnabled=false,LauncherShadowEnabled=false,BackdropEnabled=false,ConfigFolder="KiraUI/Configs/KiraGreedyGrowers",DefaultConfigName="Config 1",Status="Initializing Greedy Growers controller...",Phase="IDLE",});fshvbnQtAIC.Window=ewZdPbvIsSUT;local XwtrRURTH=ewZdPbvIsSUT:AddTab("Automation","A");local LbTXiubJnU=ewZdPbvIsSUT:AddTab("Garden","G");local jaySgygWq=ewZdPbvIsSUT:AddTab("System","S");local ItdpArIHie=XwtrRURTH:AddSection("Buying");local admtLYMo=ItdpArIHie:AddToggle({Text="Auto Buy Seeds",Default=TLDNAtPoWKo.AutoBuy,Flag="auto_buy",});local DQHeRRcYiac;local dUpOJphJvE=false;if type(ItdpArIHie.AddMultiSelect)=="function" then dUpOJphJvE=true;DQHeRRcYiac=ItdpArIHie:AddMultiSelect({Text="Buy Seeds",Values=bzKuaxLf,Default=NwBOsqBEP(fCnCPKSDRV()),Placeholder="Select seeds...",MaxVisibleItems=8,Flag="buy_seed",}) else DQHeRRcYiac=ItdpArIHie:AddDropdown({Text="Buy Seed",Values=MaeOmFaYgkb,Default=TLDNAtPoWKo.BuySeed=="ALL" and "ALL" or(JxyqNnykdjd[TLDNAtPoWKo.BuySeed]or "ALL"),Flag="buy_seed",}) end local mdUUcZCw;local YeJTaffARP=false;if type(ItdpArIHie.AddMultiSelect)=="function" then YeJTaffARP=true;mdUUcZCw=ItdpArIHie:AddMultiSelect({Text="Buy Rarities",Values=HyKBegAhF,Default=pvKdpZUlrK(),Placeholder="Select rarities...",MaxVisibleItems=6,Flag="buy_rarity",}) else mdUUcZCw=ItdpArIHie:AddDropdown({Text="Buy Rarity",Values=waKaZUkc,Default=TLDNAtPoWKo.BuyRarity=="NONE" and "ALL" or TLDNAtPoWKo.BuyRarity,Flag="buy_rarity",}) end local ppcBUCLhEOr=ItdpArIHie:AddSlider({Text="Buy Check Delay",Min=0.05,Max=1.00,Default=TLDNAtPoWKo.BuyDelay,Step=0.05,Suffix="s",Flag="buy_delay",});ItdpArIHie:AddLabel({Text="Auto Buy only buys seeds that match your filters and skips anything you cannot afford.",Wrap=true,Muted=true,Height=44,});local zGdxqfvHMbTR=XwtrRURTH:AddSection("Planting");local SQVhpmwdezv=zGdxqfvHMbTR:AddToggle({Text="Auto Plant",Default=TLDNAtPoWKo.AutoPlant,Flag="auto_plant",});local KjwIXpWdtC=zGdxqfvHMbTR:AddToggle({Text="Only Plant During Weather",Default=TLDNAtPoWKo.PlantOnlyDuringWeather,Flag="plant_weather_only",});local fPQpJOJHGB;if type(zGdxqfvHMbTR.AddMultiSelect)=="function" then fPQpJOJHGB=zGdxqfvHMbTR:AddMultiSelect({Text="Seeds",Values=VncGbOvYGv,Default=LpWfhsbtJNYi(WCKhEtDy()),Placeholder="Select seeds...",MaxVisibleItems=8,Flag="plant_seeds",}) else fPQpJOJHGB=zGdxqfvHMbTR:AddDropdown({Text="Seed",Values=VncGbOvYGv,Default=JxyqNnykdjd[TLDNAtPoWKo.PlantSeed],Flag="plant_seed",}) end local MOyrCGhr=zGdxqfvHMbTR:AddDropdown({Text="Fertilizer",Values=QOCyPsnx,Default=TLDNAtPoWKo.Fertilizer,Flag="fertilizer",});do local ppIvXQdEJ=false;local THyjkiDYSCCG;local KLzZxoLYaj;local fQrOiijAvi;local dnDGJpwHQV={"Lowest","Highest",};local function xlNeywlSonok(PtWWWeZjj) return uGHbaWONyeld(PtWWWeZjj)=="Highest" and "Highest" or "Lowest" end local function vSRRfUOD(vLySZjFLGYxC) if type(fshvbnQtAIC.NormalizeWormTypeSelection)=="function" then return fshvbnQtAIC.NormalizeWormTypeSelection(vLySZjFLGYxC,true) end return{} end local function bMlpumwtb(fbgpZkxTxm) if type(fshvbnQtAIC.WormTypesToLabels)=="function" then return fshvbnQtAIC.WormTypesToLabels(fbgpZkxTxm,true) end return{} end local function kfxALXHNRLd() if type(fshvbnQtAIC.ExportWormSettingsState)=="function" then return fshvbnQtAIC.ExportWormSettingsState() end return{Locked=true,TypesLocked=true,PriorityLocked=true,Shared={Use=false,Types={},SortMode="Lowest",MinMult=5,MaxMult=10,},Values={},} end local function ayWKqZyCAd(WdljNFWSXs,JHHCtsZoh) WdljNFWSXs=type(WdljNFWSXs)=="table" and WdljNFWSXs or{};JHHCtsZoh=type(JHHCtsZoh)=="table" and JHHCtsZoh or{};local fbgpZkxTxm=vSRRfUOD(WdljNFWSXs.Types or WdljNFWSXs.WormTypes or JHHCtsZoh.Types or{});local loQROJgvLDw=WdljNFWSXs.Use~=nil and WdljNFWSXs.Use==true or(WdljNFWSXs.Use==nil and JHHCtsZoh.Use==true);if not loQROJgvLDw then fbgpZkxTxm={} end return{Use=loQROJgvLDw and#fbgpZkxTxm>0,Types=fbgpZkxTxm,SortMode=xlNeywlSonok(WdljNFWSXs.SortMode or WdljNFWSXs.Priority or JHHCtsZoh.SortMode),MinMult=5,MaxMult=10,} end local function hAzVJWmDzZwX() local evFESHvJD=kfxALXHNRLd();local nJqSviaCyyV=ayWKqZyCAd(evFESHvJD.Shared);local ufdLsSTNsvH={};for lsmMNuktk,WdljNFWSXs in ODdZWYTinmZ(evFESHvJD.Values or{})do local sWvYBGURc=ayWKqZyCAd(WdljNFWSXs,nJqSviaCyyV);ufdLsSTNsvH[uGHbaWONyeld(lsmMNuktk)]=sWvYBGURc.Use and bMlpumwtb(sWvYBGURc.Types) or{} end return{Locked=evFESHvJD.TypesLocked~=false,Shared=nJqSviaCyyV.Use and bMlpumwtb(nJqSviaCyyV.Types) or{},Values=ufdLsSTNsvH,Items=pycXaBhSPu(),} end local function wxshaKZOXEKz() local evFESHvJD=kfxALXHNRLd();local nJqSviaCyyV=ayWKqZyCAd(evFESHvJD.Shared);local ufdLsSTNsvH={};for lsmMNuktk,WdljNFWSXs in ODdZWYTinmZ(evFESHvJD.Values or{})do ufdLsSTNsvH[uGHbaWONyeld(lsmMNuktk)]=xlNeywlSonok(type(WdljNFWSXs)=="table" and WdljNFWSXs.SortMode or nJqSviaCyyV.SortMode) end return{Locked=evFESHvJD.PriorityLocked~=false,Shared=nJqSviaCyyV.SortMode,Values=ufdLsSTNsvH,Items=pycXaBhSPu(),} end local function NqwKrFVyk() if not fQrOiijAvi then return end local evFESHvJD=kfxALXHNRLd();local nJqSviaCyyV=ayWKqZyCAd(evFESHvJD.Shared);local tQnrCHTZehU=nJqSviaCyyV.Use and(table.concat(bMlpumwtb(nJqSviaCyyV.Types),", ").." | "..nJqSviaCyyV.SortMode) or "use fertilizer";local HqIlrUPKo={"Types: "..(evFESHvJD.TypesLocked~=false and "same for all seeds" or "custom per seed"),"Priority: "..(evFESHvJD.PriorityLocked~=false and "same for all seeds" or "custom per seed"),"Shared: "..tQnrCHTZehU,"No Worm selected means that seed uses fertilizer.",};if fshvbnQtAIC.WormBridge then HqIlrUPKo[#HqIlrUPKo+1]=fshvbnQtAIC.WormBridge:GetSummaryText() end fQrOiijAvi:SetText(table.concat(HqIlrUPKo,"\n")) end function fshvbnQtAIC.RefreshWormControls() if not THyjkiDYSCCG or not KLzZxoLYaj then return end ppIvXQdEJ=true;THyjkiDYSCCG:SetValue(hAzVJWmDzZwX(),true);KLzZxoLYaj:SetValue(wxshaKZOXEKz(),true);ppIvXQdEJ=false;NqwKrFVyk() end local function LaJGDAgyskz() if ppIvXQdEJ then return end ppIvXQdEJ=true;local akmrymFTE=THyjkiDYSCCG and THyjkiDYSCCG.Value or hAzVJWmDzZwX();local rFJsIPSxddCh=KLzZxoLYaj and KLzZxoLYaj.Value or wxshaKZOXEKz();local zdcYuwFN=TLDNAtPoWKo.WormTypesLocked~=false;local EjPRtAGELvvq=TLDNAtPoWKo.WormPriorityLocked~=false;TLDNAtPoWKo.WormTypesLocked=akmrymFTE.Locked~=false;TLDNAtPoWKo.WormPriorityLocked=rFJsIPSxddCh.Locked~=false;TLDNAtPoWKo.WormSettingsLocked=TLDNAtPoWKo.WormTypesLocked and TLDNAtPoWKo.WormPriorityLocked;local xoDzruiczF=vSRRfUOD(akmrymFTE.Shared);if type(fshvbnQtAIC.SetSharedWormSettings)=="function" then fshvbnQtAIC.SetSharedWormSettings({Use=#xoDzruiczF>0,Types=xoDzruiczF,SortMode=xlNeywlSonok(rFJsIPSxddCh.Shared),MinMult=5,MaxMult=10,}) end local nuhJTHQDfAh=TLDNAtPoWKo.WormSettings or{};local FeszImay={};for lsmMNuktk in ODdZWYTinmZ(nuhJTHQDfAh)do FeszImay[uGHbaWONyeld(lsmMNuktk)]=true end for lsmMNuktk in ODdZWYTinmZ(akmrymFTE.Values or{})do FeszImay[uGHbaWONyeld(lsmMNuktk)]=true end for lsmMNuktk in ODdZWYTinmZ(rFJsIPSxddCh.Values or{})do FeszImay[uGHbaWONyeld(lsmMNuktk)]=true end TLDNAtPoWKo.WormSettings={};for lsmMNuktk in ODdZWYTinmZ(FeszImay)do if JxyqNnykdjd[lsmMNuktk]then local LbGwmxhHdVPU=ayWKqZyCAd(nuhJTHQDfAh[lsmMNuktk],{Use=#xoDzruiczF>0,Types=xoDzruiczF,SortMode=xlNeywlSonok(rFJsIPSxddCh.Shared),});local WswHnnRSOZZV=akmrymFTE.Values and akmrymFTE.Values[lsmMNuktk];local liAYxSbQgm=WswHnnRSOZZV;if liAYxSbQgm==nil then liAYxSbQgm=bMlpumwtb(LbGwmxhHdVPU.Types) end local fbgpZkxTxm=vSRRfUOD(liAYxSbQgm~=nil and liAYxSbQgm or akmrymFTE.Shared);local InHypKcRQQv=rFJsIPSxddCh.Values and rFJsIPSxddCh.Values[lsmMNuktk];TLDNAtPoWKo.WormSettings[lsmMNuktk]={Use=#fbgpZkxTxm>0,Types=fbgpZkxTxm,SortMode=xlNeywlSonok(InHypKcRQQv or LbGwmxhHdVPU.SortMode or rFJsIPSxddCh.Shared),MinMult=5,MaxMult=10,} end end ppIvXQdEJ=false;if zdcYuwFN~=TLDNAtPoWKo.WormTypesLocked or EjPRtAGELvvq~=TLDNAtPoWKo.WormPriorityLocked then ZNOMJJYC("Worm: types "..(TLDNAtPoWKo.WormTypesLocked and "locked" or "custom")..", priority "..(TLDNAtPoWKo.WormPriorityLocked and "locked" or "custom")) end NqwKrFVyk() end THyjkiDYSCCG=zGdxqfvHMbTR:AddMultiSelectMap({Text="Worm Types",Values=fshvbnQtAIC.WormLabels or{"Worm"},Items=pycXaBhSPu,Locked=TLDNAtPoWKo.WormTypesLocked~=false,Shared=hAzVJWmDzZwX().Shared,ItemValues=hAzVJWmDzZwX().Values,EmptyText="Use fertilizer",MaxVisibleItems=6,MaxVisibleChoices=8,MaxLabels=1,ItemControlWidth=166,});KLzZxoLYaj=zGdxqfvHMbTR:AddSelectMap({Text="Worm Priority",Values=dnDGJpwHQV,Items=pycXaBhSPu,Locked=TLDNAtPoWKo.WormPriorityLocked~=false,Shared=wxshaKZOXEKz().Shared,ItemValues=wxshaKZOXEKz().Values,MaxVisibleItems=6,ItemControlWidth=112,});fQrOiijAvi=zGdxqfvHMbTR:AddLabel({Text="Worm inventory is loading...",Wrap=true,Muted=true,Height=118,});THyjkiDYSCCG:OnChanged(function() LaJGDAgyskz("types") end);KLzZxoLYaj:OnChanged(function() LaJGDAgyskz("priority") end);if type(ewZdPbvIsSUT.RegisterConfigItem)=="function" then ewZdPbvIsSUT:RegisterConfigItem("worm_settings",{},{Getter=function() return fshvbnQtAIC.ExportWormSettingsState() end,Setter=function(PtWWWeZjj) fshvbnQtAIC.ApplyWormSettingsState(PtWWWeZjj);fshvbnQtAIC.RefreshWormControls() end,}) end task.spawn(function() while fshvbnQtAIC.Alive and ewZdPbvIsSUT.Gui and ewZdPbvIsSUT.Gui.Parent do NqwKrFVyk();task.wait(1) end end);fshvbnQtAIC.RefreshWormControls() end local ZewJukJvEpZk=XwtrRURTH:AddSection("Harvest");local rZyiOuuPzpap=ZewJukJvEpZk:AddToggle({Text="Auto Harvest",Default=TLDNAtPoWKo.AutoHarvest,Flag="auto_harvest",});local ArwPHiplj=ZewJukJvEpZk:AddToggle({Text="Clear Dead Trees",Default=TLDNAtPoWKo.AutoCollectDead,Flag="clear_dead_trees",});local aJwyzWzF=ZewJukJvEpZk:AddToggle({Text="Auto Collect Fruit",Default=TLDNAtPoWKo.AutoCollectFruit,Flag="auto_collect_fruit",});local eIPRcAWX=ZewJukJvEpZk:AddToggle({Text="Collect All Fruit",Default=TLDNAtPoWKo.CollectAllFruit,Flag="collect_all_fruit",});local OXwjzPXUEH=ZewJukJvEpZk:AddInput({Text="Minimum Fruit Mutations",Numeric=true,Min=0,Default=TLDNAtPoWKo.MinFruitMutations,Step=1,Placeholder="5",Flag="min_fruit_mutations",});local BdhCymznw=ZewJukJvEpZk:AddSlider({Text="Fruit Check Delay",Min=0.25,Max=5.00,Default=TLDNAtPoWKo.FruitCollectInterval,Step=0.25,Suffix="s",Flag="fruit_collect_interval",});local ibbbCofGtKK;if type(ZewJukJvEpZk.AddNumberMap)=="function" then ibbbCofGtKK=ZewJukJvEpZk:AddNumberMap({Text="Harvest Targets",Items=pycXaBhSPu,Locked=TLDNAtPoWKo.HarvestMultiplierLocked,Shared=TLDNAtPoWKo.HarvestMultiplier,Values=TLDNAtPoWKo.HarvestMultipliers,Min=0.01,Step=0.01,Suffix="x",Placeholder="Shared multiplier",MaxVisibleItems=6,Flag="harvest_targets",}) else ibbbCofGtKK=ZewJukJvEpZk:AddInput({Text="Harvest At Multiplier",Numeric=true,Min=0.01,Default=TLDNAtPoWKo.HarvestMultiplier,Step=0.01,Placeholder="100 or 94.57",Flag="harvest_multiplier",}) end local PkvJCJwXOS=ZewJukJvEpZk:AddLabel({Text="Waiting for a plant to grow...",Wrap=true,Muted=true,Height=78,});ZewJukJvEpZk:AddLabel({Text="Auto Harvest watches your growing plant and collects it when it reaches your target. Auto Collect Fruit picks fruit from your plot; Collect All Fruit ignores the mutation minimum.",Wrap=true,Muted=true,Height=74,});local jnGHBUgwem=XwtrRURTH:AddSection("Selling");local tGIHCxquC=jnGHBUgwem:AddToggle({Text="Auto Sell Dead Trees",Default=TLDNAtPoWKo.AutoSellDeadTree,Flag="auto_sell_dead_trees",});local fIRuOkTOiPi=jnGHBUgwem:AddToggle({Text="Auto Sell Fruit",Default=TLDNAtPoWKo.AutoSellFruit,Flag="auto_sell_fruit",});local mdNsELlUe=jnGHBUgwem:AddSlider({Text="Sell Delay",Min=0.05,Max=1.00,Default=TLDNAtPoWKo.SellDelay,Step=0.05,Suffix="s",Flag="sell_delay",});jnGHBUgwem:AddLabel({Text="Auto Sell sells dead trees and collected fruit from your bag. It waits if another action is using your held item.",Wrap=true,Muted=true,Height=54,});local jGEsRRUAb=XwtrRURTH:AddSection("Composting");local DouxLDDP=jGEsRRUAb:AddToggle({Text="Auto Compost Seed",Default=TLDNAtPoWKo.AutoCompostSeed,Flag="auto_compost_seed",});local cqQLYgqZlxck;local fQYrElVBb=false;if type(jGEsRRUAb.AddMultiSelect)=="function" then fQYrElVBb=true;cqQLYgqZlxck=jGEsRRUAb:AddMultiSelect({Text="Compost Seeds",Values=VncGbOvYGv,Default=CruZAMnSLdPN(DrjUAmlBSUs()),Placeholder="Select seeds...",MaxVisibleItems=8,Flag="compost_seeds",}) else cqQLYgqZlxck=jGEsRRUAb:AddDropdown({Text="Compost Seed",Values=VncGbOvYGv,Default=JxyqNnykdjd[TLDNAtPoWKo.CompostSeed],Flag="compost_seed",}) end local cisjdHZPql=jGEsRRUAb:AddSlider({Text="Compost Delay",Min=0.10,Max=2.00,Default=TLDNAtPoWKo.CompostDelay,Step=0.05,Suffix="s",Flag="compost_delay",});jGEsRRUAb:AddLabel({Text="Auto Compost stays near the Compost Bin, gives selected seeds when it says Give Seed, and collects the reward when it says Collect.",Wrap=true,Muted=true,Height=58,});local OTQzMjvIMzpK=XwtrRURTH:AddSection("Live Status",{Span="full",});local YbHhdMKyUobl=OTQzMjvIMzpK:AddLabel({Text="Getting Kira Hub ready...",Wrap=true,Height=232,});local cwirufFzgTh=LbTXiubJnU:AddSection("My Plot");local gUWInlYJFCoA=cwirufFzgTh:AddLabel({Text="Finding your plot...",Wrap=true,Height=64,});cwirufFzgTh:AddButton({Text="Refresh My Plot",Callback=function() local sWDxvMiokm=kuMeqDsfnWpu();if sWDxvMiokm then gUWInlYJFCoA:SetText("Your plot: "..sWDxvMiokm.Name);ZNOMJJYC("My plot: "..sWDxvMiokm.Name) else gUWInlYJFCoA:SetText("My plot was not found");ZNOMJJYC("My plot was not found","danger") end end,});local xRPGBflVPgD=LbTXiubJnU:AddSection("My Fruit Mutations",{Span="full",});local IoPYUWkruTfX=xRPGBflVPgD:AddToggle({Text="Auto Refresh Fruit List",Default=TLDNAtPoWKo.AutoMutationScan,Flag="auto_refresh_fruits",});local nsatcvmTDEo=xRPGBflVPgD:AddSlider({Text="Fruit Refresh Interval",Min=0.5,Max=10,Default=TLDNAtPoWKo.MutationScanInterval,Step=0.5,Suffix="s",Flag="fruit_refresh_interval",});local wqaRUnVXke=xRPGBflVPgD:AddLabel({Text="Press Refresh Fruit List to show every fruit on your plot and its mutation.",Wrap=true,RichText=true,Height=190,});if wqaRUnVXke and type(wqaRUnVXke.SetRichText)=="function" then wqaRUnVXke:SetRichText(true) elseif wqaRUnVXke and wqaRUnVXke.Label then wqaRUnVXke.Label.RichText=true end local function UTsmxXKI(vgsLowTWAR,height) height=math.max(64,SbqMasrkcJu(height)or 190);if vgsLowTWAR and type(vgsLowTWAR.SetHeight)=="function" then vgsLowTWAR:SetHeight(height);return end if vgsLowTWAR and vgsLowTWAR.Instance then vgsLowTWAR.Instance.Size=UDim2.new(vgsLowTWAR.Instance.Size.X.Scale,vgsLowTWAR.Instance.Size.X.Offset,0,height) end end local function RODDfGEP(silent) local evFESHvJD,qtFnxqcHneA=MUWFUPsyodoM();if qtFnxqcHneA then UTsmxXKI(wqaRUnVXke,190);wqaRUnVXke:SetText(qtFnxqcHneA);if not silent then ZNOMJJYC(qtFnxqcHneA,"danger") end return end if#evFESHvJD==0 then UTsmxXKI(wqaRUnVXke,190);wqaRUnVXke:SetText("No fruit mutation data found on my plot.");if not silent then ZNOMJJYC("Fruit list: 0 fruit") end return end local HqIlrUPKo={};HqIlrUPKo[#HqIlrUPKo+1]="Total: "..uGHbaWONyeld(#evFESHvJD).." fruit(s)";HqIlrUPKo[#HqIlrUPKo+1]="";for xJEdnwduH=1,#evFESHvJD do local MSdVlYAXGv=evFESHvJD[xJEdnwduH];local OKSqrshPw={"Value: "..eUOcyKlvufUF(MSdVlYAXGv.FruitValue or "?"),"Mutations: "..uGHbaWONyeld(MSdVlYAXGv.MutationCount or 0),};HqIlrUPKo[#HqIlrUPKo+1]=uGHbaWONyeld(xJEdnwduH)..". "..eUOcyKlvufUF(MSdVlYAXGv.Name);HqIlrUPKo[#HqIlrUPKo+1]="   "..table.concat(OKSqrshPw," | ");HqIlrUPKo[#HqIlrUPKo+1]="   Mutation: "..(MSdVlYAXGv.MutationRichText or "None") end UTsmxXKI(wqaRUnVXke,(#HqIlrUPKo*16)+18);wqaRUnVXke:SetText(table.concat(HqIlrUPKo,"\n"));if not silent then ZNOMJJYC("Fruit list: "..uGHbaWONyeld(#evFESHvJD).." fruit(s)") end end xRPGBflVPgD:AddButton({Text="Refresh Fruit List",Callback=function() RODDfGEP(false) end,});local jAmIeOUC=jaySgygWq:AddSection("Controls");local KkcGYoEADMo=jAmIeOUC:AddToggle({Text="Show Extra Logs",Default=TLDNAtPoWKo.Debug,Flag="show_extra_logs",});if type(jAmIeOUC.AddKeybind)=="function" then jAmIeOUC:AddKeybind({Text="Show / Hide Key",WindowToggle=true,Flag="show_hide_key",}) else jAmIeOUC:AddLabel({Text="Show / Hide: RightShift",Muted=true,Height=28,}) end local gTHWKUBhlEKa=jAmIeOUC:AddToggle({Text="Anti-AFK",Default=TLDNAtPoWKo.AntiAfk,Flag="anti_afk",});jAmIeOUC:AddButton({Text="Refresh Shop List",Callback=function() GHvgvBlk();ZNOMJJYC("Shop list refreshed: "..uGHbaWONyeld(nHLFxVBcTXL()).." item(s)") end,});jAmIeOUC:AddButton({Text="Hide UI",Callback=function() if type(ewZdPbvIsSUT.SetVisible)=="function" then ewZdPbvIsSUT:SetVisible(false);ZNOMJJYC("UI hidden. Press the show/hide key or the K launcher.") end end,});jAmIeOUC:AddButton({Text="STOP ALL",Danger=true,Callback=function() TLDNAtPoWKo.AutoBuy=false;TLDNAtPoWKo.AutoPlant=false;TLDNAtPoWKo.AutoHarvest=false;TLDNAtPoWKo.AutoCollectDead=false;TLDNAtPoWKo.AutoMutationScan=false;TLDNAtPoWKo.AutoSellDeadTree=false;TLDNAtPoWKo.AutoSellFruit=false;TLDNAtPoWKo.AutoCollectFruit=false;TLDNAtPoWKo.AutoCompostSeed=false;TLDNAtPoWKo.AntiAfk=false;PfgwmbFXH();YdKkxLzIK();GHvgvBlk();admtLYMo:SetValue(false,true);SQVhpmwdezv:SetValue(false,true);rZyiOuuPzpap:SetValue(false,true);ArwPHiplj:SetValue(false,true);IoPYUWkruTfX:SetValue(false,true);tGIHCxquC:SetValue(false,true);fIRuOkTOiPi:SetValue(false,true);aJwyzWzF:SetValue(false,true);DouxLDDP:SetValue(false,true);gTHWKUBhlEKa:SetValue(false,true);if not hONLvePvS:IsPlantBusy() and SgUCvZnxry.Owner==nil and YdCOPJCy.Owner==nil and YOsJOgdnqkY.Owner==nil and KDyzjSBNROqk.Owner==nil then mtEBVbBpifWV("IDLE") else mtEBVbBpifWV("STOPPING","warning") end ZNOMJJYC("Stopping automation safely...","warning") end,});jAmIeOUC:AddButton({Text="Destroy Script",Danger=true,Callback=function() fshvbnQtAIC:Destroy() end,});if type(ewZdPbvIsSUT.AddConfigSection)=="function" then ewZdPbvIsSUT:AddConfigSection(jaySgygWq,{Title="Saved Settings",Span=1,DefaultName="Config 1",}) end admtLYMo:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.AutoBuy=PtWWWeZjj==true;if TLDNAtPoWKo.AutoBuy then ZNOMJJYC("Auto Buy enabled");AzqTepsUHo("AutoBuy",IZspFpvN) else uUEyNxlr("AutoBuy");GHvgvBlk();ZNOMJJYC("Auto Buy disabled") end end);DQHeRRcYiac:OnChanged(function(PtWWWeZjj) local unRIgYnrSl=TTOzkithLytq(PtWWWeZjj);if dUpOJphJvE and type(DQHeRRcYiac.SetValue)=="function" then DQHeRRcYiac:SetValue(NwBOsqBEP(unRIgYnrSl),true) end GHvgvBlk();ZNOMJJYC("Buy seeds: "..jMTEAwDpEK()) end);mdUUcZCw:OnChanged(function(PtWWWeZjj) local unRIgYnrSl=APPRCbhGihY(PtWWWeZjj);if YeJTaffARP and type(mdUUcZCw.SetValue)=="function" then mdUUcZCw:SetValue(unRIgYnrSl,true) end GHvgvBlk();ZNOMJJYC("Buy rarities: "..uldAoJnHkD()) end);ppcBUCLhEOr:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.BuyDelay=SbqMasrkcJu(PtWWWeZjj)or 0.15 end);SQVhpmwdezv:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.AutoPlant=PtWWWeZjj==true;if TLDNAtPoWKo.AutoPlant then local zrynaZULKS,manPHYAxcH=tZvIJSONZrt();if TLDNAtPoWKo.PlantOnlyDuringWeather and not manPHYAxcH then ZNOMJJYC("Auto Plant enabled; waiting for weather (current: "..zrynaZULKS..")","warning") else ZNOMJJYC("Auto Plant enabled") end AzqTepsUHo("AutoPlant",cgKBGXEF) else uUEyNxlr("AutoPlant");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") else mtEBVbBpifWV("STOPPING","warning") end ZNOMJJYC("Auto Plant disabled") end end);KjwIXpWdtC:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.PlantOnlyDuringWeather=PtWWWeZjj==true;local zrynaZULKS,manPHYAxcH=tZvIJSONZrt();if TLDNAtPoWKo.PlantOnlyDuringWeather then if manPHYAxcH then ZNOMJJYC("Weather-only planting ON: "..zrynaZULKS) else ZNOMJJYC("Weather-only planting ON; waiting for weather (current: "..zrynaZULKS..")","warning") end else ZNOMJJYC("Weather-only planting OFF");if TLDNAtPoWKo.AutoPlant and not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end end end);fPQpJOJHGB:OnChanged(function(PtWWWeZjj) local unRIgYnrSl=type(PtWWWeZjj)=="table" and iHqtNIBiJTS(PtWWWeZjj) or iHqtNIBiJTS({PtWWWeZjj});unRIgYnrSl=QKjWlZOxCt(unRIgYnrSl);if#unRIgYnrSl==0 then ZNOMJJYC("No plant seed selected","warning");if ibbbCofGtKK and type(ibbbCofGtKK.SetItems)=="function" then ibbbCofGtKK:SetItems({},true) end return end if ibbbCofGtKK and type(ibbbCofGtKK.SetItems)=="function" then ibbbCofGtKK:SetItems(pycXaBhSPu(),true) end if type(fshvbnQtAIC.RefreshWormControls)=="function" then fshvbnQtAIC.RefreshWormControls() end local HTkXCwZQRor={};for _,lsmMNuktk in veanYETtE(unRIgYnrSl)do if aCWHPTIm:GetSeedCount(lsmMNuktk)>0 then HTkXCwZQRor[#HTkXCwZQRor+1]=lsmMNuktk end end if#HTkXCwZQRor>0 then ZNOMJJYC("Plant seeds: "..table.concat(unRIgYnrSl,", ").." | owned: "..table.concat(HTkXCwZQRor,", ")) else ZNOMJJYC("Plant seeds: "..table.concat(unRIgYnrSl,", ").." (not currently owned)","warning") end end);MOyrCGhr:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.Fertilizer=uGHbaWONyeld(PtWWWeZjj);ZNOMJJYC("Fertilizer: "..TLDNAtPoWKo.Fertilizer) end);rZyiOuuPzpap:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.AutoHarvest=PtWWWeZjj==true;MATNCGiXgCx();ZNOMJJYC("Auto Harvest: "..(TLDNAtPoWKo.AutoHarvest and "ON" or "OFF")) end);ArwPHiplj:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.AutoCollectDead=PtWWWeZjj==true;MATNCGiXgCx();ZNOMJJYC("Auto Collect Dead: "..(TLDNAtPoWKo.AutoCollectDead and "ON" or "OFF")) end);aJwyzWzF:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.AutoCollectFruit=PtWWWeZjj==true;if TLDNAtPoWKo.AutoCollectFruit then ZNOMJJYC("Auto Collect Fruit enabled");AzqTepsUHo("AutoCollectFruit",bcsdwSDe) else uUEyNxlr("AutoCollectFruit");hONLvePvS:ReleaseAction("AutoCollectFruit");ZNOMJJYC("Auto Collect Fruit disabled");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end end end);eIPRcAWX:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.CollectAllFruit=PtWWWeZjj==true;if TLDNAtPoWKo.CollectAllFruit then ZNOMJJYC("Collect All Fruit enabled") else ZNOMJJYC("Collecting fruit with "..uGHbaWONyeld(TLDNAtPoWKo.MinFruitMutations).."+ mutation(s)") end end);OXwjzPXUEH:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.MinFruitMutations=math.max(0,math.floor((SbqMasrkcJu(PtWWWeZjj)or TLDNAtPoWKo.MinFruitMutations or 0)+0.5));ZNOMJJYC("Minimum fruit mutations: "..uGHbaWONyeld(TLDNAtPoWKo.MinFruitMutations)) end);BdhCymznw:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.FruitCollectInterval=math.max(0.25,SbqMasrkcJu(PtWWWeZjj)or 1) end);ibbbCofGtKK:OnChanged(function(PtWWWeZjj) HsyiTzmKTXC(PtWWWeZjj);ZNOMJJYC("Harvest targets: "..RJSGeSbOxr()) end);tGIHCxquC:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.AutoSellDeadTree=PtWWWeZjj==true;if TLDNAtPoWKo.AutoSellDeadTree then ZNOMJJYC("Auto Sell Dead Trees enabled");AzqTepsUHo("AutoSellDeadTree",ySpPMNTVD) else uUEyNxlr("AutoSellDeadTree");hONLvePvS:ReleaseBackgroundEquipment("AutoSellDeadTree");ZNOMJJYC("Auto Sell Dead Trees disabled");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end end end);fIRuOkTOiPi:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.AutoSellFruit=PtWWWeZjj==true;if TLDNAtPoWKo.AutoSellFruit then ZNOMJJYC("Auto Sell Fruit enabled");AzqTepsUHo("AutoSellFruit",xjTxUCvBgf) else uUEyNxlr("AutoSellFruit");hONLvePvS:ReleaseBackgroundEquipment("AutoSellFruit");ZNOMJJYC("Auto Sell Fruit disabled");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end end end);mdNsELlUe:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.SellDelay=SbqMasrkcJu(PtWWWeZjj)or 0.15 end);DouxLDDP:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.AutoCompostSeed=PtWWWeZjj==true;if TLDNAtPoWKo.AutoCompostSeed then if TLDNAtPoWKo.AutoPlant then TLDNAtPoWKo.AutoPlant=false;uUEyNxlr("AutoPlant");if SQVhpmwdezv and type(SQVhpmwdezv.SetValue)=="function" then SQVhpmwdezv:SetValue(false,true) end URXDpHjBQWVb("Auto Compost Seed","Auto Plant đã tạm dừng để giữ bạn ở khu vực Compost Bin.","warning",4) end ZNOMJJYC("Auto Compost Seed enabled");AzqTepsUHo("AutoCompostSeed",bOxgInXxaUps) else uUEyNxlr("AutoCompostSeed");uUEyNxlr("CompostMovementGuard");hONLvePvS:ReleaseBackgroundEquipment("AutoCompostSeed");cBzlOwFDf.CompostAnchor=nil;cBzlOwFDf.CompostPrompt=nil;cBzlOwFDf.CompostAnchorPrompt=nil;ZNOMJJYC("Auto Compost Seed disabled");if not hONLvePvS:IsPlantBusy()then mtEBVbBpifWV("IDLE") end end end);cqQLYgqZlxck:OnChanged(function(PtWWWeZjj) local unRIgYnrSl=type(PtWWWeZjj)=="table" and wTJZswOn(PtWWWeZjj) or wTJZswOn({PtWWWeZjj});unRIgYnrSl=ECsEWqEFqswH(unRIgYnrSl);if type(cqQLYgqZlxck.SetValue)=="function" then if fQYrElVBb then cqQLYgqZlxck:SetValue(CruZAMnSLdPN(unRIgYnrSl),true) else cqQLYgqZlxck:SetValue(JxyqNnykdjd[unRIgYnrSl[1]or TLDNAtPoWKo.CompostSeed],true) end end ZNOMJJYC("Compost seeds: "..yJjEtPtLsDA()) end);cisjdHZPql:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.CompostDelay=math.max(0.1,SbqMasrkcJu(PtWWWeZjj)or 0.25) end);nsatcvmTDEo:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.MutationScanInterval=SbqMasrkcJu(PtWWWeZjj)or 2 end);IoPYUWkruTfX:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.AutoMutationScan=PtWWWeZjj==true;if TLDNAtPoWKo.AutoMutationScan then AzqTepsUHo("AutoMutationScan",function(eHPGDafMmf) while fshvbnQtAIC.Alive and TLDNAtPoWKo.AutoMutationScan and not eHPGDafMmf()do RODDfGEP(true);if not AvsKZPPdnJ(TLDNAtPoWKo.MutationScanInterval,eHPGDafMmf)then break end end end);ZNOMJJYC("Auto Refresh Fruit List enabled") else uUEyNxlr("AutoMutationScan");ZNOMJJYC("Auto Refresh Fruit List disabled") end end);KkcGYoEADMo:OnChanged(function(PtWWWeZjj) TLDNAtPoWKo.Debug=PtWWWeZjj==true;ZNOMJJYC("Extra logs: "..(TLDNAtPoWKo.Debug and "ON" or "OFF")) end);gTHWKUBhlEKa:OnChanged(function(PtWWWeZjj) olxhtNCJ(PtWWWeZjj==true) end);task.defer(function() if not fshvbnQtAIC.Alive then return end local sWDxvMiokm=kuMeqDsfnWpu();if sWDxvMiokm then gUWInlYJFCoA:SetText("Your plot: "..sWDxvMiokm.Name) else gUWInlYJFCoA:SetText("My plot was not detected yet") end end);task.spawn(function() while fshvbnQtAIC.Alive and ewZdPbvIsSUT.Gui and ewZdPbvIsSUT.Gui.Parent do local QarnXbaa=xqMPKmZFg();local lnwAaJUcpv,OvwYLsCDwJB=OLVQARBxHEV();local kLMkKjRmsDvh="none";if cBzlOwFDf.LastPurchase then kLMkKjRmsDvh=uGHbaWONyeld(cBzlOwFDf.LastPurchase.SeedType).." "..uGHbaWONyeld(cBzlOwFDf.LastPurchase.CostText) end YbHhdMKyUobl:SetText(table.concat({"Status: "..uGHbaWONyeld(cBzlOwFDf.Phase),"Key: No Key","Coins: "..uGHbaWONyeld(OvwYLsCDwJB or lnwAaJUcpv or "?"),"Worms: "..uGHbaWONyeld(cBzlOwFDf.WormCount or 0).." | "..uGHbaWONyeld(cBzlOwFDf.LastWormSource or "none"),"Weather: "..uGHbaWONyeld(cBzlOwFDf.CurrentWeather)..(cBzlOwFDf.WeatherActive and " (active)" or " (normal)"),"Anti-AFK: "..(TLDNAtPoWKo.AntiAfk and "ON" or "OFF"),"Held item: "..uGHbaWONyeld(QarnXbaa and QarnXbaa.Name or "none"),"Action lock: "..uGHbaWONyeld(SgUCvZnxry.Owner or "none"),"Tool lock: "..uGHbaWONyeld(YdCOPJCy.Owner or "none"),"Last buy: "..kLMkKjRmsDvh,"Last worm: "..uGHbaWONyeld(cBzlOwFDf.LastUsedWorm and(uGHbaWONyeld(cBzlOwFDf.LastUsedWorm.DisplayType).." "..uGHbaWONyeld(cBzlOwFDf.LastUsedWorm.Mult).."x") or "none"),"Bought: "..uGHbaWONyeld(cBzlOwFDf.PurchaseCount).."   |   Planted: "..uGHbaWONyeld(cBzlOwFDf.PlantCount).."   |   Harvested: "..uGHbaWONyeld(cBzlOwFDf.HarvestCount).."   |   Cleared: "..uGHbaWONyeld(cBzlOwFDf.DeadCollectCount).."   |   Fruit: "..uGHbaWONyeld(cBzlOwFDf.FruitCollectCount),"Dead trees sold: "..uGHbaWONyeld(cBzlOwFDf.SellDeadTreeCount),"Fruit sold: "..uGHbaWONyeld(cBzlOwFDf.SellFruitCount),"Compost: "..uGHbaWONyeld(cBzlOwFDf.CompostMode or "UNKNOWN").." | distance "..uGHbaWONyeld(cBzlOwFDf.CompostDistance or 0).." | given "..uGHbaWONyeld(cBzlOwFDf.CompostGiveCount or 0).." | collected "..uGHbaWONyeld(cBzlOwFDf.CompostCollectCount or 0),"Fruit listed: "..uGHbaWONyeld(cBzlOwFDf.FruitListedCount),},"\n"));local ecJRxpPorhG=cBzlOwFDf.CurrentPlantRound;if not ecJRxpPorhG or not ecJRxpPorhG.Parent then local buMdvbnuct=ENGLOpdN();ecJRxpPorhG=buMdvbnuct[#buMdvbnuct] end if ecJRxpPorhG then local QvyotayeMHWV=oKAdTluE(ecJRxpPorhG);if QvyotayeMHWV then local lsmMNuktk=UkBLxSrRPXRg(ecJRxpPorhG) or "unknown";local VVyIyeiSVOi=spEmThilUyv(ecJRxpPorhG);PkvJCJwXOS:SetText(table.concat({"Current plant: "..uGHbaWONyeld(lsmMNuktk),"Growth: "..uGHbaWONyeld(QvyotayeMHWV.Multiplier or "?").."x / "..uGHbaWONyeld(VVyIyeiSVOi).."x","Target: "..RJSGeSbOxr(),"Worm: "..(cBzlOwFDf.LastPlantContext and cBzlOwFDf.LastPlantContext.PlantRound==ecJRxpPorhG and cBzlOwFDf.LastPlantContext.UsedWorm and(uGHbaWONyeld(cBzlOwFDf.LastPlantContext.WormDisplayType).." "..uGHbaWONyeld(cBzlOwFDf.LastPlantContext.WormMult).."x") or "none"),"Health: "..(QvyotayeMHWV.Dead and "needs clearing" or "growing"),},"\n")) end else PkvJCJwXOS:SetText("No plant is growing right now.") end task.wait(0.35) end end);fshvbnQtAIC:Track(etCIDMWAodR.CharacterAdded:Connect(function() task.wait(0.75);if fshvbnQtAIC.Alive then ZNOMJJYC("Character reloaded; automation retained") end end));fshvbnQtAIC:Track(ewZdPbvIsSUT.Gui.AncestryChanged:Connect(function(_,MTCispDX) if MTCispDX==nil and fshvbnQtAIC.Alive then fshvbnQtAIC:Destroy() end end));if ybAzjEjzYxFT()then MATNCGiXgCx() end mtEBVbBpifWV("IDLE");ZNOMJJYC("Kira Hub ready");if type(ewZdPbvIsSUT.LoadAutoConfig)=="function" then task.defer(function() if not fshvbnQtAIC.Alive then return end local EJGgOEIJ,VZxKamHoJXXM,fBBRHrrWC=ewZdPbvIsSUT:LoadAutoConfig();if EJGgOEIJ and fBBRHrrWC then ZNOMJJYC("Autoload config loaded: "..uGHbaWONyeld(fBBRHrrWC).." ("..uGHbaWONyeld(VZxKamHoJXXM).." setting(s))","success") elseif not EJGgOEIJ then ZNOMJJYC("Autoload failed: "..uGHbaWONyeld(VZxKamHoJXXM),"danger") end end) end fshvbnQtAIC.RefreshMutations=RODDfGEP;fshvbnQtAIC.ClearBuyQueue=GHvgvBlk;fshvbnQtAIC.ScanConveyor=nHLFxVBcTXL;fshvbnQtAIC.GetInventory=function() return aCWHPTIm:GetInventory() end fshvbnQtAIC.GetSeeds=function() return aCWHPTIm:GetSeeds() end fshvbnQtAIC.GetSeedCount=function(lsmMNuktk) return aCWHPTIm:GetSeedCount(lsmMNuktk) end fshvbnQtAIC.GetPlantSeeds=function() return WCKhEtDy() end fshvbnQtAIC.GetHarvestTargets=function() return{Locked=TLDNAtPoWKo.HarvestMultiplierLocked,Shared=TLDNAtPoWKo.HarvestMultiplier,Values=SNnBGCLvHvec(TLDNAtPoWKo.HarvestMultipliers),} end fshvbnQtAIC.GetWeather=function() local zrynaZULKS,manPHYAxcH=tZvIJSONZrt();return{Current=zrynaZULKS,Active=manPHYAxcH,PlantOnlyDuringWeather=TLDNAtPoWKo.PlantOnlyDuringWeather,} end fshvbnQtAIC.ResolveSeed=function(lsmMNuktk) return aCWHPTIm:ResolveSeed(lsmMNuktk,xqMPKmZFg()) end fshvbnQtAIC.AllSeeds=lsqKbhtiF;fshvbnQtAIC.SeedCatalog=ykTMUBaeT;fshvbnQtAIC.SeedPriceText=edGMtCZvFZ;fshvbnQtAIC.RefreshRoundMonitor=MATNCGiXgCx;fshvbnQtAIC.KiraUI=VtOzvkJmkb end ffrgsTJRWMO();return fshvbnQtAIC end)()
+local tAkjrIRdq,ltAcELvGzk,ZVOoBlCEzTM,AbFsJOrE,oYANaOHUQcPs,BwoodiEAFu,EaksGWapyD,lvheOxWcCmfk,XplGtTryNLU,FPwbuFJZR,DfrqgXXsrB,bltBKQceuE,SGhakrAqt,bUXCKYzh,VSnWQoaPLJJ,SaBbjFyXo,GzYMiIXWDD,QSuGCcbnDyQ,YycneaNqxz,KcYuaOcsE,SVHPAEOaQ,butLjlkioU,ddVgCvfWHM,ZUTjSALmBd,llUtBaFau
+tAkjrIRdq=assert;ltAcELvGzk=error;ZVOoBlCEzTM=ipairs;AbFsJOrE=next;oYANaOHUQcPs=pairs;BwoodiEAFu=pcall;EaksGWapyD=print;lvheOxWcCmfk=rawget;XplGtTryNLU=select;FPwbuFJZR=tonumber;DfrqgXXsrB=tostring;bltBKQceuE=xpcall;SGhakrAqt=math.abs;bUXCKYzh=math.floor;VSnWQoaPLJJ=math.huge;SaBbjFyXo=math.max;GzYMiIXWDD=math.min;QSuGCcbnDyQ=string.find;YycneaNqxz=string.lower;KcYuaOcsE=string.sub;SVHPAEOaQ=string.upper;butLjlkioU=table.concat;ddVgCvfWHM=table.insert;ZUTjSALmBd=table.sort;llUtBaFau=os.clock;
+return (function()
+--[[
+    Kira Hub - Greedy Growers Script
+    UI: Kira UI loaded from GitHub
+
+    Ready now:
+      - Kira UI loader
+      - responsive UI through Kira UI
+      - Auto Buy Seed via ProximityPrompt + wallet/cost validation
+      - Auto Plant via ToggleEquip(hotbar/storage, index) + SeedType/ItemId verification
+      - Weather-aware Auto Plant gate using CurrentWeather / WeatherService
+      - Coordinator so planting and equipment-based tasks do not collide
+      - PlantRound multiplier/death monitor + auto harvest/dead collection
+      - Own-plot detection by OwnerUserId
+      - Own-plot fruit name + mutation scanner
+      - Auto mutation scan
+      - Runtime cleanup when re-executed
+
+    Adapter slots kept for later:
+      - Server-side equip protocol (ToolService.ToggleEquip args)
+      - Tree mature/dead detection
+      - Plant-result verification
+      - Harvest action
+]]
+
+--============================================================
+-- KIRA UI LOADER
+--============================================================
+
+local ahrBAuuaAFi = tAkjrIRdq(loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/AkiyamaKira2003/KiraUI/refs/heads/main/KiraUI.lua"
+)))()
+
+if type(ahrBAuuaAFi) ~= "table"
+    or type(ahrBAuuaAFi.CreateWindow) ~= "function" then
+
+    ltAcELvGzk("[KiraHub] Invalid Kira UI library returned from URL")
+end
+
+--============================================================
+-- SERVICES
+--============================================================
+
+local oLUBZcUVcgEG = game:GetService("Players")
+local vwsoFVgmZ = game:GetService("ReplicatedStorage")
+
+local dxLeYzjrD = oLUBZcUVcgEG.LocalPlayer
+local vhsjTXIP = dxLeYzjrD:WaitForChild("PlayerGui")
+
+--============================================================
+-- OLD RUNTIME CLEANUP
+-- Prevent duplicated loops/connections when script is rerun.
+--============================================================
+
+local JUUDRJUXiNbh = (getgenv and getgenv()) or _G
+
+if JUUDRJUXiNbh.KiraGreedyGrowers and type(JUUDRJUXiNbh.KiraGreedyGrowers.Destroy) == "function" then
+    BwoodiEAFu(function()
+        JUUDRJUXiNbh.KiraGreedyGrowers:Destroy()
+    end)
+end
+
+if JUUDRJUXiNbh.KiraGarden and type(JUUDRJUXiNbh.KiraGarden.Destroy) == "function" then
+    BwoodiEAFu(function()
+        JUUDRJUXiNbh.KiraGarden:Destroy()
+    end)
+end
+
+local PKTqUhNlA = {Alive= true,
+    Connections = {},
+    HolderConnections = {},
+    Window = nil,
+}
+
+JUUDRJUXiNbh.KiraGreedyGrowers = PKTqUhNlA
+JUUDRJUXiNbh.KiraGarden = PKTqUhNlA
+
+function PKTqUhNlA:Track(connection)
+    if connection then
+        table.insert(self.Connections, connection)
+    end
+    return connection
+end
+
+function PKTqUhNlA:Destroy()
+    if not self.Alive then
+        return
+    end
+
+    self.Alive = false
+
+    if self.State then
+        self.State.AutoBuy = false
+        self.State.AutoPlant = false
+        self.State.AutoHarvest = false
+        self.State.AutoCollectDead = false
+        self.State.AutoMutationScan = false
+        self.State.AutoSellDeadTree = false
+        self.State.AutoSellFruit = false
+        self.State.AutoCollectFruit = false
+        self.State.AutoCompostSeed = false
+        self.State.AntiAfk = false
+    end
+
+    if self.DisableAntiAfk then
+        BwoodiEAFu(self.DisableAntiAfk)
+    end
+
+    if self.StopAllFeatures then
+        BwoodiEAFu(self.StopAllFeatures)
+    end
+
+    for _, connection in ZVOoBlCEzTM(self.Connections) do
+        BwoodiEAFu(function()
+            connection:Disconnect()
+        end)
+    end
+
+    for _, RvcbuCAdxLIN in oYANaOHUQcPs(self.HolderConnections) do
+        for _, connection in ZVOoBlCEzTM(RvcbuCAdxLIN) do
+            BwoodiEAFu(function()
+                connection:Disconnect()
+            end)
+        end
+    end
+
+    self.Connections = {}
+    self.HolderConnections = {}
+
+    if self.Window and self.Window.Gui and self.Window.Gui.Parent then
+        BwoodiEAFu(function()
+            self.Window.Gui:Destroy()
+        end)
+    end
+
+    if JUUDRJUXiNbh.KiraGreedyGrowers == self then
+        JUUDRJUXiNbh.KiraGreedyGrowers = nil
+    end
+
+    if JUUDRJUXiNbh.KiraGarden == self then
+        JUUDRJUXiNbh.KiraGarden = nil
+    end
+end
+
+--============================================================
+-- GAME REFERENCES
+--============================================================
+
+local sWnyyWKj = vwsoFVgmZ
+    .Packages
+    ._Index["sleitnick_knit@1.6.0"]
+    .knit
+
+local KplnAOsvyjN = sWnyyWKj
+    .Services
+    .PlantRoundService
+    .RF
+    .StartRound
+
+local hxVkjLkuFG = sWnyyWKj
+    .Services
+    .PlantRoundService
+    .RF
+    .CollectDeadTree
+
+local HDDdNMSaA = sWnyyWKj
+    .Services
+    .ToolService
+    .RE
+    .ToggleEquip
+
+local EbMWmSACcQ = sWnyyWKj
+    .Services
+    .DataService
+    .RE
+    .DataUpdate
+
+local egNXrkSOdCn = nil
+BwoodiEAFu(function()
+    egNXrkSOdCn = sWnyyWKj
+        .Services
+        .SellStandService
+        .RF
+        .SellTree
+end)
+
+local UJwppRCtz = nil
+BwoodiEAFu(function()
+    UJwppRCtz = sWnyyWKj
+        .Services
+        .WeatherService
+        .RE
+        .WeatherChanged
+end)
+
+local LlgPhAFU =
+    vwsoFVgmZ:FindFirstChild("CurrentWeather")
+    or vwsoFVgmZ:WaitForChild("CurrentWeather", 5)
+
+local UQqophNh = workspace:WaitForChild("BigField")
+local xgfYDVTAxpy = UQqophNh:WaitForChild("ConveyorSeeds")
+local cTVnIvMQRMZ = UQqophNh:WaitForChild("PlayerPlots")
+
+--============================================================
+-- STATE
+--============================================================
+
+local ibVEMhwTQRuM = {AutoBuy= false,
+    AutoPlant = false,
+    AutoHarvest = false,
+    AutoCollectDead = true,
+    AutoMutationScan = false,
+    AutoSellDeadTree = false,
+    AutoSellFruit = false,
+    AutoCollectFruit = false,
+    AutoCompostSeed = false,
+    CollectAllFruit = false,
+    AntiAfk = false,
+
+    BuyRarity = "ALL",
+    BuyRarities = {"ALL"},
+    BuySeed = "ALL",
+    BuySeeds = {"ALL"},
+    BuyDelay = 0.15,
+
+    PlantSeed = "Fig",
+    PlantSeeds = {"Fig"},
+    CompostSeed = "Oak",
+    CompostSeeds = {"Oak"},
+    Fertilizer = "Magic",
+    UseWorm = false,
+    WormTypes = {"Worm"},
+    WormSortMode = "Lowest",
+    WormMultiplierMin = 5,
+    WormMultiplierMax = 10,
+    WormSettingsLocked = true,
+    WormTypesLocked = true,
+    WormPriorityLocked = true,
+    WormSettings = {},
+    AllowMutatedSeeds = true,
+    PlantOnlyDuringWeather = false,
+
+    HarvestMultiplier = 20,
+    HarvestMultiplierLocked = true,
+    HarvestMultipliers = {},
+    PlantRoundScanInterval = 0.08,
+    SellDelay = 0.15,
+    CompostDelay = 0.25,
+    MinFruitMutations = 5,
+    FruitCollectInterval = 1,
+    FruitCollectDelay = 0.1,
+
+    MutationScanInterval = 2,
+    Debug = false,
+}
+
+PKTqUhNlA.State = ibVEMhwTQRuM
+
+local euyMjRhaK = {Phase= "IDLE",
+    Status = "Starting...",
+    MyPlot = nil,
+    PurchaseCount = 0,
+    PlantCount = 0,
+    FruitListedCount = 0,
+    LastPlantContext = nil,
+    LastPurchase = nil,
+    LastInventorySource = "none",
+
+    HarvestCount = 0,
+    DeadCollectCount = 0,
+    FruitCollectCount = 0,
+    LastCollectedFruit = nil,
+    LastHarvest = nil,
+    SellDeadTreeCount = 0,
+    LastSoldDeadTree = nil,
+    SellFruitCount = 0,
+    LastSoldFruit = nil,
+    CompostCount = 0,
+    CompostGiveCount = 0,
+    CompostCollectCount = 0,
+    CompostTeleportCount = 0,
+    CompostDistance = 0,
+    CompostMode = "UNKNOWN",
+    CompostAnchor = nil,
+    CompostPrompt = nil,
+    CompostAnchorPrompt = nil,
+    LastCompostSeed = nil,
+    LastCompostAction = nil,
+    LastCompostLeashNotice = 0,
+    WormCount = 0,
+    LastWormSource = "none",
+    LastUsedWorm = nil,
+    CurrentPlantRound = nil,
+    CurrentMultiplier = 0,
+    CurrentSeed = nil,
+    CurrentHarvestTarget = 20,
+    CurrentWeather = "Normal",
+    WeatherActive = false,
+    AntiAfkMode = "off",
+    AntiAfkDisabledCount = 0,
+}
+
+PKTqUhNlA.Runtime = euyMjRhaK
+
+local RLYSHrriuiBl = {
+    "Basic",
+    "Better",
+    "Premium",
+    "Super",
+    "Magic",
+}
+
+
+-- Complete seed catalog + prices supplied from the in-game seed shop.
+local qrOkZyKh = {
+    {Name= "Apple",        PriceText = "$200"},
+    {Name= "Avocado",      PriceText = "$20K"},
+    {Name= "Banana",       PriceText = "$3B"},
+    {Name= "Blooming",     PriceText = "$750B"},
+    {Name= "Cherry",       PriceText = "$2.50M"},
+    {Name= "Coconut",      PriceText = "$10M"},
+    {Name= "Diamond",      PriceText = "$1Qi"},
+    {Name= "Dragon Fruit", PriceText = "$7B"},
+    {Name= "Elder",        PriceText = "$5Oc"},
+    {Name= "Fig",          PriceText = "$500"},
+    {Name= "Glowing",      PriceText = "$500B"},
+    {Name= "Glowshroom",   PriceText = "$3.50Oc"},
+    {Name= "Lemon",        PriceText = "$15K"},
+    {Name= "Magic",        PriceText = "$500T"},
+    {Name= "Mango",        PriceText = "$5M"},
+    {Name= "Money",        PriceText = "$14Sx"},
+    {Name= "Mushroom",     PriceText = "$7Sx"},
+    {Name= "Oak",          PriceText = "Free"},
+    {Name= "Orange",       PriceText = "$10K"},
+    {Name= "Peach",        PriceText = "$350"},
+    {Name= "Pine",         PriceText = "$25"},
+    {Name= "Pizza",        PriceText = "$850T"},
+    {Name= "Starfruit",    PriceText = "$4.50B"},
+    {Name= "Void",         PriceText = "$1.75Qi"},
+}
+
+local MKjocGYu = {}
+local tqxPJvMCxC = {}
+local SwXZMPqV = {}
+local BMBjiIBTo = {"ALL"}
+local ePXrjpkrf = {}
+local ESIHFmWdFau = {}
+local ITzawOckSLt = {}
+local HKJosaZrHScv = {}
+
+local fzMNsCGQ = {
+    "COMMON",
+    "UNCOMMON",
+    "RARE",
+    "EPIC",
+    "LEGENDARY",
+    "MYTHIC",
+}
+
+local dmbppbxeQ = {"ALL"}
+local PGBvtZsGLC = {}
+
+for LvOjTWuqYW, KJQdzwwjQOsx in ZVOoBlCEzTM(fzMNsCGQ) do
+    PGBvtZsGLC[KJQdzwwjQOsx] = LvOjTWuqYW
+    dmbppbxeQ[#dmbppbxeQ + 1] = KJQdzwwjQOsx
+end
+
+local WMAKOxdVMPqh = {
+    [""] = 1,
+    k = 1e3,
+    m = 1e6,
+    b = 1e9,
+    t = 1e12,
+    q = 1e15,
+    qa = 1e15,
+    qi = 1e18,
+    sx = 1e21,
+    sp = 1e24,
+    oc = 1e27,
+    no = 1e30,
+    dc = 1e33,
+    de = 1e33,
+}
+
+local function VcHKPCEOMcp(QtoBGFWIF)
+    QtoBGFWIF = DfrqgXXsrB(QtoBGFWIF or "")
+    QtoBGFWIF = QtoBGFWIF:gsub("<.->", "")
+    QtoBGFWIF = QtoBGFWIF:gsub(",", "")
+    QtoBGFWIF = QtoBGFWIF:gsub("%s+", "")
+
+    if QtoBGFWIF == "" then
+        return nil
+    end
+
+    local mGrFPvGieJAk = string.lower(QtoBGFWIF)
+
+    if mGrFPvGieJAk == "free"
+        or string.find(mGrFPvGieJAk, "free", 1, true) then
+        return 0
+    end
+
+    QtoBGFWIF = QtoBGFWIF:gsub("[%$€£¥]", "")
+
+    local pQvnqyZnr, jfWmUADzLmk =
+        QtoBGFWIF:match("([%+%-]?[%d%.]+)([%a]*)")
+
+    local ERQNGrtnl = FPwbuFJZR(pQvnqyZnr)
+
+    if not ERQNGrtnl then
+        return nil
+    end
+
+    local MxRPMdGNQWn =
+        WMAKOxdVMPqh[string.lower(DfrqgXXsrB(jfWmUADzLmk or ""))]
+
+    if not MxRPMdGNQWn then
+        return nil
+    end
+
+    return ERQNGrtnl * MxRPMdGNQWn
+end
+
+local function djMtGYIoe(DhaBjHwh)
+    return HKJosaZrHScv[DfrqgXXsrB(DhaBjHwh or "")]
+        or math.huge
+end
+
+local function cblgbjKYmINB(a, b)
+    local VumrEGrN = DfrqgXXsrB(a or "")
+    local TuhrRGzvUd = DfrqgXXsrB(b or "")
+    local oYyToIKdKZO = djMtGYIoe(VumrEGrN)
+    local kdoGYzSwtx = djMtGYIoe(TuhrRGzvUd)
+
+    if oYyToIKdKZO ~= kdoGYzSwtx then
+        return oYyToIKdKZO < kdoGYzSwtx
+    end
+
+    return VumrEGrN < TuhrRGzvUd
+end
+
+local function lDrsWJKe(a, b)
+    return cblgbjKYmINB(
+        ePXrjpkrf[DfrqgXXsrB(a or "")] or a,
+        ePXrjpkrf[DfrqgXXsrB(b or "")] or b
+    )
+end
+
+for _, seed in ZVOoBlCEzTM(qrOkZyKh) do
+    local ROxVchvm = seed.Name .. " Seed (" .. seed.PriceText .. ")"
+
+    MKjocGYu[#MKjocGYu + 1] = seed.Name
+    tqxPJvMCxC[#tqxPJvMCxC + 1] = ROxVchvm
+    SwXZMPqV[#SwXZMPqV + 1] = ROxVchvm
+    BMBjiIBTo[#BMBjiIBTo + 1] = ROxVchvm
+    ePXrjpkrf[ROxVchvm] = seed.Name
+    ESIHFmWdFau[seed.Name] = ROxVchvm
+    ITzawOckSLt[seed.Name] = seed.PriceText
+    HKJosaZrHScv[seed.Name] = VcHKPCEOMcp(seed.PriceText)
+end
+
+table.sort(MKjocGYu, cblgbjKYmINB)
+table.sort(tqxPJvMCxC, lDrsWJKe)
+table.sort(SwXZMPqV, lDrsWJKe)
+table.sort(BMBjiIBTo, function(a, b)
+    if a == b then
+        return false
+    elseif a == "ALL" then
+        return true
+    elseif b == "ALL" then
+        return false
+    end
+
+    return lDrsWJKe(a, b)
+end)
+
+local function nvOpXnTaTpp(BNnGQGeIA)
+    local jonwukNNT = {}
+
+    for _, XUWueugAwuSw in ZVOoBlCEzTM(BNnGQGeIA or {}) do
+        jonwukNNT[#jonwukNNT + 1] = XUWueugAwuSw
+    end
+
+    return jonwukNNT
+end
+
+local function XQlTufcFzRad(BNnGQGeIA)
+    if type(BNnGQGeIA) ~= "table" then
+        BNnGQGeIA = BNnGQGeIA == nil and {} or {BNnGQGeIA}
+    end
+
+    local jonwukNNT = {}
+    local QZYVNgIzkz = {}
+    local TwEMslBkyWZ = false
+
+    for _, XUWueugAwuSw in ZVOoBlCEzTM(BNnGQGeIA) do
+        local QtoBGFWIF = DfrqgXXsrB(XUWueugAwuSw or "")
+
+        if QtoBGFWIF == "ALL" then
+            TwEMslBkyWZ = true
+            break
+        end
+
+        local DhaBjHwh = ePXrjpkrf[QtoBGFWIF] or QtoBGFWIF
+
+        if DhaBjHwh ~= ""
+            and ESIHFmWdFau[DhaBjHwh]
+            and not QZYVNgIzkz[DhaBjHwh] then
+
+            QZYVNgIzkz[DhaBjHwh] = true
+            jonwukNNT[#jonwukNNT + 1] = DhaBjHwh
+        end
+    end
+
+    if TwEMslBkyWZ then
+        jonwukNNT = nvOpXnTaTpp(MKjocGYu)
+    end
+
+    table.sort(jonwukNNT, cblgbjKYmINB)
+    return jonwukNNT
+end
+
+local function cMtFJivxtN(BNnGQGeIA)
+    ibVEMhwTQRuM.BuySeeds = XQlTufcFzRad(BNnGQGeIA)
+    ibVEMhwTQRuM.BuySeed =
+        #ibVEMhwTQRuM.BuySeeds == #MKjocGYu
+        and "ALL"
+        or (ibVEMhwTQRuM.BuySeeds[1] or "NONE")
+
+    return nvOpXnTaTpp(ibVEMhwTQRuM.BuySeeds)
+end
+
+local function BKheSqKQSiI()
+    if type(ibVEMhwTQRuM.BuySeeds) ~= "table" then
+        return cMtFJivxtN(ibVEMhwTQRuM.BuySeed or "ALL")
+    end
+
+    return XQlTufcFzRad(ibVEMhwTQRuM.BuySeeds)
+end
+
+local function yhyrfMddESAN(BNnGQGeIA)
+    local vPMLceeu = {}
+
+    for _, DhaBjHwh in ZVOoBlCEzTM(XQlTufcFzRad(BNnGQGeIA)) do
+        vPMLceeu[#vPMLceeu + 1] = ESIHFmWdFau[DhaBjHwh] or DhaBjHwh
+    end
+
+    return vPMLceeu
+end
+
+local function AyxJZxZvpa()
+    local otMRsdmAPve = BKheSqKQSiI()
+
+    if #otMRsdmAPve == #MKjocGYu then
+        return "all seeds"
+    elseif #otMRsdmAPve == 0 then
+        return "no seeds selected"
+    end
+
+    return table.concat(otMRsdmAPve, ", ")
+end
+
+local function WMJXgCkxL(BNnGQGeIA)
+    if type(BNnGQGeIA) ~= "table" then
+        BNnGQGeIA = BNnGQGeIA == nil and {} or {BNnGQGeIA}
+    end
+
+    local jonwukNNT = {}
+    local QZYVNgIzkz = {}
+    local TwEMslBkyWZ = false
+
+    for _, XUWueugAwuSw in ZVOoBlCEzTM(BNnGQGeIA) do
+        local KJQdzwwjQOsx = string.upper(DfrqgXXsrB(XUWueugAwuSw or ""))
+
+        if KJQdzwwjQOsx == "ALL" then
+            TwEMslBkyWZ = true
+            break
+        end
+
+        if PGBvtZsGLC[KJQdzwwjQOsx] and not QZYVNgIzkz[KJQdzwwjQOsx] then
+            QZYVNgIzkz[KJQdzwwjQOsx] = true
+            jonwukNNT[#jonwukNNT + 1] = KJQdzwwjQOsx
+        end
+    end
+
+    if TwEMslBkyWZ then
+        jonwukNNT = nvOpXnTaTpp(fzMNsCGQ)
+    end
+
+    table.sort(jonwukNNT, function(a, b)
+        return (PGBvtZsGLC[a] or math.huge)
+            < (PGBvtZsGLC[b] or math.huge)
+    end)
+
+    return jonwukNNT
+end
+
+local function QOGIdmUgLGgH(BNnGQGeIA)
+    ibVEMhwTQRuM.BuyRarities = WMJXgCkxL(BNnGQGeIA)
+    ibVEMhwTQRuM.BuyRarity =
+        #ibVEMhwTQRuM.BuyRarities == #fzMNsCGQ
+        and "ALL"
+        or (ibVEMhwTQRuM.BuyRarities[1] or "NONE")
+
+    return nvOpXnTaTpp(ibVEMhwTQRuM.BuyRarities)
+end
+
+local function caURwNsUKyWo()
+    if type(ibVEMhwTQRuM.BuyRarities) ~= "table" then
+        return QOGIdmUgLGgH(ibVEMhwTQRuM.BuyRarity or "ALL")
+    end
+
+    return WMJXgCkxL(ibVEMhwTQRuM.BuyRarities)
+end
+
+local function OObSspcJge()
+    local otMRsdmAPve = caURwNsUKyWo()
+
+    if #otMRsdmAPve == #fzMNsCGQ then
+        return "all rarities"
+    elseif #otMRsdmAPve == 0 then
+        return "no rarities selected"
+    end
+
+    return table.concat(otMRsdmAPve, ", ")
+end
+
+local function sctjttTck(BNnGQGeIA, fallbackSeed)
+    if type(BNnGQGeIA) ~= "table" then
+        BNnGQGeIA = BNnGQGeIA == nil and {} or {BNnGQGeIA}
+    end
+
+    local jonwukNNT = {}
+    local QZYVNgIzkz = {}
+
+    for _, XUWueugAwuSw in ZVOoBlCEzTM(BNnGQGeIA) do
+        local QtoBGFWIF = DfrqgXXsrB(XUWueugAwuSw or "")
+        local DhaBjHwh = ePXrjpkrf[QtoBGFWIF] or QtoBGFWIF
+
+        if DhaBjHwh ~= ""
+            and ESIHFmWdFau[DhaBjHwh]
+            and not QZYVNgIzkz[DhaBjHwh] then
+
+            QZYVNgIzkz[DhaBjHwh] = true
+            jonwukNNT[#jonwukNNT + 1] = DhaBjHwh
+        end
+    end
+
+    if #jonwukNNT == 0 and fallbackSeed then
+        jonwukNNT[1] = fallbackSeed == true and (ibVEMhwTQRuM.PlantSeed or "Fig") or fallbackSeed
+    end
+
+    table.sort(jonwukNNT, cblgbjKYmINB)
+
+    return jonwukNNT
+end
+
+local function xvfaxgVJgb(BNnGQGeIA)
+    ibVEMhwTQRuM.PlantSeeds = sctjttTck(BNnGQGeIA)
+    ibVEMhwTQRuM.PlantSeed = ibVEMhwTQRuM.PlantSeeds[1] or ibVEMhwTQRuM.PlantSeed
+    return nvOpXnTaTpp(ibVEMhwTQRuM.PlantSeeds)
+end
+
+local function RyYbdTkwDtE()
+    if type(ibVEMhwTQRuM.PlantSeeds) ~= "table" then
+        return xvfaxgVJgb({ibVEMhwTQRuM.PlantSeed or "Fig"})
+    end
+
+    return nvOpXnTaTpp(ibVEMhwTQRuM.PlantSeeds)
+end
+
+local function KMlaDNlrszI(BNnGQGeIA)
+    local vPMLceeu = {}
+
+    for _, DhaBjHwh in ZVOoBlCEzTM(sctjttTck(BNnGQGeIA)) do
+        vPMLceeu[#vPMLceeu + 1] = ESIHFmWdFau[DhaBjHwh] or DhaBjHwh
+    end
+
+    return vPMLceeu
+end
+
+local function XkuqAzFB(BNnGQGeIA)
+    return sctjttTck(BNnGQGeIA)
+end
+
+local function ivsIiUzIw(BNnGQGeIA)
+    ibVEMhwTQRuM.CompostSeeds =
+        sctjttTck(
+            BNnGQGeIA,
+            ibVEMhwTQRuM.CompostSeed or "Oak"
+        )
+    ibVEMhwTQRuM.CompostSeed =
+        ibVEMhwTQRuM.CompostSeeds[1]
+        or ibVEMhwTQRuM.CompostSeed
+        or "Oak"
+    return nvOpXnTaTpp(ibVEMhwTQRuM.CompostSeeds)
+end
+
+local function XuodfQsedbd()
+    if type(ibVEMhwTQRuM.CompostSeeds) ~= "table" then
+        return ivsIiUzIw({ibVEMhwTQRuM.CompostSeed or "Oak"})
+    end
+
+    return nvOpXnTaTpp(ibVEMhwTQRuM.CompostSeeds)
+end
+
+local function vAvhLYicjXw(BNnGQGeIA)
+    local vPMLceeu = {}
+
+    for _, DhaBjHwh in ZVOoBlCEzTM(sctjttTck(BNnGQGeIA)) do
+        vPMLceeu[#vPMLceeu + 1] = ESIHFmWdFau[DhaBjHwh] or DhaBjHwh
+    end
+
+    return vPMLceeu
+end
+
+local function vfTaHKJkC(BNnGQGeIA)
+    return sctjttTck(BNnGQGeIA)
+end
+
+local function cXqsYNhLLg()
+    local otMRsdmAPve = XuodfQsedbd()
+
+    if #otMRsdmAPve == 0 then
+        return "no seeds selected"
+    end
+
+    return table.concat(otMRsdmAPve, ", ")
+end
+
+cMtFJivxtN(ibVEMhwTQRuM.BuySeeds or ibVEMhwTQRuM.BuySeed or "ALL")
+QOGIdmUgLGgH(ibVEMhwTQRuM.BuyRarities or ibVEMhwTQRuM.BuyRarity or "ALL")
+xvfaxgVJgb(ibVEMhwTQRuM.PlantSeeds or {ibVEMhwTQRuM.PlantSeed or "Fig"})
+ivsIiUzIw(ibVEMhwTQRuM.CompostSeeds or {ibVEMhwTQRuM.CompostSeed or "Oak"})
+
+local function oyZlEENU(XUWueugAwuSw, hVKRNUmvaW)
+    local QtoBGFWIF = DfrqgXXsrB(XUWueugAwuSw or "")
+    local pQvnqyZnr =
+        QtoBGFWIF:match("%-?%d+%.?%d*")
+        or QtoBGFWIF:match("%-?%.%d+")
+
+    local ERQNGrtnl =
+        FPwbuFJZR(pQvnqyZnr)
+        or FPwbuFJZR(hVKRNUmvaW)
+        or FPwbuFJZR(ibVEMhwTQRuM.HarvestMultiplier)
+        or 20
+
+    ERQNGrtnl = math.max(0.01, ERQNGrtnl)
+    return math.floor(ERQNGrtnl * 100 + 0.5) / 100
+end
+
+local function BmAHDGzgYbNu(XUWueugAwuSw)
+    ibVEMhwTQRuM.HarvestMultiplier =
+        oyZlEENU(XUWueugAwuSw, ibVEMhwTQRuM.HarvestMultiplier)
+
+    euyMjRhaK.CurrentHarvestTarget = ibVEMhwTQRuM.HarvestMultiplier
+    return ibVEMhwTQRuM.HarvestMultiplier
+end
+
+local function PyoJDKby(BNnGQGeIA)
+    local jonwukNNT = {}
+
+    for eRdipkcQbcnW, XUWueugAwuSw in oYANaOHUQcPs(BNnGQGeIA or {}) do
+        local DhaBjHwh = DfrqgXXsrB(eRdipkcQbcnW or "")
+
+        if ESIHFmWdFau[DhaBjHwh] then
+            jonwukNNT[DhaBjHwh] =
+                oyZlEENU(
+                    XUWueugAwuSw,
+                    ibVEMhwTQRuM.HarvestMultiplier
+                )
+        end
+    end
+
+    return jonwukNNT
+end
+
+local function XLZYOtQEIi(XUWueugAwuSw)
+    if type(XUWueugAwuSw) == "table" then
+        if XUWueugAwuSw.Locked ~= nil then
+            ibVEMhwTQRuM.HarvestMultiplierLocked = XUWueugAwuSw.Locked == true
+        end
+
+        BmAHDGzgYbNu(XUWueugAwuSw.Shared or XUWueugAwuSw.Default)
+
+        if type(XUWueugAwuSw.Values) == "table" then
+            ibVEMhwTQRuM.HarvestMultipliers =
+                PyoJDKby(XUWueugAwuSw.Values)
+        end
+    else
+        BmAHDGzgYbNu(XUWueugAwuSw)
+    end
+
+    return {Locked= ibVEMhwTQRuM.HarvestMultiplierLocked,
+        Shared = ibVEMhwTQRuM.HarvestMultiplier,
+        Values = PyoJDKby(ibVEMhwTQRuM.HarvestMultipliers),
+    }
+end
+
+local function DGUSmiSQl(DhaBjHwh)
+    local tpSFmqQNLSF =
+        oyZlEENU(
+            ibVEMhwTQRuM.HarvestMultiplier,
+            20
+        )
+
+    if ibVEMhwTQRuM.HarvestMultiplierLocked then
+        return tpSFmqQNLSF
+    end
+
+    DhaBjHwh = DfrqgXXsrB(DhaBjHwh or "")
+    return oyZlEENU(
+        ibVEMhwTQRuM.HarvestMultipliers[DhaBjHwh],
+        tpSFmqQNLSF
+    )
+end
+
+local function wTksbWBOfVL()
+    local aXYrwpDekZCq = {}
+    local otMRsdmAPve = RyYbdTkwDtE()
+
+    table.sort(otMRsdmAPve, cblgbjKYmINB)
+
+    for _, DhaBjHwh in ZVOoBlCEzTM(otMRsdmAPve) do
+        aXYrwpDekZCq[#aXYrwpDekZCq + 1] = {Key= DhaBjHwh,
+            Text = ESIHFmWdFau[DhaBjHwh] or DhaBjHwh,
+        }
+    end
+
+    return aXYrwpDekZCq
+end
+
+local function rdYzIypaIF()
+    if ibVEMhwTQRuM.HarvestMultiplierLocked then
+        return "locked at " .. DfrqgXXsrB(ibVEMhwTQRuM.HarvestMultiplier) .. "x"
+    end
+
+    return "custom per seed"
+end
+
+XLZYOtQEIi({Locked= ibVEMhwTQRuM.HarvestMultiplierLocked,
+    Shared = ibVEMhwTQRuM.HarvestMultiplier,
+    Values = ibVEMhwTQRuM.HarvestMultipliers,
+})
+
+--============================================================
+-- ADAPTERS FOR DATA YOU WILL PROVIDE LATER
+--============================================================
+
+local LLTinptsjcFz = {
+    -- Optional extra verification after the built-in PlantRound detector
+    -- confirms that StartRound created a new round.
+    -- function(context) -> true / false / nil
+    VerifyPlant = nil,
+}
+
+PKTqUhNlA.Adapters = LLTinptsjcFz
+
+--============================================================
+-- UI SAFE HELPERS
+--============================================================
+
+local function wJyAtKFRpbz(...)
+    if ibVEMhwTQRuM.Debug then
+        EaksGWapyD("[KiraHub]", ...)
+    end
+end
+
+local function foUSPDNDz(QtoBGFWIF, tone)
+    euyMjRhaK.Status = DfrqgXXsrB(QtoBGFWIF or "")
+    if PKTqUhNlA.Window then
+        PKTqUhNlA.Window:SetStatus(euyMjRhaK.Status, tone)
+    end
+    wJyAtKFRpbz(euyMjRhaK.Status)
+end
+
+local function HXuhwCIQZAB(QtoBGFWIF, tone)
+    euyMjRhaK.Phase = DfrqgXXsrB(QtoBGFWIF or "IDLE")
+    if PKTqUhNlA.Window then
+        PKTqUhNlA.Window:SetPhase(euyMjRhaK.Phase, tone)
+    end
+end
+
+local function AoDYQAJZTEZM(title, QtoBGFWIF, tone, duration)
+    if PKTqUhNlA.Window
+        and type(PKTqUhNlA.Window.Notify) == "function" then
+
+        PKTqUhNlA.Window:Notify({Title= title or "Kira Hub",
+            Text = DfrqgXXsrB(QtoBGFWIF or ""),
+            Tone = tone,
+            Duration = duration,
+        })
+    end
+end
+
+--============================================================
+-- ANTI-AFK
+--============================================================
+
+local dLeIFYjISzv = {Connection= nil,
+    DisabledConnections = {},
+}
+
+local function wvQAurwsLo(connection, methodName)
+    local uPirkaZfGG, PcjiroTtNDGI = BwoodiEAFu(function()
+        return connection[methodName]
+    end)
+
+    if uPirkaZfGG and type(PcjiroTtNDGI) == "function" then
+        return PcjiroTtNDGI
+    end
+
+    return nil
+end
+
+local function oCrdbSreuG()
+    if dLeIFYjISzv.Connection then
+        BwoodiEAFu(function()
+            dLeIFYjISzv.Connection:Disconnect()
+        end)
+    end
+
+    dLeIFYjISzv.Connection = nil
+end
+
+local function SpIcSRilxYM()
+    for _, connection in ZVOoBlCEzTM(dLeIFYjISzv.DisabledConnections) do
+        local qEYPbXRDcc = wvQAurwsLo(connection, "Enable")
+
+        if qEYPbXRDcc then
+            BwoodiEAFu(function()
+                qEYPbXRDcc(connection)
+            end)
+        end
+    end
+
+    dLeIFYjISzv.DisabledConnections = {}
+end
+
+local function QMnDLYrVkq()
+    local uPirkaZfGG, oawJCBFNb = BwoodiEAFu(function()
+        return game:GetService("VirtualUser")
+    end)
+
+    if not uPirkaZfGG or not oawJCBFNb then
+        return
+    end
+
+    BwoodiEAFu(function()
+        oawJCBFNb:CaptureController()
+        oawJCBFNb:ClickButton2(Vector2.new())
+    end)
+end
+
+local function kjpOqSXBa()
+    oCrdbSreuG()
+    SpIcSRilxYM()
+
+    local WSWLxRnrR = 0
+    local ldBeAOtoW = getconnections or get_signal_cons
+
+    if type(ldBeAOtoW) == "function" then
+        local uPirkaZfGG, RvcbuCAdxLIN =
+            BwoodiEAFu(function()
+                return ldBeAOtoW(dxLeYzjrD.Idled)
+            end)
+
+        if uPirkaZfGG and type(RvcbuCAdxLIN) == "table" then
+            for _, connection in oYANaOHUQcPs(RvcbuCAdxLIN) do
+                local gGegChxnwnu =
+                    wvQAurwsLo(connection, "Disable")
+                local qEYPbXRDcc =
+                    wvQAurwsLo(connection, "Enable")
+
+                if connection
+                    and gGegChxnwnu
+                    and qEYPbXRDcc then
+
+                    local EatGthUsLRZQ = BwoodiEAFu(function()
+                        gGegChxnwnu(connection)
+                    end)
+
+                    if EatGthUsLRZQ then
+                        WSWLxRnrR += 1
+                        table.insert(
+                            dLeIFYjISzv.DisabledConnections,
+                            connection
+                        )
+                    end
+                end
+            end
+        end
+    end
+
+    dLeIFYjISzv.Connection =
+        dxLeYzjrD.Idled:Connect(function()
+            QMnDLYrVkq()
+        end)
+
+    euyMjRhaK.AntiAfkDisabledCount = WSWLxRnrR
+    euyMjRhaK.AntiAfkMode =
+        WSWLxRnrR > 0
+        and "idle guard + click"
+        or "idle click"
+end
+
+local function WFtZRMBScv()
+    oCrdbSreuG()
+    SpIcSRilxYM()
+
+    euyMjRhaK.AntiAfkDisabledCount = 0
+    euyMjRhaK.AntiAfkMode = "off"
+
+    if ibVEMhwTQRuM then
+        ibVEMhwTQRuM.AntiAfk = false
+    end
+end
+
+PKTqUhNlA.DisableAntiAfk = WFtZRMBScv
+
+local function vHRPUjRYZUZk(mnlJbSzzP, silent)
+    ibVEMhwTQRuM.AntiAfk = mnlJbSzzP == true
+
+    if ibVEMhwTQRuM.AntiAfk then
+        kjpOqSXBa()
+
+        if not silent then
+            foUSPDNDz("Anti-AFK enabled")
+        end
+    else
+        WFtZRMBScv()
+
+        if not silent then
+            foUSPDNDz("Anti-AFK disabled")
+        end
+    end
+end
+
+--============================================================
+-- FEATURE GENERATIONS
+--============================================================
+
+local tFzXKhTXs = {}
+
+local function PxzWtllXIL(CRwBIXohMQ)
+    tFzXKhTXs[CRwBIXohMQ] = (tFzXKhTXs[CRwBIXohMQ] or 0) + 1
+end
+
+local function nFPpZjLd(CRwBIXohMQ, runner)
+    tFzXKhTXs[CRwBIXohMQ] = (tFzXKhTXs[CRwBIXohMQ] or 0) + 1
+    local OUYXhMYnTP = tFzXKhTXs[CRwBIXohMQ]
+
+    task.spawn(function()
+        local function lSSAtRsxOpy()
+            return (not PKTqUhNlA.Alive) or tFzXKhTXs[CRwBIXohMQ] ~= OUYXhMYnTP
+        end
+
+        local uPirkaZfGG, ujxUlzok = bltBKQceuE(function()
+            runner(lSSAtRsxOpy)
+        end, debug.traceback)
+
+        if not uPirkaZfGG and PKTqUhNlA.Alive then
+            warn("[KiraHub:" .. DfrqgXXsrB(CRwBIXohMQ) .. "]", ujxUlzok)
+        end
+    end)
+end
+
+local function pQFNwZAvvQA(seconds, lSSAtRsxOpy)
+    local QHmwcvVZcPU = os.clock() + math.max(0, FPwbuFJZR(seconds) or 0)
+
+    while os.clock() < QHmwcvVZcPU do
+        if lSSAtRsxOpy and lSSAtRsxOpy() then
+            return false
+        end
+        task.wait(math.min(0.05, math.max(0.01, QHmwcvVZcPU - os.clock())))
+    end
+
+    return true
+end
+
+--============================================================
+-- WEATHER STATE
+--============================================================
+
+local function LXQesoUbwMC(XUWueugAwuSw)
+    local QtoBGFWIF = DfrqgXXsrB(XUWueugAwuSw or "")
+    QtoBGFWIF = QtoBGFWIF:match("^%s*(.-)%s*$") or ""
+
+    if QtoBGFWIF == "" then
+        return "Normal"
+    end
+
+    return QtoBGFWIF
+end
+
+local function oKEHLRBQYmx(XUWueugAwuSw)
+    return string.lower(LXQesoUbwMC(XUWueugAwuSw)) ~= "normal"
+end
+
+local function DEGvWhkAYo(XUWueugAwuSw)
+    local CSJzVWFOz = LXQesoUbwMC(XUWueugAwuSw)
+
+    euyMjRhaK.CurrentWeather = CSJzVWFOz
+    euyMjRhaK.WeatherActive = oKEHLRBQYmx(CSJzVWFOz)
+
+    return euyMjRhaK.CurrentWeather, euyMjRhaK.WeatherActive
+end
+
+local function dHqyhbRECjo()
+    local XUWueugAwuSw = nil
+
+    if LlgPhAFU then
+        BwoodiEAFu(function()
+            XUWueugAwuSw = LlgPhAFU.Value
+        end)
+    end
+
+    return DEGvWhkAYo(XUWueugAwuSw)
+end
+
+local function ZtkuZoIr()
+    local CSJzVWFOz, UnCMwRYd = dHqyhbRECjo()
+
+    if not ibVEMhwTQRuM.PlantOnlyDuringWeather then
+        return true, CSJzVWFOz
+    end
+
+    return UnCMwRYd, CSJzVWFOz
+end
+
+local function tZYyGNtS(lSSAtRsxOpy)
+    if not ibVEMhwTQRuM.PlantOnlyDuringWeather then
+        return true
+    end
+
+    local IHaByJlryk = nil
+
+    while PKTqUhNlA.Alive
+        and ibVEMhwTQRuM.AutoPlant
+        and not lSSAtRsxOpy() do
+
+        if not ibVEMhwTQRuM.PlantOnlyDuringWeather then
+            return true
+        end
+
+        local UnCMwRYd, CSJzVWFOz = ZtkuZoIr()
+
+        if UnCMwRYd then
+            foUSPDNDz(
+                "Weather active: "
+                    .. CSJzVWFOz
+                    .. "; planting allowed"
+            )
+            return true
+        end
+
+        if CSJzVWFOz ~= IHaByJlryk then
+            HXuhwCIQZAB("WAIT WEATHER", "warning")
+            foUSPDNDz(
+                "Waiting for weather before planting (current: "
+                    .. CSJzVWFOz
+                    .. ")",
+                "warning"
+            )
+            IHaByJlryk = CSJzVWFOz
+        end
+
+        if not pQFNwZAvvQA(0.25, lSSAtRsxOpy) then
+            return false
+        end
+    end
+
+    return false
+end
+
+dHqyhbRECjo()
+
+if UJwppRCtz and UJwppRCtz.OnClientEvent then
+    PKTqUhNlA:Track(UJwppRCtz.OnClientEvent:Connect(function(CSJzVWFOz)
+        local nwooXzdW = euyMjRhaK.CurrentWeather
+        local jIsUVHAQEx, UnCMwRYd = DEGvWhkAYo(CSJzVWFOz)
+
+        if jIsUVHAQEx ~= nwooXzdW
+            and ibVEMhwTQRuM.AutoPlant
+            and ibVEMhwTQRuM.PlantOnlyDuringWeather then
+
+            if UnCMwRYd then
+                foUSPDNDz("Weather active: " .. jIsUVHAQEx)
+            else
+                foUSPDNDz(
+                    "Weather ended; next plant waits for weather",
+                    "warning"
+                )
+            end
+        end
+    end))
+end
+
+if LlgPhAFU then
+    PKTqUhNlA:Track(LlgPhAFU:GetPropertyChangedSignal("Value"):Connect(function()
+        local nwooXzdW = euyMjRhaK.CurrentWeather
+        local jIsUVHAQEx, UnCMwRYd = dHqyhbRECjo()
+
+        if jIsUVHAQEx ~= nwooXzdW
+            and ibVEMhwTQRuM.AutoPlant
+            and ibVEMhwTQRuM.PlantOnlyDuringWeather then
+
+            if UnCMwRYd then
+                foUSPDNDz("Weather active: " .. jIsUVHAQEx)
+            else
+                foUSPDNDz(
+                    "Weather ended; next plant waits for weather",
+                    "warning"
+                )
+            end
+        end
+    end))
+end
+
+local function bQLHthvj()
+    PxzWtllXIL("AutoBuy")
+    PxzWtllXIL("AutoPlant")
+    PxzWtllXIL("AutoSellDeadTree")
+    PxzWtllXIL("AutoSellFruit")
+    PxzWtllXIL("AutoCollectFruit")
+    PxzWtllXIL("AutoCompostSeed")
+    PxzWtllXIL("CompostMovementGuard")
+    PxzWtllXIL("AutoMutationScan")
+    PxzWtllXIL("RoundMonitor")
+    PxzWtllXIL("ManualPlant")
+end
+
+PKTqUhNlA.StopAllFeatures = bQLHthvj
+
+--============================================================
+-- MUTEX
+--============================================================
+
+local GouULHoGsWxF = {}
+GouULHoGsWxF.__index = GouULHoGsWxF
+
+function GouULHoGsWxF.new(CRwBIXohMQ)
+    return setmetatable({Name= CRwBIXohMQ,
+        Owner = nil,
+    }, GouULHoGsWxF)
+end
+
+function GouULHoGsWxF:Acquire(owner, lSSAtRsxOpy, timeout)
+    local lqYddjmpEbqG = os.clock()
+
+    while PKTqUhNlA.Alive and self.Owner ~= nil and self.Owner ~= owner do
+        if lSSAtRsxOpy and lSSAtRsxOpy() then
+            return false
+        end
+
+        if timeout and (os.clock() - lqYddjmpEbqG) >= timeout then
+            return false
+        end
+
+        task.wait(0.02)
+    end
+
+    if not PKTqUhNlA.Alive or (lSSAtRsxOpy and lSSAtRsxOpy()) then
+        return false
+    end
+
+    self.Owner = owner
+    return true
+end
+
+function GouULHoGsWxF:Release(owner)
+    if self.Owner == owner then
+        self.Owner = nil
+    end
+end
+
+local Guqfamwp = GouULHoGsWxF.new("Equipment")
+local MogsXTREOt = GouULHoGsWxF.new("Action")
+local CskrVDMQyUS = GouULHoGsWxF.new("Plant")
+local XbOuitZgCfm = GouULHoGsWxF.new("PlantRound")
+
+--============================================================
+-- COORDINATOR
+-- Plant gets priority before equipment-dependent background work.
+--============================================================
+
+local wpFutleQBCyz = {PlantIntent= false,
+    CriticalAction = nil,
+    CriticalOwner = nil,
+}
+
+PKTqUhNlA.Coordinator = wpFutleQBCyz
+
+function wpFutleQBCyz:IsPlantBusy()
+    return self.PlantIntent or self.CriticalAction == "PLANTING"
+end
+
+function wpFutleQBCyz:WaitPlantClear(lSSAtRsxOpy)
+    while PKTqUhNlA.Alive and self:IsPlantBusy() do
+        if lSSAtRsxOpy and lSSAtRsxOpy() then
+            return false
+        end
+        task.wait(0.025)
+    end
+
+    return PKTqUhNlA.Alive and not (lSSAtRsxOpy and lSSAtRsxOpy())
+end
+
+function wpFutleQBCyz:AcquireBackgroundEquipment(owner, lSSAtRsxOpy)
+    -- First wait for any queued/current plant.
+    if not self:WaitPlantClear(lSSAtRsxOpy) then
+        return false
+    end
+
+    while PKTqUhNlA.Alive do
+        if not MogsXTREOt:Acquire(owner, lSSAtRsxOpy) then
+            return false
+        end
+
+        if not Guqfamwp:Acquire(owner, lSSAtRsxOpy) then
+            MogsXTREOt:Release(owner)
+            return false
+        end
+
+        -- A plant may have announced intent while this task waited for equipment.
+        -- If so, yield priority immediately.
+        if not self:IsPlantBusy() then
+            return true
+        end
+
+        Guqfamwp:Release(owner)
+        MogsXTREOt:Release(owner)
+
+        if not self:WaitPlantClear(lSSAtRsxOpy) then
+            return false
+        end
+    end
+
+    return false
+end
+
+function wpFutleQBCyz:ReleaseBackgroundEquipment(owner)
+    Guqfamwp:Release(owner)
+    MogsXTREOt:Release(owner)
+end
+
+function wpFutleQBCyz:AcquireAction(owner, lSSAtRsxOpy, timeout)
+    if not self:WaitPlantClear(lSSAtRsxOpy) then
+        return false
+    end
+
+    if not MogsXTREOt:Acquire(owner, lSSAtRsxOpy, timeout) then
+        return false
+    end
+
+    if self:IsPlantBusy() and self.CriticalOwner ~= owner then
+        MogsXTREOt:Release(owner)
+        return false
+    end
+
+    return true
+end
+
+function wpFutleQBCyz:ReleaseAction(owner)
+    MogsXTREOt:Release(owner)
+end
+
+function wpFutleQBCyz:BeginPlant(owner, lSSAtRsxOpy)
+    if not CskrVDMQyUS:Acquire(owner, lSSAtRsxOpy) then
+        return false
+    end
+
+    -- Announce intent BEFORE waiting for locks.
+    -- This blocks new background actions from touching remotes/tools first.
+    self.PlantIntent = true
+    self.CriticalOwner = owner
+    HXuhwCIQZAB("PLANT QUEUED", "warning")
+
+    if not MogsXTREOt:Acquire(owner, lSSAtRsxOpy) then
+        self.PlantIntent = false
+        self.CriticalOwner = nil
+        CskrVDMQyUS:Release(owner)
+        HXuhwCIQZAB("IDLE")
+        return false
+    end
+
+    if not Guqfamwp:Acquire(owner, lSSAtRsxOpy) then
+        MogsXTREOt:Release(owner)
+        self.PlantIntent = false
+        self.CriticalOwner = nil
+        CskrVDMQyUS:Release(owner)
+        HXuhwCIQZAB("IDLE")
+        return false
+    end
+
+    self.CriticalAction = "PLANTING"
+    HXuhwCIQZAB("PLANTING", "warning")
+    return true
+end
+
+function wpFutleQBCyz:EndPlant(owner)
+    if self.CriticalOwner ~= owner then
+        return
+    end
+
+    self.CriticalAction = nil
+    self.CriticalOwner = nil
+    Guqfamwp:Release(owner)
+    MogsXTREOt:Release(owner)
+    self.PlantIntent = false
+    CskrVDMQyUS:Release(owner)
+    HXuhwCIQZAB("IDLE")
+end
+
+--============================================================
+-- CHARACTER / TOOL HELPERS
+--============================================================
+
+local function yfAvfulpTS()
+    return dxLeYzjrD.Character
+end
+
+local function QRxoupMChfPU()
+    local wERpewMzabU = yfAvfulpTS()
+    if not wERpewMzabU then
+        return nil
+    end
+    return wERpewMzabU:FindFirstChildOfClass("Humanoid")
+end
+
+local function jdMXqPJlODtA()
+    local wERpewMzabU = yfAvfulpTS()
+    if not wERpewMzabU then
+        return nil
+    end
+    return wERpewMzabU:FindFirstChildOfClass("Tool")
+end
+
+local function OyZLrMivikrp()
+    local dQSktSlt = {}
+    local wERpewMzabU = yfAvfulpTS()
+
+    if not wERpewMzabU then
+        return dQSktSlt
+    end
+
+    for _, child in ZVOoBlCEzTM(wERpewMzabU:GetChildren()) do
+        if child:IsA("Tool") then
+            dQSktSlt[#dQSktSlt + 1] = child
+        end
+    end
+
+    return dQSktSlt
+end
+
+local function jvVkYVzFo(XUWueugAwuSw)
+    return string.lower(DfrqgXXsrB(XUWueugAwuSw or ""))
+end
+
+local function cIjnZGwi(CRwBIXohMQ)
+    CRwBIXohMQ = DfrqgXXsrB(CRwBIXohMQ or "")
+    CRwBIXohMQ = CRwBIXohMQ:gsub("%b()", "")
+    CRwBIXohMQ = CRwBIXohMQ:gsub("[_%s%-]*[Ss][Ee][Ee][Dd].*$", "")
+    CRwBIXohMQ = CRwBIXohMQ:gsub("^%s+", ""):gsub("%s+$", "")
+    return CRwBIXohMQ
+end
+
+--============================================================
+-- INVENTORY BRIDGE
+--
+-- Uses the real DataService inventory (Hotbar + Storage).
+-- It can:
+--   1) reuse getgenv().KiraInventory when that API is already loaded,
+--   2) bootstrap an internal cache from existing DataUpdate callbacks,
+--   3) live-sync from DataUpdate afterwards.
+--============================================================
+
+local ZMZXtZNTlb = {Inventory= nil,
+    Source = "none",
+    LastUpdate = 0,
+    Version = 0,
+}
+
+PKTqUhNlA.Inventory = ZMZXtZNTlb
+
+local function LiOmaZCFo(tbl, eRdipkcQbcnW)
+    if type(tbl) ~= "table" then
+        return nil
+    end
+
+    local uPirkaZfGG, XUWueugAwuSw = BwoodiEAFu(lvheOxWcCmfk, tbl, eRdipkcQbcnW)
+
+    if uPirkaZfGG then
+        return XUWueugAwuSw
+    end
+
+    return nil
+end
+
+local function OFjzDxmLK(tbl)
+    if type(tbl) ~= "table" then
+        return function()
+            return nil
+        end
+    end
+
+    local eRdipkcQbcnW = nil
+
+    return function()
+        local uPirkaZfGG, BiHHHidSmm, wpfMogOT = BwoodiEAFu(AbFsJOrE, tbl, eRdipkcQbcnW)
+
+        if not uPirkaZfGG or BiHHHidSmm == nil then
+            return nil
+        end
+
+        eRdipkcQbcnW = BiHHHidSmm
+        return BiHHHidSmm, wpfMogOT
+    end
+end
+
+local function JsWrmjlSRyvZ(XUWueugAwuSw, FtEBEyLZpOZP)
+    if type(XUWueugAwuSw) ~= "table" then
+        return XUWueugAwuSw
+    end
+
+    FtEBEyLZpOZP = FtEBEyLZpOZP or {}
+
+    if FtEBEyLZpOZP[XUWueugAwuSw] then
+        return FtEBEyLZpOZP[XUWueugAwuSw]
+    end
+
+    local eMUGVdRYqdCC = {}
+    FtEBEyLZpOZP[XUWueugAwuSw] = eMUGVdRYqdCC
+
+    for eRdipkcQbcnW, child in OFjzDxmLK(XUWueugAwuSw) do
+        eMUGVdRYqdCC[JsWrmjlSRyvZ(eRdipkcQbcnW, FtEBEyLZpOZP)] =
+            JsWrmjlSRyvZ(child, FtEBEyLZpOZP)
+    end
+
+    return eMUGVdRYqdCC
+end
+
+--============================================================
+-- WORM BRIDGE
+--============================================================
+
+do
+
+local nYXywNLTy = {RawWorms= nil,
+    Worms = {},
+    Source = "none",
+    Authoritative = false,
+    LastUpdate = 0,
+    Reservations = {},
+}
+
+local LeMlSaHuCDZK = {
+    "Worm",
+    "DewyWorm",
+    "ShockedWorm",
+    "DustyWorm",
+    "FrostedWorm",
+    "InfestedWorm",
+    "RadioactiveWorm",
+    "ChargedWorm",
+    "SlimyWorm",
+    "GoldenWorm",
+    "ScaledWorm",
+    "CosmicWorm",
+}
+
+local EPFtgAjFueFR = {Worm= {Display= "Worm",
+        Mutation = "None",
+        IsMutated = false,
+    },
+    DewyWorm = {Display= "Dewy Worm",
+        Mutation = "Dewy",
+        IsMutated = true,
+    },
+    ShockedWorm = {Display= "Shocked Worm",
+        Mutation = "Shocked",
+        IsMutated = true,
+    },
+    DustyWorm = {Display= "Dusty Worm",
+        Mutation = "Dusty",
+        IsMutated = true,
+    },
+    FrostedWorm = {Display= "Frosted Worm",
+        Mutation = "Frosted",
+        IsMutated = true,
+    },
+    InfestedWorm = {Display= "Infested Worm",
+        Mutation = "Infested",
+        IsMutated = true,
+    },
+    RadioactiveWorm = {Display= "Radioactive Worm",
+        Mutation = "Radioactive",
+        IsMutated = true,
+    },
+    ChargedWorm = {Display= "Charged Worm",
+        Mutation = "Charged",
+        IsMutated = true,
+    },
+    SlimyWorm = {Display= "Slimy Worm",
+        Mutation = "Slimy",
+        IsMutated = true,
+    },
+    GoldenWorm = {Display= "Golden Worm",
+        Mutation = "Golden",
+        IsMutated = true,
+    },
+    ScaledWorm = {Display= "Scaled Worm",
+        Mutation = "Scaled",
+        IsMutated = true,
+    },
+    CosmicWorm = {Display= "Cosmic Worm",
+        Mutation = "Cosmic",
+        IsMutated = true,
+    },
+}
+
+local nCrwenUaxB = {}
+local qtAQhGEJwk = {}
+
+for _, TnTMwMYuEI in ZVOoBlCEzTM(LeMlSaHuCDZK) do
+    local orUiSoOu = EPFtgAjFueFR[TnTMwMYuEI]
+    local ROxVchvm = orUiSoOu and orUiSoOu.Display or TnTMwMYuEI
+
+    nCrwenUaxB[#nCrwenUaxB + 1] = ROxVchvm
+    qtAQhGEJwk[ROxVchvm] = TnTMwMYuEI
+end
+
+PKTqUhNlA.WormBridge = nYXywNLTy
+PKTqUhNlA.Worms = nYXywNLTy
+PKTqUhNlA.WormTypes = LeMlSaHuCDZK
+PKTqUhNlA.WormLabels = nCrwenUaxB
+
+local function YHVWDRUqDHUT(TnTMwMYuEI)
+    TnTMwMYuEI = DfrqgXXsrB(TnTMwMYuEI or "")
+
+    local orUiSoOu = EPFtgAjFueFR[TnTMwMYuEI]
+
+    if orUiSoOu then
+        return orUiSoOu
+    end
+
+    local FgynLSfATX = TnTMwMYuEI:match("^(.-)Worm$")
+
+    if TnTMwMYuEI == "Worm" then
+        FgynLSfATX = "None"
+    elseif not FgynLSfATX or FgynLSfATX == "" then
+        FgynLSfATX = TnTMwMYuEI
+    end
+
+    return {Display=
+            TnTMwMYuEI == "Worm"
+            and "Worm"
+            or (FgynLSfATX .. " Worm"),
+        Mutation = FgynLSfATX,
+        IsMutated = TnTMwMYuEI ~= "Worm",
+    }
+end
+
+local function zXGqXbrDSpXG(CvVgzwvx)
+    return type(CvVgzwvx) == "table"
+        and type(LiOmaZCFo(CvVgzwvx, "id")) == "string"
+        and type(LiOmaZCFo(CvVgzwvx, "wormType")) == "string"
+        and FPwbuFJZR(LiOmaZCFo(CvVgzwvx, "mult")) ~= nil
+end
+
+local function VjVqtNmxmc(CvVgzwvx)
+    if not zXGqXbrDSpXG(CvVgzwvx) then
+        return nil
+    end
+
+    local TnTMwMYuEI = DfrqgXXsrB(LiOmaZCFo(CvVgzwvx, "wormType"))
+    local orUiSoOu = YHVWDRUqDHUT(TnTMwMYuEI)
+
+    return {Id= DfrqgXXsrB(LiOmaZCFo(CvVgzwvx, "id")),
+        RawType = TnTMwMYuEI,
+        DisplayType = orUiSoOu.Display,
+        Mutation = orUiSoOu.Mutation,
+        IsMutated = orUiSoOu.IsMutated == true,
+        Mult = FPwbuFJZR(LiOmaZCFo(CvVgzwvx, "mult")),
+        Raw = CvVgzwvx,
+    }
+end
+
+local function UvIiCzxQURN(tbl)
+    local dQSktSlt = {}
+    local QZYVNgIzkz = {}
+
+    if type(tbl) ~= "table" then
+        return dQSktSlt
+    end
+
+    for _, CvVgzwvx in OFjzDxmLK(tbl) do
+        local TqnUoHdHB = VjVqtNmxmc(CvVgzwvx)
+
+        if TqnUoHdHB and not QZYVNgIzkz[TqnUoHdHB.Id] then
+            QZYVNgIzkz[TqnUoHdHB.Id] = true
+            dQSktSlt[#dQSktSlt + 1] = TqnUoHdHB
+        end
+    end
+
+    table.sort(dQSktSlt, function(a, b)
+        if a.RawType ~= b.RawType then
+            return a.RawType < b.RawType
+        end
+
+        if a.Mult ~= b.Mult then
+            return a.Mult < b.Mult
+        end
+
+        return a.Id < b.Id
+    end)
+
+    return dQSktSlt
+end
+
+local function HuYjKPxfZn(BNnGQGeIA, allowEmpty)
+    if type(BNnGQGeIA) ~= "table" then
+        BNnGQGeIA = BNnGQGeIA == nil and {} or {BNnGQGeIA}
+    end
+
+    local otMRsdmAPve = {}
+    local QZYVNgIzkz = {}
+
+    for _, XUWueugAwuSw in ZVOoBlCEzTM(BNnGQGeIA) do
+        local QtoBGFWIF = DfrqgXXsrB(XUWueugAwuSw or "")
+        local TnTMwMYuEI = qtAQhGEJwk[QtoBGFWIF] or QtoBGFWIF
+
+        if not EPFtgAjFueFR[TnTMwMYuEI] then
+            local LoiwERgeqm = QtoBGFWIF:gsub("%s+", "")
+            TnTMwMYuEI =
+                EPFtgAjFueFR[LoiwERgeqm]
+                and LoiwERgeqm
+                or (
+                    EPFtgAjFueFR[LoiwERgeqm .. "Worm"]
+                    and (LoiwERgeqm .. "Worm")
+                    or TnTMwMYuEI
+                )
+        end
+
+        if TnTMwMYuEI ~= "" and not QZYVNgIzkz[TnTMwMYuEI] then
+            QZYVNgIzkz[TnTMwMYuEI] = true
+            otMRsdmAPve[#otMRsdmAPve + 1] = TnTMwMYuEI
+        end
+    end
+
+    if #otMRsdmAPve == 0 and not allowEmpty then
+        otMRsdmAPve[1] = "Worm"
+    end
+
+    table.sort(otMRsdmAPve, function(a, b)
+        local pCkQHITYu = table.find(LeMlSaHuCDZK, a) or math.huge
+        local ZsKONTNDr = table.find(LeMlSaHuCDZK, b) or math.huge
+
+        if pCkQHITYu == ZsKONTNDr then
+            return a < b
+        end
+
+        return pCkQHITYu < ZsKONTNDr
+    end)
+
+    return otMRsdmAPve
+end
+
+local function sYDqgQLHozVo(BNnGQGeIA)
+    ibVEMhwTQRuM.WormTypes = HuYjKPxfZn(BNnGQGeIA)
+    return ibVEMhwTQRuM.WormTypes
+end
+
+local function MZBgYtJSAUqN()
+    ibVEMhwTQRuM.WormTypes = HuYjKPxfZn(ibVEMhwTQRuM.WormTypes)
+    return ibVEMhwTQRuM.WormTypes
+end
+
+local function KastlRMLXa(BNnGQGeIA, allowEmpty)
+    local vPMLceeu = {}
+
+    for _, TnTMwMYuEI in ZVOoBlCEzTM(HuYjKPxfZn(BNnGQGeIA, allowEmpty)) do
+        vPMLceeu[#vPMLceeu + 1] = YHVWDRUqDHUT(TnTMwMYuEI).Display
+    end
+
+    return vPMLceeu
+end
+
+local function rzIuRxBYRfq(XUWueugAwuSw)
+    local ERQNGrtnl = FPwbuFJZR(XUWueugAwuSw)
+
+    if not ERQNGrtnl then
+        return "?"
+    end
+
+    return DfrqgXXsrB(math.floor(ERQNGrtnl * 100 + 0.5) / 100)
+end
+
+local function wLoicBaczG(TqnUoHdHB)
+    if not TqnUoHdHB then
+        return "none"
+    end
+
+    return DfrqgXXsrB(TqnUoHdHB.DisplayType)
+        .. " "
+        .. rzIuRxBYRfq(TqnUoHdHB.Mult)
+        .. "x"
+end
+
+function nYXywNLTy:SetRaw(rawWorms, wizwGhwnAuC, authoritative)
+    if type(rawWorms) ~= "table" then
+        return false
+    end
+
+    local AMjunKtKpHo = UvIiCzxQURN(rawWorms)
+
+    if #AMjunKtKpHo == 0 and authoritative ~= true then
+        return false
+    end
+
+    self.RawWorms = rawWorms
+    self.Worms = AMjunKtKpHo
+    self.Source = wizwGhwnAuC or "unknown"
+    self.Authoritative = authoritative == true
+    self.LastUpdate = os.clock()
+
+    euyMjRhaK.WormCount = #AMjunKtKpHo
+    euyMjRhaK.LastWormSource = self.Source
+
+    if self.Authoritative then
+        local LPawgQwRR = {}
+
+        for _, TqnUoHdHB in ZVOoBlCEzTM(AMjunKtKpHo) do
+            LPawgQwRR[TqnUoHdHB.Id] = true
+        end
+
+        for id, UshhKFSN in oYANaOHUQcPs(self.Reservations) do
+            if UshhKFSN.State ~= "CONSUMED"
+                and LPawgQwRR[id] then
+                self.Reservations[id] = nil
+            end
+        end
+    end
+
+    return true
+end
+
+function nYXywNLTy:GetAll()
+    return self.Worms
+end
+
+function nYXywNLTy:GetCount()
+    return #self.Worms
+end
+
+function nYXywNLTy:GetById(id)
+    id = DfrqgXXsrB(id or "")
+
+    for _, TqnUoHdHB in ZVOoBlCEzTM(self.Worms) do
+        if TqnUoHdHB.Id == id then
+            return TqnUoHdHB
+        end
+    end
+
+    return nil
+end
+
+function nYXywNLTy:GetByType(TnTMwMYuEI)
+    local dQSktSlt = {}
+
+    for _, TqnUoHdHB in ZVOoBlCEzTM(self.Worms) do
+        if TqnUoHdHB.RawType == TnTMwMYuEI then
+            dQSktSlt[#dQSktSlt + 1] = TqnUoHdHB
+        end
+    end
+
+    return dQSktSlt
+end
+
+function nYXywNLTy:IsOwned(id)
+    return self:GetById(id) ~= nil
+end
+
+function nYXywNLTy:Resolve(CQQfyKmnCw)
+    CQQfyKmnCw = type(CQQfyKmnCw) == "table" and CQQfyKmnCw or nil
+
+    local esMDLymRGTsN = {}
+
+    local kBKtjiGs =
+        CQQfyKmnCw
+        and HuYjKPxfZn(CQQfyKmnCw.Types, true)
+        or MZBgYtJSAUqN()
+
+    if #kBKtjiGs == 0 then
+        return nil
+    end
+
+    for _, TnTMwMYuEI in ZVOoBlCEzTM(kBKtjiGs) do
+        esMDLymRGTsN[TnTMwMYuEI] = true
+    end
+
+    local QYpNjJtTM = {}
+    local TlrdxZZY =
+        CQQfyKmnCw
+        and FPwbuFJZR(CQQfyKmnCw.MinMult)
+        or FPwbuFJZR(ibVEMhwTQRuM.WormMultiplierMin)
+        or 0
+    local mthmOnXWtwP =
+        CQQfyKmnCw
+        and FPwbuFJZR(CQQfyKmnCw.MaxMult)
+        or FPwbuFJZR(ibVEMhwTQRuM.WormMultiplierMax)
+        or math.huge
+
+    if TlrdxZZY > mthmOnXWtwP then
+        TlrdxZZY, mthmOnXWtwP = mthmOnXWtwP, TlrdxZZY
+    end
+
+    for _, TqnUoHdHB in ZVOoBlCEzTM(self.Worms) do
+        if esMDLymRGTsN[TqnUoHdHB.RawType]
+            and TqnUoHdHB.Mult >= TlrdxZZY
+            and TqnUoHdHB.Mult <= mthmOnXWtwP
+            and not self.Reservations[TqnUoHdHB.Id] then
+            QYpNjJtTM[#QYpNjJtTM + 1] = TqnUoHdHB
+        end
+    end
+
+    table.sort(QYpNjJtTM, function(a, b)
+        if a.Mult == b.Mult then
+            return a.Id < b.Id
+        end
+
+        local qjYfLHIxKQAM =
+            CQQfyKmnCw
+            and CQQfyKmnCw.SortMode
+            or ibVEMhwTQRuM.WormSortMode
+
+        if qjYfLHIxKQAM == "Highest" then
+            return a.Mult > b.Mult
+        end
+
+        return a.Mult < b.Mult
+    end)
+
+    return QYpNjJtTM[1]
+end
+
+function nYXywNLTy:Reserve(TqnUoHdHB, owner)
+    if not TqnUoHdHB or not TqnUoHdHB.Id then
+        return false
+    end
+
+    if self.Reservations[TqnUoHdHB.Id] then
+        return false
+    end
+
+    self.Reservations[TqnUoHdHB.Id] = {State= "PENDING",
+        Owner = owner or "AutoPlant",
+        At = os.clock(),
+    }
+
+    return true
+end
+
+function nYXywNLTy:Mark(id, state)
+    id = DfrqgXXsrB(id or "")
+
+    if id == "" then
+        return
+    end
+
+    self.Reservations[id] = {State= DfrqgXXsrB(state or "UNCERTAIN"),
+        Owner = "AutoPlant",
+        At = os.clock(),
+    }
+end
+
+function nYXywNLTy:Release(id)
+    id = DfrqgXXsrB(id or "")
+
+    local UshhKFSN = self.Reservations[id]
+
+    if UshhKFSN and UshhKFSN.State == "PENDING" then
+        self.Reservations[id] = nil
+    end
+end
+
+function nYXywNLTy:GetSummary()
+    local BJcVpFOFxzMV = {}
+
+    for _, TqnUoHdHB in ZVOoBlCEzTM(self.Worms) do
+        local KOnCliJlsM = BJcVpFOFxzMV[TqnUoHdHB.RawType]
+
+        if not KOnCliJlsM then
+            KOnCliJlsM = {RawType= TqnUoHdHB.RawType,
+                Display = TqnUoHdHB.DisplayType,
+                Mutation = TqnUoHdHB.Mutation,
+                Count = 0,
+                Lowest = nil,
+                Highest = nil,
+            }
+
+            BJcVpFOFxzMV[TqnUoHdHB.RawType] = KOnCliJlsM
+        end
+
+        KOnCliJlsM.Count += 1
+        KOnCliJlsM.Lowest =
+            KOnCliJlsM.Lowest
+            and math.min(KOnCliJlsM.Lowest, TqnUoHdHB.Mult)
+            or TqnUoHdHB.Mult
+        KOnCliJlsM.Highest =
+            KOnCliJlsM.Highest
+            and math.max(KOnCliJlsM.Highest, TqnUoHdHB.Mult)
+            or TqnUoHdHB.Mult
+    end
+
+    return BJcVpFOFxzMV
+end
+
+function nYXywNLTy:GetSummaryText()
+    local ceWxoeag = {
+        "Worms: "
+            .. DfrqgXXsrB(self:GetCount())
+            .. " | Source: "
+            .. DfrqgXXsrB(self.Source),
+    }
+
+    local BJcVpFOFxzMV = self:GetSummary()
+
+    for _, TnTMwMYuEI in ZVOoBlCEzTM(LeMlSaHuCDZK) do
+        local KOnCliJlsM = BJcVpFOFxzMV[TnTMwMYuEI]
+
+        if KOnCliJlsM then
+            ceWxoeag[#ceWxoeag + 1] =
+                KOnCliJlsM.Display
+                .. ": "
+                .. DfrqgXXsrB(KOnCliJlsM.Count)
+                .. " ("
+                .. rzIuRxBYRfq(KOnCliJlsM.Lowest)
+                .. "x-"
+                .. rzIuRxBYRfq(KOnCliJlsM.Highest)
+                .. "x)"
+        end
+    end
+
+    if #ceWxoeag == 1 then
+        ceWxoeag[#ceWxoeag + 1] = "No Worm detected yet."
+    end
+
+    return table.concat(ceWxoeag, "\n")
+end
+
+function nYXywNLTy:Bootstrap()
+    if type(getgc) ~= "function" then
+        return false
+    end
+
+    local uPirkaZfGG, szXLysgZpDej = BwoodiEAFu(getgc, true)
+
+    if not uPirkaZfGG then
+        uPirkaZfGG, szXLysgZpDej = BwoodiEAFu(getgc)
+    end
+
+    if not uPirkaZfGG or type(szXLysgZpDej) ~= "table" then
+        return false
+    end
+
+    local lGcrYDHyzQ = nil
+    local zyeAonWS = {}
+
+    for _, jMfmkYAPhthA in OFjzDxmLK(szXLysgZpDej) do
+        if type(jMfmkYAPhthA) == "table" then
+            local AMjunKtKpHo = UvIiCzxQURN(jMfmkYAPhthA)
+
+            if #AMjunKtKpHo > #zyeAonWS then
+                lGcrYDHyzQ = jMfmkYAPhthA
+                zyeAonWS = AMjunKtKpHo
+            end
+        end
+    end
+
+    if lGcrYDHyzQ and #zyeAonWS > 0 then
+        return self:SetRaw(lGcrYDHyzQ, "getgc", false)
+    end
+
+    return false
+end
+
+local function pysijFczGgU(tBOlbjGIlYW, path)
+    local WhuildgWaxd = false
+    local AMjunKtKpHo = LiOmaZCFo(tBOlbjGIlYW, "Worms")
+
+    if type(AMjunKtKpHo) == "table" then
+        WhuildgWaxd =
+            nYXywNLTy:SetRaw(
+                AMjunKtKpHo,
+                "DataUpdate.Worms",
+                true
+            )
+            or WhuildgWaxd
+    end
+
+    if type(path) == "table"
+        and LiOmaZCFo(path, 1) == "Worms" then
+        WhuildgWaxd =
+            nYXywNLTy:SetRaw(
+                tBOlbjGIlYW,
+                "DataUpdate path Worms",
+                true
+            )
+            or WhuildgWaxd
+    end
+
+    return WhuildgWaxd
+end
+
+PKTqUhNlA.SyncWormDataUpdate = pysijFczGgU
+PKTqUhNlA.NormalizeWormTypeSelection = HuYjKPxfZn
+PKTqUhNlA.SetWormTypeSelection = sYDqgQLHozVo
+PKTqUhNlA.GetWormTypeSelection = MZBgYtJSAUqN
+PKTqUhNlA.WormTypesToLabels = KastlRMLXa
+PKTqUhNlA.FormatWorm = wLoicBaczG
+PKTqUhNlA.FormatMultiplier = rzIuRxBYRfq
+
+end
+
+local function xARxrIrhjKTJ()
+    local QYpNjJtTM = {
+        JUUDRJUXiNbh.KiraFullInventory,
+        JUUDRJUXiNbh.KiraInventory,
+    }
+
+    for _, api in ZVOoBlCEzTM(QYpNjJtTM) do
+        if type(api) == "table"
+            and api ~= ZMZXtZNTlb then
+
+            if type(api.IsReady) == "function" then
+                local uPirkaZfGG, BYTJMcoqR = BwoodiEAFu(function()
+                    return api:IsReady()
+                end)
+
+                if uPirkaZfGG and BYTJMcoqR then
+                    return api
+                end
+            end
+
+            local wrFTmooW =
+                type(api.GetInventory) == "function"
+                and api.GetInventory
+                or type(api.Get) == "function"
+                and api.Get
+                or nil
+
+            if wrFTmooW then
+                local uPirkaZfGG, CnnSbMNHy = BwoodiEAFu(function()
+                    return wrFTmooW(api)
+                end)
+
+                if uPirkaZfGG
+                    and type(CnnSbMNHy) == "table"
+                    and (
+                        type(LiOmaZCFo(CnnSbMNHy, "Hotbar")) == "table"
+                        or type(LiOmaZCFo(CnnSbMNHy, "Storage")) == "table"
+                    ) then
+
+                    return api
+                end
+            end
+        end
+    end
+
+    return nil
+end
+
+local function UKIlsCatl(CnnSbMNHy)
+    if type(CnnSbMNHy) ~= "table" then
+        return false
+    end
+
+    return type(LiOmaZCFo(CnnSbMNHy, "Hotbar")) == "table"
+        or type(LiOmaZCFo(CnnSbMNHy, "Storage")) == "table"
+end
+
+local function fZNTKPAFBSy(CnnSbMNHy, wizwGhwnAuC)
+    if not UKIlsCatl(CnnSbMNHy) then
+        return false
+    end
+
+    ZMZXtZNTlb.Inventory = JsWrmjlSRyvZ(CnnSbMNHy)
+    ZMZXtZNTlb.Source = wizwGhwnAuC or "unknown"
+    ZMZXtZNTlb.LastUpdate = os.clock()
+    ZMZXtZNTlb.Version =
+        (ZMZXtZNTlb.Version or 0) + 1
+    euyMjRhaK.LastInventorySource = ZMZXtZNTlb.Source
+
+    return true
+end
+
+local function WdCdqAajy(update)
+    if type(update) ~= "table" then
+        return
+    end
+
+    if type(ZMZXtZNTlb.Inventory) ~= "table" then
+        ZMZXtZNTlb.Inventory = {}
+    end
+
+    local ybcXirpUG = false
+
+    for branch, branchData in OFjzDxmLK(update) do
+        ZMZXtZNTlb.Inventory[branch] =
+            JsWrmjlSRyvZ(branchData)
+
+        ybcXirpUG = true
+    end
+
+    if ybcXirpUG then
+        ZMZXtZNTlb.Source = "DataUpdate"
+        ZMZXtZNTlb.LastUpdate = os.clock()
+        ZMZXtZNTlb.Version =
+            (ZMZXtZNTlb.Version or 0) + 1
+        euyMjRhaK.LastInventorySource = "DataUpdate"
+    end
+end
+
+function PKTqUhNlA.InventoryPathParts(path)
+    local NQYAzsomZ = {}
+
+    if type(path) ~= "table" then
+        return NQYAzsomZ
+    end
+
+    for LvOjTWuqYW = 1, 12 do
+        local XUWueugAwuSw = LiOmaZCFo(path, LvOjTWuqYW)
+
+        if XUWueugAwuSw == nil then
+            break
+        end
+
+        NQYAzsomZ[#NQYAzsomZ + 1] = XUWueugAwuSw
+    end
+
+    return NQYAzsomZ
+end
+
+function PKTqUhNlA.InventoryPathText(NQYAzsomZ)
+    local QtoBGFWIF = {}
+
+    for _, muPHtvEg in ZVOoBlCEzTM(NQYAzsomZ or {}) do
+        QtoBGFWIF[#QtoBGFWIF + 1] = DfrqgXXsrB(muPHtvEg)
+    end
+
+    return table.concat(QtoBGFWIF, ".")
+end
+
+function PKTqUhNlA.ApplyInventoryPathUpdate(tBOlbjGIlYW, path)
+    local NQYAzsomZ = PKTqUhNlA.InventoryPathParts(path)
+
+    if NQYAzsomZ[1] ~= "Inventory"
+        or NQYAzsomZ[2] == nil then
+
+        return false
+    end
+
+    if type(ZMZXtZNTlb.Inventory) ~= "table" then
+        ZMZXtZNTlb.Inventory = {}
+    end
+
+    if #NQYAzsomZ == 2 then
+        ZMZXtZNTlb.Inventory[NQYAzsomZ[2]] =
+            JsWrmjlSRyvZ(tBOlbjGIlYW)
+    else
+        local jVhdYEIPZTmD = ZMZXtZNTlb.Inventory
+
+        for LvOjTWuqYW = 2, #NQYAzsomZ - 1 do
+            local eRdipkcQbcnW = NQYAzsomZ[LvOjTWuqYW]
+            local IfRutpBlMj = LiOmaZCFo(jVhdYEIPZTmD, eRdipkcQbcnW)
+
+            if type(IfRutpBlMj) ~= "table" then
+                IfRutpBlMj = {}
+                jVhdYEIPZTmD[eRdipkcQbcnW] = IfRutpBlMj
+            end
+
+            jVhdYEIPZTmD = IfRutpBlMj
+        end
+
+        jVhdYEIPZTmD[NQYAzsomZ[#NQYAzsomZ]] =
+            JsWrmjlSRyvZ(tBOlbjGIlYW)
+    end
+
+    ZMZXtZNTlb.Source =
+        "DataUpdate-direct:"
+        .. PKTqUhNlA.InventoryPathText(NQYAzsomZ)
+    ZMZXtZNTlb.LastUpdate = os.clock()
+    ZMZXtZNTlb.Version =
+        (ZMZXtZNTlb.Version or 0) + 1
+    euyMjRhaK.LastInventorySource = ZMZXtZNTlb.Source
+
+    return true
+end
+
+PKTqUhNlA:Track(EbMWmSACcQ.OnClientEvent:Connect(function(tBOlbjGIlYW, path)
+    if type(tBOlbjGIlYW) == "table"
+        and type(PKTqUhNlA.SyncWormDataUpdate) == "function" then
+        PKTqUhNlA.SyncWormDataUpdate(tBOlbjGIlYW, path)
+    end
+
+    if type(tBOlbjGIlYW) == "table" then
+        local CnnSbMNHy = LiOmaZCFo(tBOlbjGIlYW, "Inventory")
+
+        if type(CnnSbMNHy) == "table" then
+            WdCdqAajy(CnnSbMNHy)
+        end
+    end
+
+    -- Defensive direct-delta format:
+    -- {"Inventory", "Hotbar"} replaces a branch.
+    -- {"Inventory", "Hotbar", 6} updates a single slot.
+    PKTqUhNlA.ApplyInventoryPathUpdate(tBOlbjGIlYW, path)
+end))
+
+local function gCyrbzFf(cNriAbRfCZO)
+    if type(cNriAbRfCZO) ~= "function" then
+        return nil
+    end
+
+    if type(getupvalues) == "function" then
+        local uPirkaZfGG, BNnGQGeIA = BwoodiEAFu(getupvalues, cNriAbRfCZO)
+
+        if uPirkaZfGG and type(BNnGQGeIA) == "table" then
+            return BNnGQGeIA
+        end
+    end
+
+    if debug and type(debug.getupvalues) == "function" then
+        local uPirkaZfGG, BNnGQGeIA = BwoodiEAFu(debug.getupvalues, cNriAbRfCZO)
+
+        if uPirkaZfGG and type(BNnGQGeIA) == "table" then
+            return BNnGQGeIA
+        end
+    end
+
+    return nil
+end
+
+local function RigOBXyzF(eNOyItOd)
+    local FtEBEyLZpOZP = {}
+    local DbqzrmQqgbjo = 0
+
+    local function viGkUeznUDor(XUWueugAwuSw, depth)
+        if type(XUWueugAwuSw) ~= "table" or FtEBEyLZpOZP[XUWueugAwuSw] then
+            return nil
+        end
+
+        FtEBEyLZpOZP[XUWueugAwuSw] = true
+        DbqzrmQqgbjo += 1
+
+        if DbqzrmQqgbjo > 2500 then
+            return nil
+        end
+
+        local CnnSbMNHy = LiOmaZCFo(XUWueugAwuSw, "Inventory")
+
+        if UKIlsCatl(CnnSbMNHy) then
+            return CnnSbMNHy
+        end
+
+        if UKIlsCatl(XUWueugAwuSw) then
+            return XUWueugAwuSw
+        end
+
+        if depth >= 5 then
+            return nil
+        end
+
+        for _, child in OFjzDxmLK(XUWueugAwuSw) do
+            if type(child) == "table" then
+                local EJWoSYJFtW = viGkUeznUDor(child, depth + 1)
+
+                if EJWoSYJFtW then
+                    return EJWoSYJFtW
+                end
+            end
+        end
+
+        return nil
+    end
+
+    return viGkUeznUDor(eNOyItOd, 0)
+end
+
+local function hfBLUgtjD()
+    local baWDTpCF = xARxrIrhjKTJ()
+
+    if baWDTpCF and type(baWDTpCF.GetInventory) == "function" then
+        local uPirkaZfGG, CnnSbMNHy = BwoodiEAFu(function()
+            return baWDTpCF:GetInventory()
+        end)
+
+        if uPirkaZfGG and fZNTKPAFBSy(CnnSbMNHy, "KiraInventory") then
+            return true
+        end
+    end
+
+    if type(getconnections) ~= "function" then
+        return false
+    end
+
+    local uPirkaZfGG, RvcbuCAdxLIN =
+        BwoodiEAFu(getconnections, EbMWmSACcQ.OnClientEvent)
+
+    if not uPirkaZfGG or type(RvcbuCAdxLIN) ~= "table" then
+        return false
+    end
+
+    for connectionIndex, connection in ZVOoBlCEzTM(RvcbuCAdxLIN) do
+        local cNriAbRfCZO = nil
+
+        BwoodiEAFu(function()
+            cNriAbRfCZO = connection.Function
+        end)
+
+        if type(cNriAbRfCZO) ~= "function" then
+            BwoodiEAFu(function()
+                cNriAbRfCZO = connection.Callback
+            end)
+        end
+
+        if type(cNriAbRfCZO) == "function" then
+            local xBVXKjndcj = gCyrbzFf(cNriAbRfCZO)
+
+            if type(xBVXKjndcj) == "table" then
+                for upvalueName, XUWueugAwuSw in OFjzDxmLK(xBVXKjndcj) do
+                    if type(XUWueugAwuSw) == "table" then
+                        local CnnSbMNHy =
+                            RigOBXyzF(XUWueugAwuSw)
+
+                        if CnnSbMNHy then
+                            return fZNTKPAFBSy(
+                                CnnSbMNHy,
+                                "existing-cache:"
+                                    .. DfrqgXXsrB(connectionIndex)
+                                    .. ":"
+                                    .. DfrqgXXsrB(upvalueName)
+                            )
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return false
+end
+
+hfBLUgtjD()
+if PKTqUhNlA.WormBridge then
+    PKTqUhNlA.WormBridge:Bootstrap()
+end
+
+local function TjIHhQMpnV(eNOyItOd, path, callback, FtEBEyLZpOZP)
+    if type(eNOyItOd) ~= "table" then
+        return
+    end
+
+    FtEBEyLZpOZP = FtEBEyLZpOZP or {}
+
+    if FtEBEyLZpOZP[eNOyItOd] then
+        return
+    end
+
+    FtEBEyLZpOZP[eNOyItOd] = true
+
+    local pZWezDiISM =
+        LiOmaZCFo(eNOyItOd, "itemType")
+        or LiOmaZCFo(eNOyItOd, "ItemType")
+
+    local sKvykwKmzSJv =
+        LiOmaZCFo(eNOyItOd, "id")
+        or LiOmaZCFo(eNOyItOd, "itemId")
+        or LiOmaZCFo(eNOyItOd, "ItemId")
+
+    if pZWezDiISM ~= nil or sKvykwKmzSJv ~= nil then
+        callback(eNOyItOd, path)
+    end
+
+    for eRdipkcQbcnW, child in OFjzDxmLK(eNOyItOd) do
+        if type(child) == "table" then
+            TjIHhQMpnV(
+                child,
+                path .. "." .. DfrqgXXsrB(eRdipkcQbcnW),
+                callback,
+                FtEBEyLZpOZP
+            )
+        end
+    end
+end
+
+function ZMZXtZNTlb:IsReady()
+    local baWDTpCF = xARxrIrhjKTJ()
+
+    if baWDTpCF then
+        return true
+    end
+
+    return type(self.Inventory) == "table"
+end
+
+function ZMZXtZNTlb:GetInventory()
+    local baWDTpCF = xARxrIrhjKTJ()
+
+    if baWDTpCF and type(baWDTpCF.GetInventory) == "function" then
+        local uPirkaZfGG, CnnSbMNHy = BwoodiEAFu(function()
+            return baWDTpCF:GetInventory()
+        end)
+
+        if uPirkaZfGG and type(CnnSbMNHy) == "table" then
+            self.Source = "KiraInventory"
+            local sUkAECEIL = FPwbuFJZR(baWDTpCF.LastUpdate)
+
+            if sUkAECEIL
+                and sUkAECEIL ~= self.ExternalLastUpdate then
+
+                self.ExternalLastUpdate = sUkAECEIL
+                self.LastUpdate = sUkAECEIL
+                self.Version = (self.Version or 0) + 1
+            end
+
+            euyMjRhaK.LastInventorySource = self.Source
+            return CnnSbMNHy
+        end
+    end
+
+    if baWDTpCF and type(baWDTpCF.Get) == "function" then
+        local uPirkaZfGG, CnnSbMNHy = BwoodiEAFu(function()
+            return baWDTpCF:Get()
+        end)
+
+        if uPirkaZfGG and type(CnnSbMNHy) == "table" then
+            self.Source = "KiraFullInventory"
+            local sUkAECEIL = FPwbuFJZR(baWDTpCF.LastUpdate)
+
+            if sUkAECEIL
+                and sUkAECEIL ~= self.ExternalLastUpdate then
+
+                self.ExternalLastUpdate = sUkAECEIL
+                self.LastUpdate = sUkAECEIL
+                self.Version = (self.Version or 0) + 1
+            end
+
+            euyMjRhaK.LastInventorySource = self.Source
+            return CnnSbMNHy
+        end
+    end
+
+    return self.Inventory and JsWrmjlSRyvZ(self.Inventory) or nil
+end
+
+function PKTqUhNlA.GetInventoryVersion()
+    ZMZXtZNTlb:GetInventory()
+    return FPwbuFJZR(ZMZXtZNTlb.Version) or 0
+end
+
+function PKTqUhNlA.WaitForInventoryRefresh(previousVersion, lSSAtRsxOpy, timeout)
+    local QHmwcvVZcPU =
+        os.clock() + (FPwbuFJZR(timeout) or 2)
+
+    while PKTqUhNlA.Alive
+        and not (
+            type(lSSAtRsxOpy) == "function"
+            and lSSAtRsxOpy()
+        )
+        and os.clock() < QHmwcvVZcPU do
+
+        if PKTqUhNlA.GetInventoryVersion() ~= previousVersion then
+            return true
+        end
+
+        task.wait(0.08)
+    end
+
+    return false
+end
+
+function PKTqUhNlA.ClearInventoryLocation(VthIAVxSEI, expectedItemId)
+    if not VthIAVxSEI
+        or type(ZMZXtZNTlb.Inventory) ~= "table" then
+
+        return false
+    end
+
+    local PDnviBYoORx =
+        LiOmaZCFo(
+            ZMZXtZNTlb.Inventory,
+            VthIAVxSEI.Container
+        )
+
+    if type(PDnviBYoORx) ~= "table" then
+        return false
+    end
+
+    local CvVgzwvx =
+        LiOmaZCFo(PDnviBYoORx, VthIAVxSEI.Index)
+
+    if CvVgzwvx == nil then
+        return false
+    end
+
+    local ftkFgiCevokN =
+        LiOmaZCFo(CvVgzwvx, "id")
+        or LiOmaZCFo(CvVgzwvx, "itemId")
+        or LiOmaZCFo(CvVgzwvx, "ItemId")
+        or LiOmaZCFo(CvVgzwvx, "Id")
+        or LiOmaZCFo(CvVgzwvx, "uuid")
+        or LiOmaZCFo(CvVgzwvx, "UUID")
+
+    if expectedItemId ~= nil
+        and ftkFgiCevokN ~= nil
+        and DfrqgXXsrB(ftkFgiCevokN) ~= DfrqgXXsrB(expectedItemId) then
+
+        return false
+    end
+
+    PDnviBYoORx[VthIAVxSEI.Index] = nil
+
+    return true
+end
+
+local function xfbGWaEamWXE(XUWueugAwuSw, depth, FtEBEyLZpOZP)
+    depth = depth or 0
+    FtEBEyLZpOZP = FtEBEyLZpOZP or {}
+
+    if depth > 4 then
+        return "..."
+    end
+
+    if type(XUWueugAwuSw) ~= "table" then
+        return DfrqgXXsrB(XUWueugAwuSw)
+    end
+
+    if FtEBEyLZpOZP[XUWueugAwuSw] then
+        return "<cycle>"
+    end
+
+    FtEBEyLZpOZP[XUWueugAwuSw] = true
+    local NQYAzsomZ = {}
+
+    for eRdipkcQbcnW, child in OFjzDxmLK(XUWueugAwuSw) do
+        NQYAzsomZ[#NQYAzsomZ + 1] =
+            DfrqgXXsrB(eRdipkcQbcnW)
+            .. "="
+            .. xfbGWaEamWXE(child, depth + 1, FtEBEyLZpOZP)
+    end
+
+    table.sort(NQYAzsomZ)
+    FtEBEyLZpOZP[XUWueugAwuSw] = nil
+    return "{" .. table.concat(NQYAzsomZ, ",") .. "}"
+end
+
+local function rFeoDPhd(CvVgzwvx)
+    if type(CvVgzwvx) ~= "table" then
+        return ""
+    end
+
+    local NQYAzsomZ = {}
+    local FtEBEyLZpOZP = {}
+
+    local function eydOEnaha(XUWueugAwuSw, path, depth)
+        if type(XUWueugAwuSw) ~= "table"
+            or FtEBEyLZpOZP[XUWueugAwuSw]
+            or depth > 5 then
+            return
+        end
+
+        FtEBEyLZpOZP[XUWueugAwuSw] = true
+
+        for eRdipkcQbcnW, child in OFjzDxmLK(XUWueugAwuSw) do
+            local mDHEjrNgJ = jvVkYVzFo(eRdipkcQbcnW)
+            local FVgBLHUvKdf =
+                path == ""
+                and DfrqgXXsrB(eRdipkcQbcnW)
+                or (path .. "." .. DfrqgXXsrB(eRdipkcQbcnW))
+
+            if string.find(mDHEjrNgJ, "mutation", 1, true) then
+                local AFMgnure =
+                    child ~= nil
+                    and child ~= false
+                    and child ~= ""
+                    and child ~= 0
+                    and jvVkYVzFo(child) ~= "none"
+                    and jvVkYVzFo(child) ~= "false"
+                    and not (
+                        type(child) == "table"
+                        and AbFsJOrE(child) == nil
+                    )
+
+                if AFMgnure then
+                    NQYAzsomZ[#NQYAzsomZ + 1] =
+                        FVgBLHUvKdf
+                        .. "="
+                        .. xfbGWaEamWXE(child)
+                end
+            elseif type(child) == "table" then
+                eydOEnaha(child, FVgBLHUvKdf, depth + 1)
+            end
+        end
+
+        FtEBEyLZpOZP[XUWueugAwuSw] = nil
+    end
+
+    eydOEnaha(CvVgzwvx, "", 0)
+    table.sort(NQYAzsomZ)
+
+    return table.concat(NQYAzsomZ, " | ")
+end
+
+local function oCsyfpJnzjH(path)
+    path = DfrqgXXsrB(path or "")
+
+    local PDnviBYoORx, WVELRoxY =
+        path:match("^Inventory%.([^%.]+)%.(%d+)$")
+
+    local LvOjTWuqYW = FPwbuFJZR(WVELRoxY)
+
+    if not PDnviBYoORx or not LvOjTWuqYW then
+        return nil
+    end
+
+    if PDnviBYoORx == "Hotbar" then
+        return {Container= "Hotbar",
+            IsHotbar = true,
+            Index = LvOjTWuqYW,
+        }
+    elseif PDnviBYoORx == "Storage" then
+        return {Container= "Storage",
+            IsHotbar = false,
+            Index = LvOjTWuqYW,
+        }
+    end
+
+    return nil
+end
+
+function ZMZXtZNTlb:GetSeeds()
+    local CnnSbMNHy = self:GetInventory()
+    local WUcKIyzSAqgs = {}
+
+    if type(CnnSbMNHy) ~= "table" then
+        return WUcKIyzSAqgs
+    end
+
+    local function XghEKcywnp(CvVgzwvx)
+        local brFeJHrLrSF =
+            LiOmaZCFo(CvVgzwvx, "seedType")
+            or LiOmaZCFo(CvVgzwvx, "SeedType")
+
+        local XUWueugAwuSw =
+            brFeJHrLrSF
+            or LiOmaZCFo(CvVgzwvx, "seed")
+            or LiOmaZCFo(CvVgzwvx, "Seed")
+            or LiOmaZCFo(CvVgzwvx, "name")
+            or LiOmaZCFo(CvVgzwvx, "Name")
+            or LiOmaZCFo(CvVgzwvx, "itemName")
+            or LiOmaZCFo(CvVgzwvx, "ItemName")
+            or LiOmaZCFo(CvVgzwvx, "displayName")
+            or LiOmaZCFo(CvVgzwvx, "DisplayName")
+
+        if type(XUWueugAwuSw) ~= "string" then
+            return nil
+        end
+
+        local EQkOFXGQS = cIjnZGwi(XUWueugAwuSw)
+
+        if EQkOFXGQS == ""
+            or jvVkYVzFo(EQkOFXGQS) == "seed" then
+            return nil
+        end
+
+        return EQkOFXGQS
+    end
+
+    TjIHhQMpnV(
+        CnnSbMNHy,
+        "Inventory",
+        function(CvVgzwvx, path)
+            local pZWezDiISM =
+                jvVkYVzFo(
+                    LiOmaZCFo(CvVgzwvx, "itemType")
+                    or LiOmaZCFo(CvVgzwvx, "ItemType")
+                )
+
+            local EQkOFXGQS = XghEKcywnp(CvVgzwvx)
+            local YfioPeYVE =
+                pZWezDiISM ~= ""
+
+            local bAQQATjKccA =
+                pZWezDiISM == "seed"
+                or (
+                    not YfioPeYVE
+                    and (
+                        LiOmaZCFo(CvVgzwvx, "seedType") ~= nil
+                        or LiOmaZCFo(CvVgzwvx, "SeedType") ~= nil
+                    )
+                )
+
+            if bAQQATjKccA and EQkOFXGQS then
+                local FgynLSfATX = rFeoDPhd(CvVgzwvx)
+                local VthIAVxSEI = oCsyfpJnzjH(path)
+
+                WUcKIyzSAqgs[#WUcKIyzSAqgs + 1] = {SeedType= EQkOFXGQS,
+
+                    Count =
+                        FPwbuFJZR(
+                            LiOmaZCFo(CvVgzwvx, "count")
+                            or LiOmaZCFo(CvVgzwvx, "Count")
+                            or 1
+                        ) or 1,
+
+                    Id =
+                        LiOmaZCFo(CvVgzwvx, "id")
+                        or LiOmaZCFo(CvVgzwvx, "itemId")
+                        or LiOmaZCFo(CvVgzwvx, "ItemId"),
+
+                    ItemType = pZWezDiISM ~= "" and pZWezDiISM or "seed",
+                    Mutation = FgynLSfATX,
+                    IsMutated = FgynLSfATX ~= "",
+                    Path = path,
+                    Location = VthIAVxSEI,
+                    Data = JsWrmjlSRyvZ(CvVgzwvx),
+                }
+            end
+        end
+    )
+
+    table.sort(WUcKIyzSAqgs, function(a, b)
+        if jvVkYVzFo(a.SeedType) ~= jvVkYVzFo(b.SeedType) then
+            return jvVkYVzFo(a.SeedType) < jvVkYVzFo(b.SeedType)
+        end
+
+        if a.IsMutated ~= b.IsMutated then
+            return not a.IsMutated
+        end
+
+        return DfrqgXXsrB(a.Path) < DfrqgXXsrB(b.Path)
+    end)
+
+    return WUcKIyzSAqgs
+end
+
+function ZMZXtZNTlb:GetSeedCount(DhaBjHwh)
+    local VuDvjaRnSLZL = jvVkYVzFo(DhaBjHwh)
+    local nPPqaVMjIHf = 0
+
+    for _, seed in ZVOoBlCEzTM(self:GetSeeds()) do
+        if jvVkYVzFo(seed.SeedType) == VuDvjaRnSLZL then
+            nPPqaVMjIHf += FPwbuFJZR(seed.Count) or 0
+        end
+    end
+
+    return nPPqaVMjIHf
+end
+
+function ZMZXtZNTlb:ResolveSeed(DhaBjHwh, DcAmitWhFX)
+    local VuDvjaRnSLZL = jvVkYVzFo(DhaBjHwh)
+    local ftkFgiCevokN = nil
+
+    if DcAmitWhFX then
+        ftkFgiCevokN =
+            DcAmitWhFX:GetAttribute("ItemId")
+            or DcAmitWhFX:GetAttribute("itemId")
+            or DcAmitWhFX:GetAttribute("id")
+    end
+
+    local qLfdgteI = {}
+
+    for _, seed in ZVOoBlCEzTM(self:GetSeeds()) do
+        if jvVkYVzFo(seed.SeedType) == VuDvjaRnSLZL
+            and (FPwbuFJZR(seed.Count) or 0) > 0
+            and seed.Location ~= nil
+            and (
+                ibVEMhwTQRuM.AllowMutatedSeeds
+                or not seed.IsMutated
+            ) then
+
+            local ihZCPKaH = FPwbuFJZR(seed.Count) or 0
+
+            -- Duplicate stacks can represent mutations. Prefer plain stacks.
+            if not seed.IsMutated then
+                ihZCPKaH += 1000000000000000
+            end
+
+            if ftkFgiCevokN ~= nil
+                and DfrqgXXsrB(seed.Id) == DfrqgXXsrB(ftkFgiCevokN) then
+                ihZCPKaH += 1000000000000
+            end
+
+            if seed.Location.IsHotbar then
+                ihZCPKaH += 1000000000
+            end
+
+            qLfdgteI[#qLfdgteI + 1] = {SeedType= seed.SeedType,
+                Count = seed.Count,
+                Id = seed.Id,
+                Mutation = seed.Mutation,
+                IsMutated = seed.IsMutated,
+                Path = seed.Path,
+                Location = seed.Location,
+                Data = seed.Data,
+                Score = ihZCPKaH,
+            }
+        end
+    end
+
+    table.sort(qLfdgteI, function(a, b)
+        if a.Score == b.Score then
+            return DfrqgXXsrB(a.Path) < DfrqgXXsrB(b.Path)
+        end
+        return a.Score > b.Score
+    end)
+
+    return qLfdgteI[1]
+end
+
+PKTqUhNlA.GetItemMutationSignature = rFeoDPhd
+PKTqUhNlA.ParseInventoryLocation = oCsyfpJnzjH
+
+do
+    local function hweIUOEL(XUWueugAwuSw, hVKRNUmvaW)
+        local ERQNGrtnl =
+            FPwbuFJZR(
+                DfrqgXXsrB(XUWueugAwuSw or ""):match("%-?%d+%.?%d*")
+                or DfrqgXXsrB(XUWueugAwuSw or ""):match("%-?%.%d+")
+                or XUWueugAwuSw
+            )
+            or FPwbuFJZR(hVKRNUmvaW)
+            or 5
+
+        ERQNGrtnl = math.max(0, ERQNGrtnl)
+        return math.floor(ERQNGrtnl * 100 + 0.5) / 100
+    end
+
+    local function OIcdvOgJoDZ(XUWueugAwuSw, hVKRNUmvaW)
+        XUWueugAwuSw = DfrqgXXsrB(XUWueugAwuSw or hVKRNUmvaW or "Lowest")
+
+        if XUWueugAwuSw == "Highest" then
+            return "Highest"
+        end
+
+        return "Lowest"
+    end
+
+    local function fGLXcjkPyLVN(XUWueugAwuSw, hVKRNUmvaW)
+        XUWueugAwuSw = type(XUWueugAwuSw) == "table" and XUWueugAwuSw or {}
+        hVKRNUmvaW = type(hVKRNUmvaW) == "table" and hVKRNUmvaW or {}
+
+        local TlrdxZZY =
+            hweIUOEL(
+                XUWueugAwuSw.MinMult or XUWueugAwuSw.Min or XUWueugAwuSw.Minimum,
+                hVKRNUmvaW.MinMult or ibVEMhwTQRuM.WormMultiplierMin or 5
+            )
+
+        local mthmOnXWtwP =
+            hweIUOEL(
+                XUWueugAwuSw.MaxMult or XUWueugAwuSw.Max or XUWueugAwuSw.Maximum,
+                hVKRNUmvaW.MaxMult or ibVEMhwTQRuM.WormMultiplierMax or 10
+            )
+
+        if TlrdxZZY > mthmOnXWtwP then
+            TlrdxZZY, mthmOnXWtwP = mthmOnXWtwP, TlrdxZZY
+        end
+
+        local eKAmKQGHBuwj =
+            XUWueugAwuSw.Use ~= nil
+            and XUWueugAwuSw.Use == true
+            or (
+                XUWueugAwuSw.Use == nil
+                and hVKRNUmvaW.Use == true
+            )
+
+        local WGOtDLHU =
+            PKTqUhNlA.NormalizeWormTypeSelection
+            or function(ephNnOXqNlUd, allowEmpty)
+                if type(ephNnOXqNlUd) ~= "table" then
+                    ephNnOXqNlUd = ephNnOXqNlUd == nil and {} or {ephNnOXqNlUd}
+                end
+
+                if #ephNnOXqNlUd == 0 and not allowEmpty then
+                    return {"Worm"}
+                end
+
+                return ephNnOXqNlUd
+            end
+
+        local cMZkIdNmqen =
+            XUWueugAwuSw.Types
+            or XUWueugAwuSw.WormTypes
+            or hVKRNUmvaW.Types
+            or (eKAmKQGHBuwj and ibVEMhwTQRuM.WormTypes or {})
+
+        local ephNnOXqNlUd =
+            WGOtDLHU(cMZkIdNmqen, true)
+
+        if eKAmKQGHBuwj and #ephNnOXqNlUd == 0 then
+            ephNnOXqNlUd = WGOtDLHU(ibVEMhwTQRuM.WormTypes or {"Worm"})
+        elseif not eKAmKQGHBuwj then
+            ephNnOXqNlUd = WGOtDLHU(ephNnOXqNlUd, true)
+        end
+
+        return {Use= eKAmKQGHBuwj and #ephNnOXqNlUd > 0,
+            Types = ephNnOXqNlUd,
+            SortMode =
+                OIcdvOgJoDZ(
+                    XUWueugAwuSw.SortMode or XUWueugAwuSw.Priority,
+                    hVKRNUmvaW.SortMode or ibVEMhwTQRuM.WormSortMode
+                ),
+            MinMult = TlrdxZZY,
+            MaxMult = mthmOnXWtwP,
+        }
+    end
+
+    local function UPbpCazewef()
+        return fGLXcjkPyLVN({Use= ibVEMhwTQRuM.UseWorm,
+            Types = ibVEMhwTQRuM.WormTypes,
+            SortMode = ibVEMhwTQRuM.WormSortMode,
+            MinMult = ibVEMhwTQRuM.WormMultiplierMin,
+            MaxMult = ibVEMhwTQRuM.WormMultiplierMax,
+        })
+    end
+
+    local function QndbGYZN(XUWueugAwuSw)
+        local CQQfyKmnCw =
+            fGLXcjkPyLVN(XUWueugAwuSw, UPbpCazewef())
+
+        ibVEMhwTQRuM.UseWorm = CQQfyKmnCw.Use
+        ibVEMhwTQRuM.WormTypes = CQQfyKmnCw.Types
+        ibVEMhwTQRuM.WormSortMode = CQQfyKmnCw.SortMode
+        ibVEMhwTQRuM.WormMultiplierMin = CQQfyKmnCw.MinMult
+        ibVEMhwTQRuM.WormMultiplierMax = CQQfyKmnCw.MaxMult
+
+        return CQQfyKmnCw
+    end
+
+    function PKTqUhNlA.GetWormSettingsForSeed(DhaBjHwh)
+        local tpSFmqQNLSF = UPbpCazewef()
+
+        ibVEMhwTQRuM.WormTypesLocked =
+            ibVEMhwTQRuM.WormTypesLocked ~= false
+
+        ibVEMhwTQRuM.WormPriorityLocked =
+            ibVEMhwTQRuM.WormPriorityLocked ~= false
+
+        ibVEMhwTQRuM.WormSettingsLocked =
+            ibVEMhwTQRuM.WormTypesLocked
+            and ibVEMhwTQRuM.WormPriorityLocked
+
+        if ibVEMhwTQRuM.WormTypesLocked
+            and ibVEMhwTQRuM.WormPriorityLocked then
+            return tpSFmqQNLSF
+        end
+
+        if type(ibVEMhwTQRuM.WormSettings) ~= "table" then
+            ibVEMhwTQRuM.WormSettings = {}
+        end
+
+        local CQQfyKmnCw =
+            fGLXcjkPyLVN(
+                ibVEMhwTQRuM.WormSettings[DfrqgXXsrB(DhaBjHwh or "")],
+                tpSFmqQNLSF
+            )
+
+        if ibVEMhwTQRuM.WormTypesLocked then
+            CQQfyKmnCw.Use = tpSFmqQNLSF.Use
+            CQQfyKmnCw.Types = JsWrmjlSRyvZ(tpSFmqQNLSF.Types)
+        end
+
+        if ibVEMhwTQRuM.WormPriorityLocked then
+            CQQfyKmnCw.SortMode = tpSFmqQNLSF.SortMode
+        end
+
+        CQQfyKmnCw.MinMult = tpSFmqQNLSF.MinMult
+        CQQfyKmnCw.MaxMult = tpSFmqQNLSF.MaxMult
+
+        return fGLXcjkPyLVN(CQQfyKmnCw, tpSFmqQNLSF)
+    end
+
+    function PKTqUhNlA.SetWormSettingsForSeed(DhaBjHwh, XUWueugAwuSw)
+        local bnqNhGgNjiU = DfrqgXXsrB(DhaBjHwh or "")
+        local tpSFmqQNLSF = UPbpCazewef()
+        local jIsUVHAQEx =
+            fGLXcjkPyLVN(
+                type(ibVEMhwTQRuM.WormSettings) == "table"
+                and ibVEMhwTQRuM.WormSettings[bnqNhGgNjiU]
+                or nil,
+                tpSFmqQNLSF
+            )
+
+        local CQQfyKmnCw =
+            fGLXcjkPyLVN(
+                XUWueugAwuSw,
+                jIsUVHAQEx
+            )
+
+        ibVEMhwTQRuM.WormTypesLocked =
+            ibVEMhwTQRuM.WormTypesLocked ~= false
+
+        ibVEMhwTQRuM.WormPriorityLocked =
+            ibVEMhwTQRuM.WormPriorityLocked ~= false
+
+        ibVEMhwTQRuM.WormSettingsLocked =
+            ibVEMhwTQRuM.WormTypesLocked
+            and ibVEMhwTQRuM.WormPriorityLocked
+
+        if ibVEMhwTQRuM.WormTypesLocked
+            and ibVEMhwTQRuM.WormPriorityLocked then
+            return QndbGYZN(CQQfyKmnCw)
+        end
+
+        if type(ibVEMhwTQRuM.WormSettings) ~= "table" then
+            ibVEMhwTQRuM.WormSettings = {}
+        end
+
+        if ibVEMhwTQRuM.WormTypesLocked then
+            CQQfyKmnCw.Use = jIsUVHAQEx.Use
+            CQQfyKmnCw.Types = jIsUVHAQEx.Types
+        end
+
+        if ibVEMhwTQRuM.WormPriorityLocked then
+            CQQfyKmnCw.SortMode = jIsUVHAQEx.SortMode
+        end
+
+        CQQfyKmnCw.MinMult = tpSFmqQNLSF.MinMult
+        CQQfyKmnCw.MaxMult = tpSFmqQNLSF.MaxMult
+
+        ibVEMhwTQRuM.WormSettings[bnqNhGgNjiU] = CQQfyKmnCw
+        return PKTqUhNlA.GetWormSettingsForSeed(bnqNhGgNjiU)
+    end
+
+    function PKTqUhNlA.GetSharedWormSettings()
+        return UPbpCazewef()
+    end
+
+    function PKTqUhNlA.SetSharedWormSettings(XUWueugAwuSw)
+        return QndbGYZN(XUWueugAwuSw)
+    end
+
+    function PKTqUhNlA.ExportWormSettingsState()
+        ibVEMhwTQRuM.WormTypesLocked =
+            ibVEMhwTQRuM.WormTypesLocked ~= false
+
+        ibVEMhwTQRuM.WormPriorityLocked =
+            ibVEMhwTQRuM.WormPriorityLocked ~= false
+
+        ibVEMhwTQRuM.WormSettingsLocked =
+            ibVEMhwTQRuM.WormTypesLocked
+            and ibVEMhwTQRuM.WormPriorityLocked
+
+        return {Locked= ibVEMhwTQRuM.WormSettingsLocked == true,
+            TypesLocked = ibVEMhwTQRuM.WormTypesLocked == true,
+            PriorityLocked = ibVEMhwTQRuM.WormPriorityLocked == true,
+            Shared = UPbpCazewef(),
+            Values = JsWrmjlSRyvZ(ibVEMhwTQRuM.WormSettings or {}),
+        }
+    end
+
+    function PKTqUhNlA.ApplyWormSettingsState(XUWueugAwuSw)
+        if type(XUWueugAwuSw) == "table" then
+            local bTOFCmgU =
+                XUWueugAwuSw.Locked ~= false
+
+            local MqDzDOsZNNB =
+                XUWueugAwuSw.TypesLocked
+
+            if MqDzDOsZNNB == nil then
+                MqDzDOsZNNB = XUWueugAwuSw.WormTypesLocked
+            end
+
+            local mdLohPoc =
+                XUWueugAwuSw.PriorityLocked
+
+            if mdLohPoc == nil then
+                mdLohPoc = XUWueugAwuSw.WormPriorityLocked
+            end
+
+            ibVEMhwTQRuM.WormTypesLocked =
+                MqDzDOsZNNB == nil
+                and bTOFCmgU
+                or MqDzDOsZNNB == true
+
+            ibVEMhwTQRuM.WormPriorityLocked =
+                mdLohPoc == nil
+                and bTOFCmgU
+                or mdLohPoc == true
+
+            ibVEMhwTQRuM.WormSettingsLocked =
+                ibVEMhwTQRuM.WormTypesLocked
+                and ibVEMhwTQRuM.WormPriorityLocked
+
+            QndbGYZN(
+                XUWueugAwuSw.Shared
+                or XUWueugAwuSw.Default
+                or XUWueugAwuSw
+            )
+
+            ibVEMhwTQRuM.WormSettings = {}
+
+            if type(XUWueugAwuSw.Values) == "table" then
+                local tpSFmqQNLSF = UPbpCazewef()
+
+                for DhaBjHwh, CQQfyKmnCw in oYANaOHUQcPs(XUWueugAwuSw.Values) do
+                    ibVEMhwTQRuM.WormSettings[DfrqgXXsrB(DhaBjHwh)] =
+                        fGLXcjkPyLVN(CQQfyKmnCw, tpSFmqQNLSF)
+                end
+            end
+        end
+
+        return PKTqUhNlA.ExportWormSettingsState()
+    end
+end
+
+--============================================================
+-- TOOL / SEED VERIFICATION
+--============================================================
+
+local function UhasFEscpy(iZoQeOxOdO)
+    if not iZoQeOxOdO then
+        return nil
+    end
+
+    return iZoQeOxOdO:GetAttribute("ItemId")
+        or iZoQeOxOdO:GetAttribute("itemId")
+        or iZoQeOxOdO:GetAttribute("Id")
+        or iZoQeOxOdO:GetAttribute("id")
+end
+
+local function MLuVxMKxGY(
+    iZoQeOxOdO,
+    DhaBjHwh,
+    expectedItemId,
+    allowLooseItemId
+)
+    if not iZoQeOxOdO or not iZoQeOxOdO:IsA("Tool") then
+        return false
+    end
+
+    if iZoQeOxOdO:GetAttribute("IsSeed") == false then
+        return false
+    end
+
+    local VuDvjaRnSLZL = jvVkYVzFo(DhaBjHwh)
+
+    local OZrjIWrMvRTs =
+        iZoQeOxOdO:GetAttribute("SeedType")
+        or iZoQeOxOdO:GetAttribute("Seed")
+        or iZoQeOxOdO:GetAttribute("SeedName")
+        or iZoQeOxOdO:GetAttribute("Item")
+
+    local zrbJyNgEPHaR = false
+
+    if OZrjIWrMvRTs ~= nil then
+        zrbJyNgEPHaR = jvVkYVzFo(OZrjIWrMvRTs) == VuDvjaRnSLZL
+    else
+        local rsBADmaybXb = jvVkYVzFo(iZoQeOxOdO.Name)
+
+        zrbJyNgEPHaR =
+            rsBADmaybXb == VuDvjaRnSLZL
+            or rsBADmaybXb == VuDvjaRnSLZL .. " seed"
+            or (
+                string.sub(rsBADmaybXb, 1, #VuDvjaRnSLZL) == VuDvjaRnSLZL
+                and string.find(
+                    string.sub(rsBADmaybXb, #VuDvjaRnSLZL + 1),
+                    "seed",
+                    1,
+                    true
+                ) ~= nil
+            )
+    end
+
+    if not zrbJyNgEPHaR then
+        return false
+    end
+
+    if expectedItemId ~= nil
+        and not allowLooseItemId then
+
+        local iwPALJXk = UhasFEscpy(iZoQeOxOdO)
+
+        -- Safe mode: if we know the exact inventory item ID,
+        -- the equipped Tool must expose and match it.
+        if iwPALJXk == nil
+            or DfrqgXXsrB(iwPALJXk) ~= DfrqgXXsrB(expectedItemId) then
+            return false
+        end
+    end
+
+    return true
+end
+
+local function QrsDjipIhch(
+    DhaBjHwh,
+    expectedItemId,
+    timeout,
+    allowLooseItemId
+)
+    local QHmwcvVZcPU = os.clock() + (FPwbuFJZR(timeout) or 1.5)
+
+    while PKTqUhNlA.Alive and os.clock() < QHmwcvVZcPU do
+        local gfGCiliPwd = OyZLrMivikrp()
+
+        if #gfGCiliPwd == 1 then
+            local wBmRAlRrmt = gfGCiliPwd[1]
+
+            if MLuVxMKxGY(
+                wBmRAlRrmt,
+                DhaBjHwh,
+                expectedItemId,
+                allowLooseItemId
+            ) then
+                return wBmRAlRrmt
+            end
+        end
+
+        task.wait(0.025)
+    end
+
+    return nil
+end
+
+local function KxmYSguYv(
+    DhaBjHwh,
+    loPlXfSGwyxw,
+    allowLooseItemId
+)
+    local wERpewMzabU = yfAvfulpTS()
+
+    if not wERpewMzabU then
+        return false, "character missing"
+    end
+
+    if not loPlXfSGwyxw or not loPlXfSGwyxw.Location then
+        return false, "inventory location missing"
+    end
+
+    local gvsPDuYXO = loPlXfSGwyxw.Id
+    local jIsUVHAQEx = jdMXqPJlODtA()
+
+    if jIsUVHAQEx
+        and MLuVxMKxGY(
+            jIsUVHAQEx,
+            DhaBjHwh,
+            gvsPDuYXO,
+            allowLooseItemId
+        ) then
+
+        return true
+    end
+
+    local VthIAVxSEI = loPlXfSGwyxw.Location
+
+    -- ToggleEquip protocol:
+    -- true = Hotbar, false = Storage/inventory, number = branch index.
+    local uPirkaZfGG, ujxUlzok = BwoodiEAFu(function()
+        HDDdNMSaA:FireServer(
+            VthIAVxSEI.IsHotbar,
+            VthIAVxSEI.Index
+        )
+    end)
+
+    if not uPirkaZfGG then
+        return false, "ToggleEquip failed: " .. DfrqgXXsrB(ujxUlzok)
+    end
+
+    local wBmRAlRrmt =
+        QrsDjipIhch(
+            DhaBjHwh,
+            gvsPDuYXO,
+            1.75,
+            allowLooseItemId
+        )
+
+    if not wBmRAlRrmt then
+        return false, "ToggleEquip did not produce exact SeedType + ItemId"
+    end
+
+    return true
+end
+
+local function RKToqRBd(DhaBjHwh)
+    local jIsUVHAQEx = jdMXqPJlODtA()
+
+    local loPlXfSGwyxw =
+        ZMZXtZNTlb:ResolveSeed(
+            DhaBjHwh,
+            jIsUVHAQEx
+        )
+
+    if not loPlXfSGwyxw then
+        local KPqHgqZokm =
+            ZMZXtZNTlb:GetSeedCount(
+                DhaBjHwh
+            )
+
+        if KPqHgqZokm > 0
+            and not ibVEMhwTQRuM.AllowMutatedSeeds then
+
+            return nil,
+                nil,
+                "Only mutated "
+                    .. DfrqgXXsrB(DhaBjHwh)
+                    .. " seeds are available"
+        end
+
+        return nil,
+            nil,
+            "Seed not found in your bag: "
+                .. DfrqgXXsrB(DhaBjHwh)
+    end
+
+    if jIsUVHAQEx
+        and MLuVxMKxGY(
+            jIsUVHAQEx,
+            DhaBjHwh,
+            loPlXfSGwyxw.Id
+        ) then
+        return jIsUVHAQEx, loPlXfSGwyxw
+    end
+
+    if not KxmYSguYv(
+        DhaBjHwh,
+        loPlXfSGwyxw
+    ) then
+        return nil,
+            loPlXfSGwyxw,
+            "Could not equip exact inventory seed "
+                .. DfrqgXXsrB(DhaBjHwh)
+                .. " ("
+                .. DfrqgXXsrB(loPlXfSGwyxw.Path)
+                .. ", id="
+                .. DfrqgXXsrB(loPlXfSGwyxw.Id)
+                .. ")"
+    end
+
+    local wBmRAlRrmt =
+        QrsDjipIhch(
+            DhaBjHwh,
+            loPlXfSGwyxw.Id,
+            1.5
+        )
+
+    if not wBmRAlRrmt then
+        return nil,
+            loPlXfSGwyxw,
+            "Equipped Tool did not match SeedType + ItemId"
+    end
+
+    return wBmRAlRrmt, loPlXfSGwyxw
+end
+
+local function rRUUBuGfgaxk(DhaBjHwh, expectedItemId)
+    local ycMNfkdWITzR = {0, 0.05, 0.05}
+
+    for LvOjTWuqYW, LWALSqdy in ZVOoBlCEzTM(ycMNfkdWITzR) do
+        if LWALSqdy > 0 then
+            task.wait(LWALSqdy)
+        end
+
+        local gfGCiliPwd = OyZLrMivikrp()
+        local iZoQeOxOdO = gfGCiliPwd[1]
+
+        if #gfGCiliPwd ~= 1
+            or not iZoQeOxOdO
+            or not MLuVxMKxGY(
+                iZoQeOxOdO,
+                DhaBjHwh,
+                expectedItemId
+            ) then
+
+            return false,
+                "seed verify #"
+                    .. DfrqgXXsrB(LvOjTWuqYW)
+                    .. " failed (equipped tools="
+                    .. DfrqgXXsrB(#gfGCiliPwd)
+                    .. ")"
+        end
+    end
+
+    return true
+end
+
+--============================================================
+-- AUTO SELL DEAD TREES
+--============================================================
+
+local function UrKxbeTklwO(XUWueugAwuSw, umiaOedd)
+    if type(XUWueugAwuSw) ~= "string" then
+        return false
+    end
+
+    return string.find(
+        string.lower(XUWueugAwuSw),
+        string.lower(umiaOedd),
+        1,
+        true
+    ) ~= nil
+end
+
+local function frrntFCxtLm(CvVgzwvx)
+    return LiOmaZCFo(CvVgzwvx, "id")
+        or LiOmaZCFo(CvVgzwvx, "itemId")
+        or LiOmaZCFo(CvVgzwvx, "ItemId")
+        or LiOmaZCFo(CvVgzwvx, "Id")
+        or LiOmaZCFo(CvVgzwvx, "uuid")
+        or LiOmaZCFo(CvVgzwvx, "UUID")
+end
+
+local function rdJrWNGbGThM(CvVgzwvx)
+    if type(CvVgzwvx) ~= "table" then
+        return nil
+    end
+
+    local pZWezDiISM =
+        jvVkYVzFo(
+            LiOmaZCFo(CvVgzwvx, "itemType")
+            or LiOmaZCFo(CvVgzwvx, "ItemType")
+        )
+    local WDWDzrmni =
+        LiOmaZCFo(CvVgzwvx, "isDead")
+        or LiOmaZCFo(CvVgzwvx, "IsDead")
+        or LiOmaZCFo(CvVgzwvx, "Dead")
+
+    if pZWezDiISM == "tree"
+        and WDWDzrmni ~= nil then
+
+        if WDWDzrmni ~= true then
+            return nil
+        end
+
+        local pURLJBVyP =
+            LiOmaZCFo(CvVgzwvx, "seedType")
+            or LiOmaZCFo(CvVgzwvx, "SeedType")
+            or LiOmaZCFo(CvVgzwvx, "treeType")
+            or LiOmaZCFo(CvVgzwvx, "TreeType")
+            or "Tree"
+
+        return {TreeType= pURLJBVyP,
+            DisplayName =
+                "Dead "
+                .. DfrqgXXsrB(pURLJBVyP)
+                .. " Tree",
+            Multiplier =
+                FPwbuFJZR(
+                    LiOmaZCFo(CvVgzwvx, "multiplier")
+                    or LiOmaZCFo(CvVgzwvx, "Multiplier")
+                    or LiOmaZCFo(CvVgzwvx, "mult")
+                    or LiOmaZCFo(CvVgzwvx, "Mult")
+                ),
+            WoodValue =
+                FPwbuFJZR(
+                    LiOmaZCFo(CvVgzwvx, "woodValue")
+                    or LiOmaZCFo(CvVgzwvx, "WoodValue")
+                ),
+            ItemId = frrntFCxtLm(CvVgzwvx),
+            Raw = CvVgzwvx,
+        }
+    end
+
+    local zyAFfxdNGIgV = false
+    local ddResYTHxsY = false
+    local pURLJBVyP = nil
+    local MxRPMdGNQWn = nil
+    local dqXNyVJbsaq = nil
+    local sKvykwKmzSJv = frrntFCxtLm(CvVgzwvx)
+
+    local function erNeVySH(XUWueugAwuSw)
+        XUWueugAwuSw = DfrqgXXsrB(XUWueugAwuSw or "")
+
+        if XUWueugAwuSw == "" or #XUWueugAwuSw > 80 then
+            return false
+        end
+
+        return UrKxbeTklwO(XUWueugAwuSw, "dead")
+            or UrKxbeTklwO(XUWueugAwuSw, "tree")
+            or XUWueugAwuSw:match("%([%d%.]+%s*[xX]%)") ~= nil
+    end
+
+    local function fZjlHaquT(XUWueugAwuSw)
+        XUWueugAwuSw = DfrqgXXsrB(XUWueugAwuSw or "")
+
+        if erNeVySH(XUWueugAwuSw) and not dqXNyVJbsaq then
+            dqXNyVJbsaq = XUWueugAwuSw
+        end
+
+        if UrKxbeTklwO(XUWueugAwuSw, "tree") then
+            zyAFfxdNGIgV = true
+        end
+
+        if UrKxbeTklwO(XUWueugAwuSw, "dead") then
+            ddResYTHxsY = true
+        end
+
+        local RMXMCvdU =
+            XUWueugAwuSw:match("[Dd]ead%s+(.+)%s+[Tt]ree")
+            or XUWueugAwuSw:match("(.+)%s+[Tt]ree")
+
+        if RMXMCvdU and RMXMCvdU ~= "" and not pURLJBVyP then
+            pURLJBVyP = RMXMCvdU
+        end
+
+        local eedfEsvlA =
+            XUWueugAwuSw:match("%(([%d%.]+)%s*[xX]%)")
+
+        if eedfEsvlA and not MxRPMdGNQWn then
+            MxRPMdGNQWn = FPwbuFJZR(eedfEsvlA)
+        end
+    end
+
+    local function eydOEnaha(XUWueugAwuSw, eRdipkcQbcnW, depth, FtEBEyLZpOZP)
+        if depth > 5 then
+            return
+        end
+
+        local mDHEjrNgJ = string.lower(DfrqgXXsrB(eRdipkcQbcnW or ""))
+
+        if type(XUWueugAwuSw) == "string" then
+            local QtoBGFWIF = string.lower(XUWueugAwuSw)
+
+            if string.find(QtoBGFWIF, "tree", 1, true) then
+                zyAFfxdNGIgV = true
+            end
+
+            if string.find(QtoBGFWIF, "dead", 1, true) then
+                ddResYTHxsY = true
+            end
+
+            if mDHEjrNgJ == "treetype"
+                or mDHEjrNgJ == "tree"
+                or mDHEjrNgJ == "seedtype"
+                or mDHEjrNgJ == "name"
+                or mDHEjrNgJ == "displayname" then
+
+                fZjlHaquT(XUWueugAwuSw)
+                if not pURLJBVyP
+                    and mDHEjrNgJ ~= "name"
+                    and mDHEjrNgJ ~= "displayname" then
+                    pURLJBVyP = XUWueugAwuSw
+                end
+            else
+                fZjlHaquT(XUWueugAwuSw)
+            end
+
+            if (
+                mDHEjrNgJ == "id"
+                or mDHEjrNgJ == "itemid"
+                or mDHEjrNgJ == "uuid"
+            ) and not sKvykwKmzSJv then
+                sKvykwKmzSJv = XUWueugAwuSw
+            end
+        elseif type(XUWueugAwuSw) == "boolean" then
+            if XUWueugAwuSw == true
+                and (
+                    mDHEjrNgJ == "dead"
+                    or mDHEjrNgJ == "isdead"
+                    or string.find(mDHEjrNgJ, "dead", 1, true)
+                ) then
+
+                ddResYTHxsY = true
+            end
+
+            if XUWueugAwuSw == true
+                and string.find(mDHEjrNgJ, "tree", 1, true) then
+
+                zyAFfxdNGIgV = true
+            end
+        elseif type(XUWueugAwuSw) == "number" then
+            if string.find(mDHEjrNgJ, "mult", 1, true)
+                or mDHEjrNgJ == "multiplier" then
+
+                MxRPMdGNQWn = MxRPMdGNQWn or XUWueugAwuSw
+            end
+        elseif type(XUWueugAwuSw) == "table" then
+            FtEBEyLZpOZP = FtEBEyLZpOZP or {}
+
+            if FtEBEyLZpOZP[XUWueugAwuSw] then
+                return
+            end
+
+            FtEBEyLZpOZP[XUWueugAwuSw] = true
+
+            local uyNUuLrLQw = 0
+
+            for childKey, childValue in OFjzDxmLK(XUWueugAwuSw) do
+                uyNUuLrLQw += 1
+
+                if uyNUuLrLQw > 120 then
+                    break
+                end
+
+                eydOEnaha(childValue, childKey, depth + 1, FtEBEyLZpOZP)
+            end
+
+            FtEBEyLZpOZP[XUWueugAwuSw] = nil
+        end
+    end
+
+    fZjlHaquT(
+        LiOmaZCFo(CvVgzwvx, "name")
+        or LiOmaZCFo(CvVgzwvx, "Name")
+        or LiOmaZCFo(CvVgzwvx, "displayName")
+        or LiOmaZCFo(CvVgzwvx, "DisplayName")
+        or LiOmaZCFo(CvVgzwvx, "treeType")
+        or LiOmaZCFo(CvVgzwvx, "TreeType")
+        or LiOmaZCFo(CvVgzwvx, "seedType")
+        or LiOmaZCFo(CvVgzwvx, "SeedType")
+    )
+
+    eydOEnaha(CvVgzwvx, "", 0, {})
+
+    if LiOmaZCFo(CvVgzwvx, "isDead") == true
+        or LiOmaZCFo(CvVgzwvx, "IsDead") == true
+        or LiOmaZCFo(CvVgzwvx, "Dead") == true then
+
+        ddResYTHxsY = true
+    end
+
+    if UrKxbeTklwO(LiOmaZCFo(CvVgzwvx, "itemType"), "tree")
+        or UrKxbeTklwO(LiOmaZCFo(CvVgzwvx, "ItemType"), "tree")
+        or LiOmaZCFo(CvVgzwvx, "TreeType") ~= nil
+        or LiOmaZCFo(CvVgzwvx, "treeType") ~= nil then
+
+        zyAFfxdNGIgV = true
+    end
+
+    if not zyAFfxdNGIgV or not ddResYTHxsY then
+        return nil
+    end
+
+    return {TreeType= pURLJBVyP or "Unknown",
+        DisplayName = dqXNyVJbsaq,
+        Multiplier = MxRPMdGNQWn,
+        ItemId = sKvykwKmzSJv,
+        Raw = CvVgzwvx,
+    }
+end
+
+local function VUTOgsqLEhB(ksXdsOKIx)
+    if not ksXdsOKIx then
+        return "Dead Tree"
+    end
+
+    local CRwBIXohMQ = DfrqgXXsrB(ksXdsOKIx.DisplayName or "")
+
+    if CRwBIXohMQ == "" then
+        CRwBIXohMQ = DfrqgXXsrB(ksXdsOKIx.TreeType or "Tree")
+    end
+
+    if not UrKxbeTklwO(CRwBIXohMQ, "dead") then
+        CRwBIXohMQ = "Dead " .. CRwBIXohMQ
+    end
+
+    if not UrKxbeTklwO(CRwBIXohMQ, "tree") then
+        CRwBIXohMQ = CRwBIXohMQ .. " Tree"
+    end
+
+    if ksXdsOKIx.Multiplier and not CRwBIXohMQ:match("%([%d%.]+%s*[xX]%)") then
+        CRwBIXohMQ = CRwBIXohMQ
+            .. " ("
+            .. DfrqgXXsrB(ksXdsOKIx.Multiplier)
+            .. "x)"
+    end
+
+    return CRwBIXohMQ
+end
+
+local function yHrNQLoKBR()
+    if not ZMZXtZNTlb:IsReady() then
+        hfBLUgtjD()
+    end
+
+    local CnnSbMNHy = ZMZXtZNTlb:GetInventory()
+    local XYuqTCClIeZ = {}
+
+    if type(CnnSbMNHy) ~= "table" then
+        return XYuqTCClIeZ
+    end
+
+    TjIHhQMpnV(
+        CnnSbMNHy,
+        "Inventory",
+        function(CvVgzwvx, path)
+            local VthIAVxSEI =
+                oCsyfpJnzjH(path)
+
+            if not VthIAVxSEI then
+                return
+            end
+
+            local ksXdsOKIx = rdJrWNGbGThM(CvVgzwvx)
+
+            if ksXdsOKIx then
+                ksXdsOKIx.Index = VthIAVxSEI.Index
+                ksXdsOKIx.IsHotbar = VthIAVxSEI.IsHotbar
+                ksXdsOKIx.Container = VthIAVxSEI.Container
+                ksXdsOKIx.Path = path
+                ksXdsOKIx.Location = VthIAVxSEI
+
+                XYuqTCClIeZ[#XYuqTCClIeZ + 1] = ksXdsOKIx
+            end
+        end
+    )
+
+    table.sort(XYuqTCClIeZ, function(a, b)
+        return DfrqgXXsrB(a.Path) < DfrqgXXsrB(b.Path)
+    end)
+
+    return XYuqTCClIeZ
+end
+
+PKTqUhNlA.GetDeadTrees = yHrNQLoKBR
+
+PKTqUhNlA.PrintDeadTrees = function()
+    local yPVGQBaFWuT = yHrNQLoKBR()
+
+    EaksGWapyD("")
+    EaksGWapyD("===== KIRA DEAD TREES =====")
+
+    for LvOjTWuqYW, ksXdsOKIx in ZVOoBlCEzTM(yPVGQBaFWuT) do
+        EaksGWapyD(
+            LvOjTWuqYW,
+            ksXdsOKIx.Path,
+            "|",
+            VUTOgsqLEhB(ksXdsOKIx),
+            "| ID:",
+            DfrqgXXsrB(ksXdsOKIx.ItemId)
+        )
+    end
+
+    EaksGWapyD("Total:", #yPVGQBaFWuT)
+    EaksGWapyD("===========================")
+end
+
+local function omtzFoCmg(iZoQeOxOdO, ksXdsOKIx, allowLoose)
+    if not iZoQeOxOdO or not iZoQeOxOdO:IsA("Tool") or not ksXdsOKIx then
+        return false
+    end
+
+    local gvsPDuYXO = ksXdsOKIx.ItemId
+    local iwPALJXk = UhasFEscpy(iZoQeOxOdO)
+
+    if gvsPDuYXO ~= nil then
+        if iwPALJXk ~= nil then
+            return DfrqgXXsrB(iwPALJXk) == DfrqgXXsrB(gvsPDuYXO)
+        end
+
+        if allowLoose ~= true then
+            return false
+        end
+    end
+
+    local rsBADmaybXb = DfrqgXXsrB(iZoQeOxOdO.Name or "")
+
+    if UrKxbeTklwO(rsBADmaybXb, "dead")
+        and UrKxbeTklwO(rsBADmaybXb, "tree") then
+        return true
+    end
+
+    if iZoQeOxOdO:GetAttribute("IsDead") == true
+        or iZoQeOxOdO:GetAttribute("Dead") == true then
+
+        if iZoQeOxOdO:GetAttribute("TreeType") ~= nil
+            or iZoQeOxOdO:GetAttribute("treeType") ~= nil
+            or UrKxbeTklwO(rsBADmaybXb, "tree") then
+
+            return true
+        end
+    end
+
+    return false
+end
+
+local function efcxmLlzZd(ksXdsOKIx, timeout)
+    local QHmwcvVZcPU = os.clock() + (FPwbuFJZR(timeout) or 2)
+
+    while PKTqUhNlA.Alive and os.clock() < QHmwcvVZcPU do
+        local gfGCiliPwd = OyZLrMivikrp()
+
+        if #gfGCiliPwd == 1
+            and omtzFoCmg(gfGCiliPwd[1], ksXdsOKIx, true) then
+            return gfGCiliPwd[1]
+        end
+
+        task.wait(0.03)
+    end
+
+    return nil
+end
+
+local function nyVtovxYkT()
+    local iaojDScxh = QRxoupMChfPU()
+
+    if iaojDScxh then
+        BwoodiEAFu(function()
+            iaojDScxh:UnequipTools()
+        end)
+    end
+
+    task.wait(0.05)
+end
+
+local function nrsqFEykCc(ksXdsOKIx)
+    if not ksXdsOKIx or not ksXdsOKIx.Location then
+        return nil, "inventory location missing"
+    end
+
+    local jIsUVHAQEx = jdMXqPJlODtA()
+
+    if omtzFoCmg(jIsUVHAQEx, ksXdsOKIx, false) then
+        return jIsUVHAQEx
+    end
+
+    nyVtovxYkT()
+
+    local uPirkaZfGG, ujxUlzok = BwoodiEAFu(function()
+        HDDdNMSaA:FireServer(
+            ksXdsOKIx.Location.IsHotbar,
+            ksXdsOKIx.Location.Index
+        )
+    end)
+
+    if not uPirkaZfGG then
+        return nil, "Equip failed: " .. DfrqgXXsrB(ujxUlzok)
+    end
+
+    local wBmRAlRrmt = efcxmLlzZd(ksXdsOKIx, 2)
+
+    if not wBmRAlRrmt then
+        return nil, "Could not equip " .. VUTOgsqLEhB(ksXdsOKIx)
+    end
+
+    return wBmRAlRrmt
+end
+
+local function BnBfySFT(ksXdsOKIx, lSSAtRsxOpy)
+    if not egNXrkSOdCn then
+        return false, "Sell service was not found"
+    end
+
+    if not wpFutleQBCyz:AcquireBackgroundEquipment(
+        "AutoSellDeadTree",
+        lSSAtRsxOpy
+    ) then
+        return false, "cancelled"
+    end
+
+    local uPirkaZfGG, WfmhLERIYGg = bltBKQceuE(function()
+        local iZoQeOxOdO, OJzlPmkLd = nrsqFEykCc(ksXdsOKIx)
+
+        if not iZoQeOxOdO then
+            ltAcELvGzk(OJzlPmkLd or "Could not equip dead tree")
+        end
+
+        if ksXdsOKIx.ItemId ~= nil then
+            local iwPALJXk = UhasFEscpy(iZoQeOxOdO)
+
+            if iwPALJXk ~= nil
+                and DfrqgXXsrB(iwPALJXk) ~= DfrqgXXsrB(ksXdsOKIx.ItemId) then
+                ltAcELvGzk("Equipped item changed before selling")
+            end
+        end
+
+        HXuhwCIQZAB("SELLING", "warning")
+        foUSPDNDz(
+            "Selling " .. VUTOgsqLEhB(ksXdsOKIx) .. "...",
+            "warning"
+        )
+
+        local dQSktSlt = egNXrkSOdCn:InvokeServer()
+
+        euyMjRhaK.SellDeadTreeCount += 1
+        euyMjRhaK.LastSoldDeadTree = {Name= VUTOgsqLEhB(ksXdsOKIx),
+            Path = ksXdsOKIx.Path,
+            Result = dQSktSlt,
+        }
+
+        PKTqUhNlA.ClearInventoryLocation(
+            ksXdsOKIx.Location,
+            ksXdsOKIx.ItemId
+        )
+
+        return dQSktSlt
+    end, debug.traceback)
+
+    wpFutleQBCyz:ReleaseBackgroundEquipment("AutoSellDeadTree")
+
+    if not wpFutleQBCyz:IsPlantBusy() then
+        HXuhwCIQZAB("IDLE")
+    end
+
+    if not uPirkaZfGG then
+        local uRQanNSTiFqN =
+            DfrqgXXsrB(WfmhLERIYGg):match("^[^\n]+")
+            or DfrqgXXsrB(WfmhLERIYGg)
+
+        foUSPDNDz("Sell dead tree failed: " .. uRQanNSTiFqN, "danger")
+        return false, uRQanNSTiFqN
+    end
+
+    return true, WfmhLERIYGg
+end
+
+local function FbIMnaYWL(lSSAtRsxOpy)
+    local yLbjhpVKOB = {}
+
+    while PKTqUhNlA.Alive
+        and ibVEMhwTQRuM.AutoSellDeadTree
+        and not lSSAtRsxOpy() do
+
+        if not ZMZXtZNTlb:IsReady() then
+            hfBLUgtjD()
+            foUSPDNDz("Waiting for bag data before selling...", "warning")
+
+            if not pQFNwZAvvQA(0.5, lSSAtRsxOpy) then
+                break
+            end
+        else
+            local SOmfoAbH = os.clock()
+            local yPVGQBaFWuT = yHrNQLoKBR()
+            local otMRsdmAPve = nil
+
+            for _, tree in ZVOoBlCEzTM(yPVGQBaFWuT) do
+                local OVYmLrNOMZpK = yLbjhpVKOB[tree.Path]
+
+                if not OVYmLrNOMZpK or OVYmLrNOMZpK <= SOmfoAbH then
+                    otMRsdmAPve = tree
+                    break
+                end
+            end
+
+            if otMRsdmAPve then
+                local XgKJlGmpyrd =
+                    PKTqUhNlA.GetInventoryVersion()
+                local yFYedyPjpUi = BnBfySFT(otMRsdmAPve, lSSAtRsxOpy)
+
+                if yFYedyPjpUi then
+                    foUSPDNDz(
+                        "Sold "
+                            .. VUTOgsqLEhB(otMRsdmAPve)
+                            .. " | total "
+                            .. DfrqgXXsrB(euyMjRhaK.SellDeadTreeCount),
+                        "success"
+                    )
+
+                    PKTqUhNlA.WaitForInventoryRefresh(
+                        XgKJlGmpyrd,
+                        lSSAtRsxOpy,
+                        2
+                    )
+
+                    if not pQFNwZAvvQA(ibVEMhwTQRuM.SellDelay, lSSAtRsxOpy) then
+                        break
+                    end
+                else
+                    yLbjhpVKOB[otMRsdmAPve.Path] = os.clock() + 5
+
+                    if not pQFNwZAvvQA(0.35, lSSAtRsxOpy) then
+                        break
+                    end
+                end
+            else
+                if #yPVGQBaFWuT == 0 then
+                    foUSPDNDz("No dead trees in your bag")
+                else
+                    foUSPDNDz("Waiting before retrying dead tree sales", "warning")
+                end
+
+                if not pQFNwZAvvQA(1, lSSAtRsxOpy) then
+                    break
+                end
+            end
+        end
+    end
+
+    wpFutleQBCyz:ReleaseBackgroundEquipment("AutoSellDeadTree")
+
+    if not wpFutleQBCyz:IsPlantBusy() then
+        HXuhwCIQZAB("IDLE")
+    end
+end
+
+--============================================================
+-- AUTO PLANT CATALOG
+--============================================================
+
+local function xZgKeaJVSR()
+    local BNnGQGeIA = {}
+
+    for _, ROxVchvm in ZVOoBlCEzTM(tqxPJvMCxC) do
+        BNnGQGeIA[#BNnGQGeIA + 1] = ROxVchvm
+    end
+
+    return BNnGQGeIA
+end
+
+PKTqUhNlA.GetAvailableSeeds = xZgKeaJVSR
+
+local VtLHIlnk = 0
+
+local function XiRANzkuIiam()
+    local otMRsdmAPve = RyYbdTkwDtE()
+
+    if #otMRsdmAPve == 0 then
+        return nil, "No plant seed selected"
+    end
+
+    for offset = 1, #otMRsdmAPve do
+        local LvOjTWuqYW = ((VtLHIlnk + offset - 1) % #otMRsdmAPve) + 1
+        local DhaBjHwh = otMRsdmAPve[LvOjTWuqYW]
+
+        if ZMZXtZNTlb:GetSeedCount(DhaBjHwh) > 0 then
+            local QFnSxcLhb =
+                ZMZXtZNTlb:ResolveSeed(
+                    DhaBjHwh,
+                    jdMXqPJlODtA()
+                )
+
+            if QFnSxcLhb then
+                VtLHIlnk = LvOjTWuqYW
+                ibVEMhwTQRuM.PlantSeed = DhaBjHwh
+                return DhaBjHwh
+            end
+        end
+    end
+
+    return nil, "None of the selected seeds are available in your bag"
+end
+
+--============================================================
+-- OWN PLOT
+--============================================================
+
+local function kUPNnQqxT()
+    for _, EojeQsclmwhy in ZVOoBlCEzTM(cTVnIvMQRMZ:GetChildren()) do
+        local IePDiBFSOqPi = FPwbuFJZR(EojeQsclmwhy:GetAttribute("OwnerUserId"))
+
+        if IePDiBFSOqPi == dxLeYzjrD.UserId then
+            euyMjRhaK.MyPlot = EojeQsclmwhy
+            return EojeQsclmwhy
+        end
+    end
+
+    euyMjRhaK.MyPlot = nil
+    return nil
+end
+
+PKTqUhNlA.FindMyPlot = kUPNnQqxT
+
+--============================================================
+-- AUTO COMPOST SEEDS
+--============================================================
+
+local TQQVQyTiPrA = nil
+
+local function zlLzuiziNH()
+local lavgSrlnDTi = 0
+local eCHBbBixk = 10
+local YMsqNBUOM = 11
+local IJeZfaVtoyc = 6
+local jGNYWGwIvOYe = 3
+
+local function hpuUymguVr(DhaBjHwh, DcAmitWhFX)
+    local VuDvjaRnSLZL = jvVkYVzFo(DhaBjHwh)
+    local ftkFgiCevokN = DcAmitWhFX and UhasFEscpy(DcAmitWhFX)
+    local qLfdgteI = {}
+
+    for _, seed in ZVOoBlCEzTM(ZMZXtZNTlb:GetSeeds()) do
+        if jvVkYVzFo(seed.SeedType) == VuDvjaRnSLZL
+            and (FPwbuFJZR(seed.Count) or 0) > 0
+            and seed.Location ~= nil then
+
+            local ihZCPKaH = FPwbuFJZR(seed.Count) or 0
+
+            if ftkFgiCevokN ~= nil
+                and DfrqgXXsrB(seed.Id) == DfrqgXXsrB(ftkFgiCevokN) then
+                ihZCPKaH += 1000000000000
+            end
+
+            if seed.Location.IsHotbar then
+                ihZCPKaH += 1000000000
+            end
+
+            qLfdgteI[#qLfdgteI + 1] = {SeedType= seed.SeedType,
+                Count = seed.Count,
+                Id = seed.Id,
+                Mutation = seed.Mutation,
+                IsMutated = seed.IsMutated,
+                Path = seed.Path,
+                Location = seed.Location,
+                Data = seed.Data,
+                Score = ihZCPKaH,
+            }
+        end
+    end
+
+    table.sort(qLfdgteI, function(a, b)
+        if a.Score == b.Score then
+            return DfrqgXXsrB(a.Path) < DfrqgXXsrB(b.Path)
+        end
+        return a.Score > b.Score
+    end)
+
+    return qLfdgteI[1]
+end
+
+local function mDYXXKdvx()
+    local otMRsdmAPve = XuodfQsedbd()
+
+    if #otMRsdmAPve == 0 then
+        return nil, "No compost seed selected"
+    end
+
+    local jIsUVHAQEx = jdMXqPJlODtA()
+
+    if jIsUVHAQEx then
+        for _, DhaBjHwh in ZVOoBlCEzTM(otMRsdmAPve) do
+            if MLuVxMKxGY(jIsUVHAQEx, DhaBjHwh, nil) then
+                ibVEMhwTQRuM.CompostSeed = DhaBjHwh
+                return DhaBjHwh
+            end
+        end
+    end
+
+    for offset = 1, #otMRsdmAPve do
+        local LvOjTWuqYW = ((lavgSrlnDTi + offset - 1) % #otMRsdmAPve) + 1
+        local DhaBjHwh = otMRsdmAPve[LvOjTWuqYW]
+        local QFnSxcLhb =
+            hpuUymguVr(
+                DhaBjHwh,
+                jdMXqPJlODtA()
+            )
+
+        if QFnSxcLhb then
+            lavgSrlnDTi = LvOjTWuqYW
+            ibVEMhwTQRuM.CompostSeed = DhaBjHwh
+            return DhaBjHwh
+        end
+    end
+
+    return nil, "None of the selected compost seeds are in your bag"
+end
+
+local function FsHJEOcKA()
+    local wERpewMzabU = yfAvfulpTS()
+
+    if not wERpewMzabU then
+        return nil
+    end
+
+    return wERpewMzabU:FindFirstChild("HumanoidRootPart")
+        or wERpewMzabU.PrimaryPart
+end
+
+local function auCVpQdmzsmA(yQJrjaPZKi)
+    if not yQJrjaPZKi then
+        return nil, nil
+    end
+
+    local ODlrNcZGPi = yQJrjaPZKi.Parent
+
+    if ODlrNcZGPi and ODlrNcZGPi:IsA("BasePart") then
+        return ODlrNcZGPi.Position, ODlrNcZGPi
+    end
+
+    if ODlrNcZGPi and ODlrNcZGPi:IsA("Attachment") then
+        local HuXrGncZny = ODlrNcZGPi:FindFirstAncestorWhichIsA("BasePart")
+        return ODlrNcZGPi.WorldPosition, HuXrGncZny
+    end
+
+    local muPHtvEg = yQJrjaPZKi:FindFirstAncestorWhichIsA("BasePart")
+
+    if muPHtvEg then
+        return muPHtvEg.Position, muPHtvEg
+    end
+
+    return nil, nil
+end
+
+local function VrrQDjyqq()
+    local EojeQsclmwhy = kUPNnQqxT()
+
+    if not EojeQsclmwhy then
+        return nil, "My plot was not found"
+    end
+
+    local HNsjNhyaQ =
+        EojeQsclmwhy:FindFirstChild("CompostBin")
+        or EojeQsclmwhy:FindFirstChild("CompostBin", true)
+
+    local yQJrjaPZKi = nil
+
+    if HNsjNhyaQ then
+        local sfFJiJxwdL =
+            HNsjNhyaQ:FindFirstChild("PromptPart")
+        if sfFJiJxwdL then
+            yQJrjaPZKi =
+                sfFJiJxwdL:FindFirstChild("CompostPrompt")
+                or sfFJiJxwdL:FindFirstChildWhichIsA(
+                    "ProximityPrompt",
+                    true
+                )
+        end
+
+        yQJrjaPZKi =
+            yQJrjaPZKi
+            or HNsjNhyaQ:FindFirstChild("CompostPrompt", true)
+            or HNsjNhyaQ:FindFirstChildWhichIsA(
+                "ProximityPrompt",
+                true
+            )
+    end
+
+    yQJrjaPZKi =
+        yQJrjaPZKi
+        or EojeQsclmwhy:FindFirstChild("CompostPrompt", true)
+
+    if yQJrjaPZKi and yQJrjaPZKi:IsA("ProximityPrompt") then
+        return yQJrjaPZKi
+    end
+
+    return nil, "Compost prompt was not found"
+end
+
+local function cdlpyubBHoDe(yQJrjaPZKi)
+    local QtoBGFWIF =
+        DfrqgXXsrB(
+            yQJrjaPZKi
+            and yQJrjaPZKi.ActionText
+            or ""
+        )
+
+    local mGrFPvGieJAk = string.lower(QtoBGFWIF)
+
+    if string.find(mGrFPvGieJAk, "collect", 1, true) then
+        return "collect", QtoBGFWIF
+    end
+
+    if string.find(mGrFPvGieJAk, "give", 1, true) then
+        return "give", QtoBGFWIF
+    end
+
+    return "unknown", QtoBGFWIF
+end
+
+local function ityBmxmMVGe(yQJrjaPZKi)
+    local ggLmjaobdy, QtoBGFWIF = cdlpyubBHoDe(yQJrjaPZKi)
+
+    euyMjRhaK.CompostMode = string.upper(ggLmjaobdy)
+    euyMjRhaK.LastCompostAction = QtoBGFWIF ~= "" and QtoBGFWIF or euyMjRhaK.LastCompostAction
+
+    return ggLmjaobdy, QtoBGFWIF
+end
+
+local function qfEGKElS(yQJrjaPZKi)
+    local eNOyItOd = FsHJEOcKA()
+
+    if not eNOyItOd then
+        return nil, "character root missing"
+    end
+
+    local yQScPDyubd, muPHtvEg = auCVpQdmzsmA(yQJrjaPZKi)
+
+    if not yQScPDyubd then
+        return nil, "compost prompt position missing"
+    end
+
+    local zMSDroBKL =
+        FPwbuFJZR(yQJrjaPZKi.MaxActivationDistance)
+        or 12
+    local axXemhEjusJI = (eNOyItOd.Position - yQScPDyubd).Magnitude
+
+    euyMjRhaK.CompostPrompt = yQJrjaPZKi
+    euyMjRhaK.CompostDistance =
+        math.floor(axXemhEjusJI * 10 + 0.5) / 10
+
+    return {Root= eNOyItOd,
+        Position = yQScPDyubd,
+        Part = muPHtvEg,
+        MaxDistance = zMSDroBKL,
+        Distance = axXemhEjusJI,
+    }
+end
+
+local function xkctDfJwcp(ksXdsOKIx)
+    local eNOyItOd = ksXdsOKIx.Root
+    local yQScPDyubd = ksXdsOKIx.Position
+    local muPHtvEg = ksXdsOKIx.Part
+    local BsNmWocxkqu = eNOyItOd.Position - yQScPDyubd
+    local SUjMxDPnxm = Vector3.new(BsNmWocxkqu.X, 0, BsNmWocxkqu.Z)
+
+    if SUjMxDPnxm.Magnitude < 1 and muPHtvEg then
+        local BlDTzHnuVEv = muPHtvEg.CFrame.LookVector
+        SUjMxDPnxm = Vector3.new(-BlDTzHnuVEv.X, 0, -BlDTzHnuVEv.Z)
+    end
+
+    if SUjMxDPnxm.Magnitude < 0.1 then
+        SUjMxDPnxm = Vector3.new(0, 0, -1)
+    end
+
+    local EBqZuFAZS =
+        math.min(
+            IJeZfaVtoyc,
+            math.max(4, (ksXdsOKIx.MaxDistance or 12) * 0.5)
+        )
+    local UwGsJUXRQAa = SUjMxDPnxm.Unit
+    local umiaOedd =
+        yQScPDyubd
+        + (UwGsJUXRQAa * EBqZuFAZS)
+    local MoLMGZsP = eNOyItOd.Position.Y
+    local aVfVROmVuWCP =
+        Vector3.new(umiaOedd.X, MoLMGZsP, umiaOedd.Z)
+    local VeuhEylPBmsJ =
+        Vector3.new(yQScPDyubd.X, MoLMGZsP, yQScPDyubd.Z)
+
+    return CFrame.new(aVfVROmVuWCP, VeuhEylPBmsJ)
+end
+
+local function aVhDMLoLZ(yQJrjaPZKi, ksXdsOKIx)
+    if euyMjRhaK.CompostAnchorPrompt ~= yQJrjaPZKi
+        or typeof(euyMjRhaK.CompostAnchor) ~= "CFrame" then
+
+        euyMjRhaK.CompostAnchorPrompt = yQJrjaPZKi
+        euyMjRhaK.CompostAnchor =
+            xkctDfJwcp(ksXdsOKIx)
+    end
+
+    return euyMjRhaK.CompostAnchor
+end
+
+local function EaqphqpMLI(yQJrjaPZKi, ksXdsOKIx)
+    local eNOyItOd = ksXdsOKIx.Root
+    local iaojDScxh = QRxoupMChfPU()
+
+    if iaojDScxh then
+        BwoodiEAFu(function()
+            iaojDScxh.Sit = false
+        end)
+    end
+
+    BwoodiEAFu(function()
+        eNOyItOd.AssemblyLinearVelocity = Vector3.zero
+        eNOyItOd.AssemblyAngularVelocity = Vector3.zero
+    end)
+
+    eNOyItOd.CFrame = aVhDMLoLZ(yQJrjaPZKi, ksXdsOKIx)
+    euyMjRhaK.CompostTeleportCount += 1
+
+    local SOmfoAbH = os.clock()
+    if SOmfoAbH - (euyMjRhaK.LastCompostLeashNotice or 0)
+        > jGNYWGwIvOYe then
+
+        euyMjRhaK.LastCompostLeashNotice = SOmfoAbH
+        AoDYQAJZTEZM(
+            "Auto Compost Seed",
+            "Auto Compost đang chạy. Hãy ở gần Compost Bin cho đến khi tắt.",
+            "warning",
+            3.5
+        )
+    end
+end
+
+local function FYNvIHAMyJIJ(yQJrjaPZKi, limit, lSSAtRsxOpy)
+    local ksXdsOKIx, DCuONQIRL = qfEGKElS(yQJrjaPZKi)
+
+    if not ksXdsOKIx then
+        return false, DCuONQIRL
+    end
+
+    local zMSDroBKL =
+        FPwbuFJZR(ksXdsOKIx.MaxDistance)
+        or 12
+    local mJMZOryZWawI =
+        math.min(
+            FPwbuFJZR(limit) or eCHBbBixk,
+            math.max(3, zMSDroBKL - 1)
+        )
+
+    if ksXdsOKIx.Distance <= mJMZOryZWawI then
+        return true, false
+    end
+
+    if not wpFutleQBCyz:WaitPlantClear(lSSAtRsxOpy) then
+        return false, "waiting for planting to finish"
+    end
+
+    ksXdsOKIx, DCuONQIRL = qfEGKElS(yQJrjaPZKi)
+
+    if not ksXdsOKIx then
+        return false, DCuONQIRL
+    end
+
+    EaqphqpMLI(yQJrjaPZKi, ksXdsOKIx)
+    foUSPDNDz(
+        "Returned to compost area",
+        "warning"
+    )
+
+    return true, true
+end
+
+local function ElSRDydYCrj(lSSAtRsxOpy)
+    while PKTqUhNlA.Alive
+        and ibVEMhwTQRuM.AutoCompostSeed
+        and not lSSAtRsxOpy() do
+
+        local yQJrjaPZKi = VrrQDjyqq()
+
+        if yQJrjaPZKi then
+            ityBmxmMVGe(yQJrjaPZKi)
+            FYNvIHAMyJIJ(
+                yQJrjaPZKi,
+                YMsqNBUOM,
+                lSSAtRsxOpy
+            )
+        else
+            euyMjRhaK.CompostMode = "MISSING"
+            euyMjRhaK.CompostDistance = 0
+            euyMjRhaK.CompostAnchor = nil
+            euyMjRhaK.CompostPrompt = nil
+            euyMjRhaK.CompostAnchorPrompt = nil
+        end
+
+        task.wait(0.15)
+    end
+end
+
+local function FjHSTilJhA(yQJrjaPZKi)
+    if not yQJrjaPZKi then
+        return false, "CompostPrompt missing"
+    end
+
+    if type(fireproximityprompt) ~= "function" then
+        return false, "fireproximityprompt unavailable"
+    end
+
+    local uPirkaZfGG, ujxUlzok = BwoodiEAFu(function()
+        fireproximityprompt(yQJrjaPZKi)
+    end)
+
+    if not uPirkaZfGG then
+        return false, DfrqgXXsrB(ujxUlzok)
+    end
+
+    return true
+end
+
+local function ZUOjVjPEKjr(yQJrjaPZKi)
+    HXuhwCIQZAB("COMPOST", "warning")
+    foUSPDNDz("Collecting compost...", "warning")
+
+    local XbUDFIepRJM, aAIBWyUMkPz = FjHSTilJhA(yQJrjaPZKi)
+    if not XbUDFIepRJM then
+        ltAcELvGzk(aAIBWyUMkPz)
+    end
+
+    euyMjRhaK.CompostCollectCount += 1
+    euyMjRhaK.CompostCount += 1
+    euyMjRhaK.LastCompostAction = "Collect"
+    euyMjRhaK.LastCompostSeed = nil
+
+    return "collect"
+end
+
+local function LqpmdhxAjM(DhaBjHwh)
+    local jIsUVHAQEx = jdMXqPJlODtA()
+
+    if jIsUVHAQEx
+        and MLuVxMKxGY(jIsUVHAQEx, DhaBjHwh, nil) then
+
+        return jIsUVHAQEx, nil, nil
+    end
+
+    local loPlXfSGwyxw =
+        hpuUymguVr(
+            DhaBjHwh,
+            jIsUVHAQEx
+        )
+
+    if not loPlXfSGwyxw then
+        return nil,
+            nil,
+            "Seed not found in your bag: "
+                .. DfrqgXXsrB(DhaBjHwh)
+    end
+
+    local ABGeANcWlwK, OJzlPmkLd =
+        KxmYSguYv(
+            DhaBjHwh,
+            loPlXfSGwyxw,
+            true
+        )
+
+    if not ABGeANcWlwK then
+        return nil,
+            loPlXfSGwyxw,
+            OJzlPmkLd
+                or (
+                    "Could not equip compost seed "
+                    .. DfrqgXXsrB(DhaBjHwh)
+                )
+    end
+
+    local wBmRAlRrmt =
+        QrsDjipIhch(
+            DhaBjHwh,
+            loPlXfSGwyxw.Id,
+            1.5,
+            true
+        )
+
+    if not wBmRAlRrmt then
+        return nil,
+            loPlXfSGwyxw,
+            "Compost seed was not equipped"
+    end
+
+    return wBmRAlRrmt, loPlXfSGwyxw
+end
+
+local function ReJoilryb(DhaBjHwh)
+    local jIsUVHAQEx = jdMXqPJlODtA()
+
+    if not jIsUVHAQEx then
+        return false, "You are not holding a seed"
+    end
+
+    if not MLuVxMKxGY(jIsUVHAQEx, DhaBjHwh, nil) then
+        return false,
+            "You are not holding "
+                .. DfrqgXXsrB(DhaBjHwh)
+                .. " seed"
+    end
+
+    return true
+end
+
+local function zHlhhpSq(lSSAtRsxOpy)
+    local yQJrjaPZKi, aIHGDUstExJb = VrrQDjyqq()
+
+    if not yQJrjaPZKi then
+        return false, aIHGDUstExJb
+    end
+
+    local ggLmjaobdy = ityBmxmMVGe(yQJrjaPZKi)
+    local DhaBjHwh = nil
+    local MHYAAEXgCdz = nil
+
+    if ggLmjaobdy == "unknown" then
+        foUSPDNDz(
+            "Waiting for Compost Bin prompt...",
+            "warning"
+        )
+        return false, "Compost prompt is not ready"
+    end
+
+    if ggLmjaobdy ~= "collect" then
+        DhaBjHwh, MHYAAEXgCdz = mDYXXKdvx()
+
+        if not DhaBjHwh then
+            return false, MHYAAEXgCdz
+        end
+    end
+
+    if not wpFutleQBCyz:AcquireBackgroundEquipment(
+        "AutoCompostSeed",
+        lSSAtRsxOpy
+    ) then
+        return false, "cancelled"
+    end
+
+    local RnCJjUHos = nil
+
+    local uPirkaZfGG, lyIbGZBLJjNW = bltBKQceuE(function()
+        yQJrjaPZKi, aIHGDUstExJb = VrrQDjyqq()
+        if not yQJrjaPZKi then
+            ltAcELvGzk(aIHGDUstExJb)
+        end
+
+        ggLmjaobdy = ityBmxmMVGe(yQJrjaPZKi)
+
+        local hFIoNJWzPg, GRaogDOUFhnW =
+            FYNvIHAMyJIJ(
+                yQJrjaPZKi,
+                eCHBbBixk,
+                lSSAtRsxOpy
+            )
+
+        if not hFIoNJWzPg then
+            ltAcELvGzk(GRaogDOUFhnW or "Could not move into compost range")
+        end
+
+        if GRaogDOUFhnW == true then
+            task.wait(0.08)
+        end
+
+        if ggLmjaobdy == "unknown" then
+            foUSPDNDz(
+                "Waiting for Compost Bin prompt...",
+                "warning"
+            )
+            return "wait"
+        end
+
+        if ggLmjaobdy == "collect" then
+            RnCJjUHos =
+                PKTqUhNlA.GetInventoryVersion()
+            return ZUOjVjPEKjr(yQJrjaPZKi)
+        end
+
+        DhaBjHwh, MHYAAEXgCdz = mDYXXKdvx()
+        if not DhaBjHwh then
+            ltAcELvGzk(MHYAAEXgCdz)
+        end
+
+        HXuhwCIQZAB("COMPOST", "warning")
+        foUSPDNDz(
+            "Composting "
+                .. DfrqgXXsrB(DhaBjHwh)
+                .. " seed...",
+            "warning"
+        )
+
+        local wBmRAlRrmt,
+            loPlXfSGwyxw,
+            OJzlPmkLd =
+                LqpmdhxAjM(DhaBjHwh)
+
+        if not wBmRAlRrmt then
+            ltAcELvGzk(OJzlPmkLd or "Could not equip compost seed")
+        end
+
+        task.wait(0.08)
+
+        yQJrjaPZKi, aIHGDUstExJb = VrrQDjyqq()
+        if not yQJrjaPZKi then
+            ltAcELvGzk(aIHGDUstExJb)
+        end
+
+        ggLmjaobdy = ityBmxmMVGe(yQJrjaPZKi)
+
+        hFIoNJWzPg, GRaogDOUFhnW =
+            FYNvIHAMyJIJ(
+                yQJrjaPZKi,
+                eCHBbBixk,
+                lSSAtRsxOpy
+            )
+
+        if not hFIoNJWzPg then
+            ltAcELvGzk(GRaogDOUFhnW or "Could not move into compost range")
+        end
+
+        if GRaogDOUFhnW == true then
+            task.wait(0.08)
+        end
+
+        ggLmjaobdy = ityBmxmMVGe(yQJrjaPZKi)
+
+        if ggLmjaobdy == "collect" then
+            RnCJjUHos =
+                PKTqUhNlA.GetInventoryVersion()
+            return ZUOjVjPEKjr(yQJrjaPZKi)
+        elseif ggLmjaobdy ~= "give" then
+            foUSPDNDz(
+                "Waiting for Compost Bin prompt...",
+                "warning"
+            )
+            return "wait"
+        end
+
+        local RPUuMSzuaPOX, sTbPRrpHKm =
+            ReJoilryb(DhaBjHwh)
+
+        if not RPUuMSzuaPOX then
+            foUSPDNDz(
+                "Compost waiting: "
+                    .. DfrqgXXsrB(sTbPRrpHKm),
+                "warning"
+            )
+            return "wait"
+        end
+
+        RnCJjUHos =
+            PKTqUhNlA.GetInventoryVersion()
+
+        local XbUDFIepRJM, aAIBWyUMkPz = FjHSTilJhA(yQJrjaPZKi)
+        if not XbUDFIepRJM then
+            ltAcELvGzk(aAIBWyUMkPz)
+        end
+
+        euyMjRhaK.LastCompostAction = "Give Seed"
+        euyMjRhaK.LastCompostSeed = DhaBjHwh
+        euyMjRhaK.CompostGiveCount += 1
+        euyMjRhaK.CompostCount += 1
+
+        foUSPDNDz(
+            "Give Seed fired: "
+                .. DfrqgXXsrB(DhaBjHwh)
+        )
+
+        return DhaBjHwh
+    end, debug.traceback)
+
+    wpFutleQBCyz:ReleaseBackgroundEquipment("AutoCompostSeed")
+
+    if not wpFutleQBCyz:IsPlantBusy() then
+        HXuhwCIQZAB("IDLE")
+    end
+
+    if not uPirkaZfGG then
+        local uRQanNSTiFqN =
+            DfrqgXXsrB(lyIbGZBLJjNW):match("^[^\n]+")
+            or DfrqgXXsrB(lyIbGZBLJjNW)
+
+        foUSPDNDz("Auto Compost failed: " .. uRQanNSTiFqN, "danger")
+        return false, uRQanNSTiFqN
+    end
+
+    if lyIbGZBLJjNW == "wait" then
+        return true, lyIbGZBLJjNW
+    elseif lyIbGZBLJjNW == "collect" then
+        if RnCJjUHos ~= nil then
+            PKTqUhNlA.WaitForInventoryRefresh(
+                RnCJjUHos,
+                lSSAtRsxOpy,
+                2
+            )
+        end
+
+        foUSPDNDz("Compost collected")
+    else
+        if RnCJjUHos ~= nil then
+            PKTqUhNlA.WaitForInventoryRefresh(
+                RnCJjUHos,
+                lSSAtRsxOpy,
+                2
+            )
+        end
+
+        foUSPDNDz("Composted " .. DfrqgXXsrB(lyIbGZBLJjNW) .. " seed")
+    end
+
+    return true, lyIbGZBLJjNW
+end
+
+TQQVQyTiPrA = function(lSSAtRsxOpy)
+    nFPpZjLd(
+        "CompostMovementGuard",
+        ElSRDydYCrj
+    )
+
+    AoDYQAJZTEZM(
+        "Auto Compost Seed",
+        "Đã bật Auto Compost Seed. Script sẽ giữ bạn trong vùng compost khi cần.",
+        "warning",
+        4
+    )
+
+    while PKTqUhNlA.Alive
+        and ibVEMhwTQRuM.AutoCompostSeed
+        and not lSSAtRsxOpy() do
+
+        local uPirkaZfGG = zHlhhpSq(lSSAtRsxOpy)
+
+        if lSSAtRsxOpy()
+            or not ibVEMhwTQRuM.AutoCompostSeed then
+            break
+        end
+
+        local LWALSqdy =
+            uPirkaZfGG and ibVEMhwTQRuM.CompostDelay or 0.75
+
+        if not pQFNwZAvvQA(LWALSqdy, lSSAtRsxOpy) then
+            break
+        end
+    end
+
+    PxzWtllXIL("CompostMovementGuard")
+    wpFutleQBCyz:ReleaseBackgroundEquipment("AutoCompostSeed")
+    euyMjRhaK.CompostAnchor = nil
+    euyMjRhaK.CompostPrompt = nil
+    euyMjRhaK.CompostAnchorPrompt = nil
+
+    if not wpFutleQBCyz:IsPlantBusy() then
+        HXuhwCIQZAB("IDLE")
+    end
+end
+
+PKTqUhNlA.GetCompostSeeds = function()
+    return XuodfQsedbd()
+end
+
+PKTqUhNlA.CompostOnce = function()
+    return zHlhhpSq(function()
+        return not PKTqUhNlA.Alive
+    end)
+end
+
+end
+
+zlLzuiziNH()
+
+--============================================================
+-- PLANT ROUND LIFECYCLE
+--============================================================
+
+local function RfAxgCjnjg(kHtWakxlAm)
+    if not kHtWakxlAm then
+        return nil
+    end
+
+    return FPwbuFJZR(
+        DfrqgXXsrB(kHtWakxlAm.Name):match("_(%d+)$")
+    )
+end
+
+local function xgaAZuLdymsR(kHtWakxlAm)
+    if not kHtWakxlAm then
+        return nil
+    end
+
+    local cZYiEHIJWAEh = kHtWakxlAm:FindFirstChild("MultDisplay")
+
+    if not cZYiEHIJWAEh then
+        return nil
+    end
+
+    return cZYiEHIJWAEh:FindFirstChild("ProximityPrompt")
+        or cZYiEHIJWAEh:FindFirstChildWhichIsA("ProximityPrompt", true)
+end
+
+local function VXbzSdNydTv(kHtWakxlAm)
+    if not kHtWakxlAm or not kHtWakxlAm.Parent then
+        return false
+    end
+
+    if string.sub(
+        DfrqgXXsrB(kHtWakxlAm.Name),
+        1,
+        #"PlantRound_"
+    ) ~= "PlantRound_" then
+        return false
+    end
+
+    local iCVWKWYZwjHS =
+        "PlantRound_"
+        .. DfrqgXXsrB(dxLeYzjrD.UserId)
+        .. "_"
+
+    if string.sub(kHtWakxlAm.Name, 1, #iCVWKWYZwjHS) == iCVWKWYZwjHS then
+        return true
+    end
+
+    local yQJrjaPZKi = xgaAZuLdymsR(kHtWakxlAm)
+
+    if yQJrjaPZKi then
+        local TchWhIGbaLz =
+            yQJrjaPZKi:GetAttribute("PlantOwnerID")
+            or yQJrjaPZKi:GetAttribute("PlantOwnerId")
+
+        if FPwbuFJZR(TchWhIGbaLz) == dxLeYzjrD.UserId then
+            return true
+        end
+    end
+
+    local TchWhIGbaLz =
+        kHtWakxlAm:GetAttribute("PlantOwnerID")
+        or kHtWakxlAm:GetAttribute("PlantOwnerId")
+
+    return FPwbuFJZR(TchWhIGbaLz) == dxLeYzjrD.UserId
+end
+
+local function lciEiyCr()
+    local meYmQTnufS = {}
+
+    for _, child in ZVOoBlCEzTM(UQqophNh:GetChildren()) do
+        if VXbzSdNydTv(child) then
+            meYmQTnufS[#meYmQTnufS + 1] = child
+        end
+    end
+
+    table.sort(meYmQTnufS, function(a, b)
+        return (RfAxgCjnjg(a) or 0)
+            < (RfAxgCjnjg(b) or 0)
+    end)
+
+    return meYmQTnufS
+end
+
+local function eymQWPKD()
+    local QZYVNgIzkz = {}
+    local qkySwoMOnU = 0
+
+    for _, kHtWakxlAm in ZVOoBlCEzTM(lciEiyCr()) do
+        QZYVNgIzkz[kHtWakxlAm] = true
+        qkySwoMOnU = math.max(
+            qkySwoMOnU,
+            RfAxgCjnjg(kHtWakxlAm) or 0
+        )
+    end
+
+    return QZYVNgIzkz, qkySwoMOnU
+end
+
+local function HYpjMmzn(QtoBGFWIF)
+    QtoBGFWIF = DfrqgXXsrB(QtoBGFWIF or "")
+
+    local pQvnqyZnr =
+        QtoBGFWIF:match("([%d]+%.?[%d]*)%s*[xX]")
+        or QtoBGFWIF:match("([%d]+%.?[%d]*)")
+
+    return FPwbuFJZR(pQvnqyZnr)
+end
+
+local buxBHzlExq = Color3.fromRGB(255, 50, 50)
+
+local function JFQRzFlAXQJ(a, b, tolerance)
+    tolerance = FPwbuFJZR(tolerance) or (1 / 255)
+
+    return math.abs(a.R - b.R) <= tolerance
+        and math.abs(a.G - b.G) <= tolerance
+        and math.abs(a.B - b.B) <= tolerance
+end
+
+local function ciyEOPymQW(kHtWakxlAm)
+    if not VXbzSdNydTv(kHtWakxlAm) then
+        return nil
+    end
+
+    local cZYiEHIJWAEh = kHtWakxlAm:FindFirstChild("MultDisplay")
+    local dzGwxesc =
+        cZYiEHIJWAEh
+        and cZYiEHIJWAEh:FindFirstChild("BillboardGui")
+
+    local JIxfYesp =
+        dzGwxesc
+        and dzGwxesc:FindFirstChild("MainFrame")
+
+    local wfvYmaqRGdp =
+        JIxfYesp
+        and JIxfYesp:FindFirstChild("Mult")
+
+    local zgNYkbRit =
+        JIxfYesp
+        and JIxfYesp:FindFirstChild("Value")
+
+    local MxRPMdGNQWn = nil
+
+    if wfvYmaqRGdp
+        and (
+            wfvYmaqRGdp:IsA("TextLabel")
+            or wfvYmaqRGdp:IsA("TextButton")
+            or wfvYmaqRGdp:IsA("TextBox")
+        ) then
+        MxRPMdGNQWn = HYpjMmzn(wfvYmaqRGdp.Text)
+    end
+
+    local fRSOIIhPQ = false
+
+    if zgNYkbRit
+        and (
+            zgNYkbRit:IsA("TextLabel")
+            or zgNYkbRit:IsA("TextButton")
+            or zgNYkbRit:IsA("TextBox")
+        ) then
+        local uaUfBgyz =
+            DfrqgXXsrB(zgNYkbRit.Text or "")
+
+        local DUKhdbKIb =
+            uaUfBgyz:gsub("%s+", "")
+
+        fRSOIIhPQ =
+            JFQRzFlAXQJ(
+                zgNYkbRit.TextColor3,
+                buxBHzlExq,
+                2 / 255
+            )
+            or string.find(
+                DUKhdbKIb,
+                "255,50,50",
+                1,
+                true
+            ) ~= nil
+    end
+
+    local yQJrjaPZKi = xgaAZuLdymsR(kHtWakxlAm)
+    local TchWhIGbaLz = nil
+
+    if yQJrjaPZKi then
+        TchWhIGbaLz =
+            yQJrjaPZKi:GetAttribute("PlantOwnerID")
+            or yQJrjaPZKi:GetAttribute("PlantOwnerId")
+    end
+
+    return {Round= kHtWakxlAm,
+        Serial = RfAxgCjnjg(kHtWakxlAm),
+        MultDisplay = cZYiEHIJWAEh,
+        Billboard = dzGwxesc,
+        MainFrame = JIxfYesp,
+        MultLabel = wfvYmaqRGdp,
+        ValueLabel = zgNYkbRit,
+        Multiplier = MxRPMdGNQWn,
+        Dead = fRSOIIhPQ,
+        Prompt = yQJrjaPZKi,
+        OwnerId = FPwbuFJZR(TchWhIGbaLz),
+    }
+end
+
+local function UFtCUOsISQtE(beforeSet, beforeMaxSerial, timeout)
+    local QHmwcvVZcPU =
+        os.clock() + (FPwbuFJZR(timeout) or 3)
+
+    while PKTqUhNlA.Alive and os.clock() < QHmwcvVZcPU do
+        local lGcrYDHyzQ = nil
+
+        for _, kHtWakxlAm in ZVOoBlCEzTM(lciEiyCr()) do
+            local mtjjZPXM = RfAxgCjnjg(kHtWakxlAm) or 0
+
+            if not beforeSet[kHtWakxlAm]
+                or mtjjZPXM > beforeMaxSerial then
+
+                if not lGcrYDHyzQ
+                    or mtjjZPXM > (RfAxgCjnjg(lGcrYDHyzQ) or 0) then
+                    lGcrYDHyzQ = kHtWakxlAm
+                end
+            end
+        end
+
+        if lGcrYDHyzQ then
+            return lGcrYDHyzQ
+        end
+
+        task.wait(0.04)
+    end
+
+    return nil
+end
+
+local function SQlPAyWBEQ(LNufBNUJAR)
+    if LNufBNUJAR
+        and LNufBNUJAR.PlantRound
+        and LNufBNUJAR.PlantRound.Parent
+        and VXbzSdNydTv(LNufBNUJAR.PlantRound) then
+        return LNufBNUJAR.PlantRound
+    end
+
+    local MzrzoZEjZohK =
+        LNufBNUJAR
+        and LNufBNUJAR.BeforeRoundSerial
+        or 0
+
+    local jMfmkYAPhthA = nil
+
+    for _, kHtWakxlAm in ZVOoBlCEzTM(lciEiyCr()) do
+        local mtjjZPXM = RfAxgCjnjg(kHtWakxlAm) or 0
+
+        if mtjjZPXM > MzrzoZEjZohK
+            and (
+                not jMfmkYAPhthA
+                or mtjjZPXM > (RfAxgCjnjg(jMfmkYAPhthA) or 0)
+            ) then
+            jMfmkYAPhthA = kHtWakxlAm
+        end
+    end
+
+    if LNufBNUJAR and jMfmkYAPhthA then
+        LNufBNUJAR.PlantRound = jMfmkYAPhthA
+    end
+
+    return jMfmkYAPhthA
+end
+
+PKTqUhNlA.GetOwnPlantRounds = lciEiyCr
+PKTqUhNlA.GetPlantRoundInfo = ciyEOPymQW
+
+local HpqCsUNehWs = setmetatable({}, {__mode= "k",
+})
+
+local function vrGYPXgh(kHtWakxlAm, DhaBjHwh)
+    if kHtWakxlAm and DhaBjHwh then
+        HpqCsUNehWs[kHtWakxlAm] = DfrqgXXsrB(DhaBjHwh)
+    end
+end
+
+local function EgiwikUN(kHtWakxlAm)
+    if not kHtWakxlAm then
+        return nil
+    end
+
+    local DhaBjHwh = HpqCsUNehWs[kHtWakxlAm]
+
+    if DhaBjHwh then
+        return DhaBjHwh
+    end
+
+    local LNufBNUJAR = euyMjRhaK.LastPlantContext
+
+    if LNufBNUJAR
+        and LNufBNUJAR.PlantRound == kHtWakxlAm
+        and LNufBNUJAR.Seed then
+
+        DhaBjHwh = DfrqgXXsrB(LNufBNUJAR.Seed)
+        vrGYPXgh(kHtWakxlAm, DhaBjHwh)
+        return DhaBjHwh
+    end
+
+    return nil
+end
+
+local function PwPdrJwbG(kHtWakxlAm)
+    return DGUSmiSQl(EgiwikUN(kHtWakxlAm))
+end
+
+PKTqUhNlA.GetHarvestTargetForSeed = DGUSmiSQl
+PKTqUhNlA.GetHarvestTargetForRound = PwPdrJwbG
+
+--============================================================
+-- MUTATION SCANNER
+--============================================================
+
+local function xiZaGgEVoUD(QtoBGFWIF)
+    QtoBGFWIF = DfrqgXXsrB(QtoBGFWIF or "")
+    QtoBGFWIF = QtoBGFWIF:gsub("<.->", "")
+    QtoBGFWIF = QtoBGFWIF:gsub("&amp;", "&")
+    QtoBGFWIF = QtoBGFWIF:gsub("&lt;", "<")
+    QtoBGFWIF = QtoBGFWIF:gsub("&gt;", ">")
+    QtoBGFWIF = QtoBGFWIF:gsub("^%s+", ""):gsub("%s+$", "")
+    return QtoBGFWIF
+end
+
+local function zIwNzVxielXw(QtoBGFWIF)
+    QtoBGFWIF = DfrqgXXsrB(QtoBGFWIF or "")
+    QtoBGFWIF = QtoBGFWIF:gsub("&", "&amp;")
+    QtoBGFWIF = QtoBGFWIF:gsub("<", "&lt;")
+    QtoBGFWIF = QtoBGFWIF:gsub(">", "&gt;")
+    return QtoBGFWIF
+end
+
+local function cagbPKyCDdA(QtoBGFWIF)
+    return (DfrqgXXsrB(QtoBGFWIF or ""):match("^%s*(.-)%s*$")) or ""
+end
+
+local function eulgADICZF(QtoBGFWIF)
+    QtoBGFWIF = cagbPKyCDdA(QtoBGFWIF)
+
+    if QtoBGFWIF == "" then
+        return ""
+    end
+
+    if QtoBGFWIF:find("<font", 1, true)
+        or QtoBGFWIF:find("<b>", 1, true)
+        or QtoBGFWIF:find("<i>", 1, true)
+        or QtoBGFWIF:find("<u>", 1, true)
+        or QtoBGFWIF:find("<s>", 1, true) then
+
+        return QtoBGFWIF
+    end
+
+    return zIwNzVxielXw(QtoBGFWIF)
+end
+
+local function JHeHuWKa(QtoBGFWIF)
+    QtoBGFWIF = xiZaGgEVoUD(QtoBGFWIF)
+    QtoBGFWIF = QtoBGFWIF:gsub("[\r\n]+", ",")
+    QtoBGFWIF = QtoBGFWIF:gsub("%s*[%+,%|]%s*", ",")
+    QtoBGFWIF = QtoBGFWIF:gsub("%s*,%s*", ",")
+
+    local BNnGQGeIA = {}
+    local QZYVNgIzkz = {}
+
+    for muPHtvEg in QtoBGFWIF:gmatch("[^,]+") do
+        local XUWueugAwuSw = cagbPKyCDdA(muPHtvEg)
+        XUWueugAwuSw =
+            cagbPKyCDdA(
+                XUWueugAwuSw:gsub("^[Mm]utations?:%s*", "")
+            )
+
+        local eRdipkcQbcnW = jvVkYVzFo(XUWueugAwuSw)
+
+        if XUWueugAwuSw ~= ""
+            and eRdipkcQbcnW ~= "none"
+            and eRdipkcQbcnW ~= "normal"
+            and eRdipkcQbcnW ~= "no mutation"
+            and eRdipkcQbcnW ~= "no mutations"
+            and eRdipkcQbcnW ~= "mutation"
+            and eRdipkcQbcnW ~= "mutations"
+            and not QZYVNgIzkz[eRdipkcQbcnW] then
+
+            QZYVNgIzkz[eRdipkcQbcnW] = true
+            BNnGQGeIA[#BNnGQGeIA + 1] = XUWueugAwuSw
+        end
+    end
+
+    return BNnGQGeIA
+end
+
+local EqJoEozgzfg = {
+    "Dewy",
+    "Dusty",
+    "Frosted",
+    "Shocked",
+    "Radioactive",
+    "Golden",
+    "Cosmic",
+}
+
+local function TRBZSzHi(QtoBGFWIF)
+    local NQYAzsomZ = JHeHuWKa(QtoBGFWIF)
+
+    if #NQYAzsomZ > 1 then
+        return #NQYAzsomZ, NQYAzsomZ
+    end
+
+    local SgxiIThqSlXm = xiZaGgEVoUD(QtoBGFWIF)
+    local cTAyyytM = string.lower(SgxiIThqSlXm)
+    local EJWoSYJFtW = {}
+    local QZYVNgIzkz = {}
+
+    for _, mutationName in ZVOoBlCEzTM(EqJoEozgzfg) do
+        local eRdipkcQbcnW = jvVkYVzFo(mutationName)
+
+        if string.find(
+            cTAyyytM,
+            eRdipkcQbcnW,
+            1,
+            true
+        ) and not QZYVNgIzkz[eRdipkcQbcnW] then
+
+            EJWoSYJFtW[#EJWoSYJFtW + 1] = mutationName
+            QZYVNgIzkz[eRdipkcQbcnW] = true
+        end
+    end
+
+    if #EJWoSYJFtW > 0 then
+        return #EJWoSYJFtW, EJWoSYJFtW
+    end
+
+    return #NQYAzsomZ, NQYAzsomZ
+end
+
+local function FGApyjULGyb(XUWueugAwuSw)
+    if XUWueugAwuSw == nil then
+        return nil
+    end
+
+    if typeof(XUWueugAwuSw) == "number" then
+        local QtoBGFWIF = DfrqgXXsrB(math.floor(XUWueugAwuSw * 100 + 0.5) / 100)
+        return QtoBGFWIF
+    end
+
+    local QtoBGFWIF = cagbPKyCDdA(XUWueugAwuSw)
+
+    if QtoBGFWIF == "" then
+        return nil
+    end
+
+    return QtoBGFWIF
+end
+
+local function NQgnmBye(instance, names)
+    if not instance then
+        return nil
+    end
+
+    for _, CRwBIXohMQ in ZVOoBlCEzTM(names) do
+        local XUWueugAwuSw = instance:GetAttribute(CRwBIXohMQ)
+        local rebdYfoIFFw = FGApyjULGyb(XUWueugAwuSw)
+
+        if rebdYfoIFFw then
+            return rebdYfoIFFw
+        end
+    end
+
+    return nil
+end
+
+local function BdMdWktPyu(eNOyItOd, names, patterns)
+    if not eNOyItOd then
+        return nil
+    end
+
+    local VuDvjaRnSLZL = {}
+
+    for _, CRwBIXohMQ in ZVOoBlCEzTM(names or {}) do
+        VuDvjaRnSLZL[string.lower(CRwBIXohMQ)] = true
+    end
+
+    for _, obj in ZVOoBlCEzTM(eNOyItOd:GetDescendants()) do
+        if obj:IsA("TextLabel")
+            or obj:IsA("TextButton")
+            or obj:IsA("TextBox") then
+
+            local QtoBGFWIF = xiZaGgEVoUD(obj.Text)
+
+            if QtoBGFWIF ~= "" then
+                local QUlyWSImzyd = string.lower(obj.Name)
+
+                if VuDvjaRnSLZL[QUlyWSImzyd] then
+                    return QtoBGFWIF
+                end
+
+                for _, pattern in ZVOoBlCEzTM(patterns or {}) do
+                    if string.find(string.lower(QtoBGFWIF), pattern, 1, true) then
+                        return QtoBGFWIF
+                    end
+                end
+            end
+        end
+    end
+
+    return nil
+end
+
+local function HWmcIHkgz(JIxfYesp, bTjKsleJ)
+    local QtoBGFWIF =
+        BdMdWktPyu(
+            JIxfYesp,
+            {
+                "Fruit Money",
+                "FruitMoney",
+                "Value",
+                "FruitValue",
+                "Money",
+            },
+            {
+                "$/min",
+                "fruit $",
+                "value",
+            }
+        )
+
+    if QtoBGFWIF then
+        return QtoBGFWIF
+    end
+
+    return NQgnmBye(
+        bTjKsleJ,
+        {
+            "FruitValue",
+            "Value",
+            "FruitMoney",
+            "Money",
+            "CoinsPerMinute",
+        }
+    )
+end
+
+local function QrbIxVJEqHGh(bTjKsleJ, fallbackText)
+    local hVKRNUmvaW = cagbPKyCDdA(xiZaGgEVoUD(fallbackText))
+
+    if hVKRNUmvaW ~= ""
+        and jvVkYVzFo(hVKRNUmvaW) ~= "none" then
+
+        return hVKRNUmvaW
+    end
+
+    local wizwGhwnAuC =
+        NQgnmBye(
+            bTjKsleJ,
+            {
+                "FruitMutation",
+                "Mutations",
+                "Mutation",
+            }
+        )
+
+    if wizwGhwnAuC then
+        return wizwGhwnAuC
+    end
+
+    local ODlrNcZGPi = bTjKsleJ and bTjKsleJ.Parent
+
+    for _ = 1, 4 do
+        if not ODlrNcZGPi then
+            break
+        end
+
+        wizwGhwnAuC =
+            NQgnmBye(
+                ODlrNcZGPi,
+                {
+                    "FruitMutation",
+                    "Mutations",
+                    "Mutation",
+                }
+            )
+
+        if wizwGhwnAuC then
+            return wizwGhwnAuC
+        end
+
+        ODlrNcZGPi = ODlrNcZGPi.Parent
+    end
+
+    return fallbackText
+end
+
+local function psKuspqQP()
+    local EojeQsclmwhy = kUPNnQqxT()
+    if not EojeQsclmwhy then
+        return {}, "My plot was not found"
+    end
+
+    local YUytgcWIyg = vhsjTXIP:FindFirstChild("PlotBillboards")
+    if not YUytgcWIyg then
+        return {}, "PlotBillboards was not found"
+    end
+
+    local XYuqTCClIeZ = {}
+
+    for _, dzGwxesc in ZVOoBlCEzTM(YUytgcWIyg:GetDescendants()) do
+        if dzGwxesc:IsA("BillboardGui")
+            and dzGwxesc.Name == "FruitBillboard_WithPrompt"
+            and dzGwxesc.Adornee
+            and dzGwxesc.Adornee.Name == "FruitSpawn"
+            and dzGwxesc.Adornee:IsDescendantOf(EojeQsclmwhy) then
+
+            local JIxfYesp = dzGwxesc:FindFirstChild("MainFrame")
+
+            if JIxfYesp then
+                local ZyfAwIMnhA = JIxfYesp:FindFirstChild("Name")
+                local cVJIkOMOr = JIxfYesp:FindFirstChild("Mutations")
+
+                local GMhMNUmf = "Unknown"
+                local FgynLSfATX = "None"
+                local MYfIeqgbb = "None"
+
+                if ZyfAwIMnhA and (ZyfAwIMnhA:IsA("TextLabel") or ZyfAwIMnhA:IsA("TextButton") or ZyfAwIMnhA:IsA("TextBox")) then
+                    GMhMNUmf = xiZaGgEVoUD(ZyfAwIMnhA.Text)
+                end
+
+                if cVJIkOMOr
+                    and (cVJIkOMOr:IsA("TextLabel") or cVJIkOMOr:IsA("TextButton") or cVJIkOMOr:IsA("TextBox"))
+                    and cVJIkOMOr.Text ~= "" then
+                    local EWcINeRRS =
+                        xiZaGgEVoUD(cVJIkOMOr.Text)
+
+                    if EWcINeRRS ~= "" then
+                        FgynLSfATX = EWcINeRRS
+                        MYfIeqgbb =
+                            eulgADICZF(cVJIkOMOr.Text)
+                    end
+                end
+
+                local bTjKsleJ = dzGwxesc.Adornee
+                local BCOlhEka =
+                    QrbIxVJEqHGh(bTjKsleJ, FgynLSfATX)
+                local wnnztFOY, QnFyVawVul =
+                    TRBZSzHi(BCOlhEka)
+
+                if #QnFyVawVul > 0 then
+                    FgynLSfATX =
+                        table.concat(QnFyVawVul, " + ")
+                else
+                    local pUgvDQrSXl =
+                        cagbPKyCDdA(xiZaGgEVoUD(BCOlhEka))
+
+                    if pUgvDQrSXl ~= ""
+                        and jvVkYVzFo(pUgvDQrSXl) ~= "none" then
+
+                        FgynLSfATX = pUgvDQrSXl
+                    else
+                        FgynLSfATX = "None"
+                    end
+                end
+
+                if MYfIeqgbb == "None"
+                    and FgynLSfATX ~= "None" then
+
+                    MYfIeqgbb =
+                        zIwNzVxielXw(FgynLSfATX)
+                end
+
+                local uaUfBgyz = HWmcIHkgz(JIxfYesp, bTjKsleJ)
+                local MSZbokKn =
+                    NQgnmBye(
+                        bTjKsleJ,
+                        {
+                            "FruitSizeMult",
+                            "SizeMultiplier",
+                            "SizeMult",
+                        }
+                    )
+
+                table.insert(XYuqTCClIeZ, {Name= GMhMNUmf,
+                    Mutation = FgynLSfATX,
+                    MutationRichText = MYfIeqgbb,
+                    MutationSource = BCOlhEka,
+                    MutationParts = QnFyVawVul,
+                    MutationCount = wnnztFOY,
+                    FruitValue = uaUfBgyz,
+                    SizeMultiplier = MSZbokKn,
+                    FruitSpawn = bTjKsleJ,
+                    Billboard = dzGwxesc,
+                    Plot = EojeQsclmwhy,
+                })
+            end
+        end
+    end
+
+    table.sort(XYuqTCClIeZ, function(a, b)
+        if a.Name == b.Name then
+            return a.Mutation < b.Mutation
+        end
+        return a.Name < b.Name
+    end)
+
+    euyMjRhaK.FruitListedCount = #XYuqTCClIeZ
+    return XYuqTCClIeZ
+end
+
+PKTqUhNlA.ScanMyMutations = psKuspqQP
+
+local function ErFGTEfyIlQM()
+    local OVYmLrNOMZpK =
+        setmetatable({}, {__mode= "k",
+        })
+
+    local function nHmHODxTv(ksXdsOKIx)
+        local bTjKsleJ =
+            ksXdsOKIx and ksXdsOKIx.FruitSpawn
+
+        if not bTjKsleJ or not bTjKsleJ.Parent then
+            return nil
+        end
+
+        return bTjKsleJ:FindFirstChild("ProximityPrompt")
+            or bTjKsleJ:FindFirstChildWhichIsA(
+                "ProximityPrompt",
+                true
+            )
+    end
+
+    local function EjXJqYlPo(ksXdsOKIx, yQJrjaPZKi)
+        local bTjKsleJ =
+            ksXdsOKIx and ksXdsOKIx.FruitSpawn
+
+        if not bTjKsleJ or not bTjKsleJ.Parent then
+            return true
+        end
+
+        if ksXdsOKIx.Billboard and not ksXdsOKIx.Billboard.Parent then
+            return true
+        end
+
+        if yQJrjaPZKi and not yQJrjaPZKi.Parent then
+            return true
+        end
+
+        local uPirkaZfGG, mnlJbSzzP =
+            BwoodiEAFu(function()
+                return yQJrjaPZKi and yQJrjaPZKi.Enabled
+            end)
+
+        if uPirkaZfGG and mnlJbSzzP == false then
+            return true
+        end
+
+        return false
+    end
+
+    local function wJiqCFIY(ksXdsOKIx, yQJrjaPZKi, timeout)
+        local QHmwcvVZcPU =
+            os.clock() + (FPwbuFJZR(timeout) or 0.75)
+
+        while PKTqUhNlA.Alive and os.clock() < QHmwcvVZcPU do
+            if EjXJqYlPo(ksXdsOKIx, yQJrjaPZKi) then
+                return true
+            end
+
+            task.wait(0.04)
+        end
+
+        return EjXJqYlPo(ksXdsOKIx, yQJrjaPZKi)
+    end
+
+    local function vKnUaAxk(ksXdsOKIx)
+        if ibVEMhwTQRuM.CollectAllFruit then
+            return true
+        end
+
+        local YLgISKeuTi =
+            math.max(
+                0,
+                math.floor(
+                    (FPwbuFJZR(ibVEMhwTQRuM.MinFruitMutations) or 0)
+                    + 0.5
+                )
+            )
+
+        return (FPwbuFJZR(ksXdsOKIx.MutationCount) or 0) >= YLgISKeuTi
+    end
+
+    local function jVDkEsMUsjr(ksXdsOKIx, lSSAtRsxOpy)
+        if not ksXdsOKIx
+            or not ksXdsOKIx.FruitSpawn
+            or not ksXdsOKIx.FruitSpawn.Parent then
+
+            return false, "fruit-missing"
+        end
+
+        if not vKnUaAxk(ksXdsOKIx) then
+            return false, "filtered"
+        end
+
+        local zSrEarOfx =
+            OVYmLrNOMZpK[ksXdsOKIx.FruitSpawn] or 0
+
+        if zSrEarOfx > os.clock() then
+            return false, "cooldown"
+        end
+
+        local yQJrjaPZKi =
+            nHmHODxTv(ksXdsOKIx)
+
+        if not yQJrjaPZKi then
+            OVYmLrNOMZpK[ksXdsOKIx.FruitSpawn] = os.clock() + 1
+            return false, "prompt-missing"
+        end
+
+        if type(fireproximityprompt) ~= "function" then
+            foUSPDNDz(
+                "Fruit collect needs fireproximityprompt",
+                "danger"
+            )
+            return false, "fireproximityprompt-unavailable"
+        end
+
+        if not wpFutleQBCyz:AcquireAction(
+            "AutoCollectFruit",
+            lSSAtRsxOpy,
+            1
+        ) then
+            return false, "busy"
+        end
+
+        if lSSAtRsxOpy()
+            or not ibVEMhwTQRuM.AutoCollectFruit
+            or not ksXdsOKIx.FruitSpawn.Parent
+            or not vKnUaAxk(ksXdsOKIx) then
+
+            wpFutleQBCyz:ReleaseAction("AutoCollectFruit")
+            return false, "cancelled"
+        end
+
+        yQJrjaPZKi = nHmHODxTv(ksXdsOKIx)
+
+        if not yQJrjaPZKi then
+            wpFutleQBCyz:ReleaseAction("AutoCollectFruit")
+            OVYmLrNOMZpK[ksXdsOKIx.FruitSpawn] = os.clock() + 1
+            return false, "prompt-missing"
+        end
+
+        HXuhwCIQZAB("COLLECT FRUIT", "warning")
+        foUSPDNDz(
+            "Collecting "
+                .. DfrqgXXsrB(ksXdsOKIx.Name or "fruit")
+                .. " ("
+                .. DfrqgXXsrB(ksXdsOKIx.MutationCount or 0)
+                .. " mutation(s))",
+            "warning"
+        )
+
+        local XbUDFIepRJM, aAIBWyUMkPz =
+            BwoodiEAFu(function()
+                fireproximityprompt(yQJrjaPZKi)
+            end)
+
+        local RcEgnLXWKPPQ = false
+
+        if XbUDFIepRJM then
+            RcEgnLXWKPPQ = wJiqCFIY(ksXdsOKIx, yQJrjaPZKi, 0.75)
+        end
+
+        wpFutleQBCyz:ReleaseAction("AutoCollectFruit")
+
+        if not wpFutleQBCyz:IsPlantBusy() then
+            HXuhwCIQZAB("IDLE")
+        end
+
+        if not XbUDFIepRJM then
+            OVYmLrNOMZpK[ksXdsOKIx.FruitSpawn] = os.clock() + 1.5
+            foUSPDNDz(
+                "Collect fruit failed: "
+                    .. DfrqgXXsrB(aAIBWyUMkPz),
+                "danger"
+            )
+            return false, DfrqgXXsrB(aAIBWyUMkPz)
+        end
+
+        if not RcEgnLXWKPPQ then
+            OVYmLrNOMZpK[ksXdsOKIx.FruitSpawn] = os.clock() + 1.25
+            foUSPDNDz(
+                "Collect fruit was not confirmed yet",
+                "warning"
+            )
+            return false, "unverified"
+        end
+
+        OVYmLrNOMZpK[ksXdsOKIx.FruitSpawn] = nil
+        euyMjRhaK.FruitCollectCount += 1
+        euyMjRhaK.LastCollectedFruit = {Name= ksXdsOKIx.Name,
+            MutationCount = ksXdsOKIx.MutationCount,
+            Mutation = ksXdsOKIx.Mutation,
+            At = os.clock(),
+        }
+
+        return true, "collected"
+    end
+
+    local function EDGuBRaC(lSSAtRsxOpy)
+        local tBOlbjGIlYW, ujxUlzok =
+            psKuspqQP()
+
+        if ujxUlzok then
+            return 0, ujxUlzok, 0
+        end
+
+        table.sort(tBOlbjGIlYW, function(a, b)
+            local BXVtJveZsHQ = FPwbuFJZR(a.MutationCount) or 0
+            local AiSghBSLYKJ = FPwbuFJZR(b.MutationCount) or 0
+
+            if BXVtJveZsHQ == AiSghBSLYKJ then
+                return DfrqgXXsrB(a.Name) < DfrqgXXsrB(b.Name)
+            end
+
+            return BXVtJveZsHQ > AiSghBSLYKJ
+        end)
+
+        local mwLRTkUYiu = 0
+        local GpCYQIsOilaM = 0
+
+        for _, bTjKsleJ in ZVOoBlCEzTM(tBOlbjGIlYW) do
+            if lSSAtRsxOpy()
+                or not ibVEMhwTQRuM.AutoCollectFruit then
+                break
+            end
+
+            if vKnUaAxk(bTjKsleJ) then
+                mwLRTkUYiu += 1
+
+                local uPirkaZfGG =
+                    jVDkEsMUsjr(bTjKsleJ, lSSAtRsxOpy)
+
+                if uPirkaZfGG then
+                    GpCYQIsOilaM += 1
+
+                    if not pQFNwZAvvQA(
+                        ibVEMhwTQRuM.FruitCollectDelay,
+                        lSSAtRsxOpy
+                    ) then
+                        break
+                    end
+                else
+                    task.wait(0.02)
+                end
+            end
+        end
+
+        return GpCYQIsOilaM, nil, mwLRTkUYiu
+    end
+
+    local function xIPKitYl(lSSAtRsxOpy)
+        local fCZgzZoj = 0
+
+        while PKTqUhNlA.Alive
+            and ibVEMhwTQRuM.AutoCollectFruit
+            and not lSSAtRsxOpy() do
+
+            local GpCYQIsOilaM, ujxUlzok, mwLRTkUYiu =
+                EDGuBRaC(lSSAtRsxOpy)
+
+            if ujxUlzok then
+                foUSPDNDz(
+                    "Fruit collect waiting: "
+                        .. DfrqgXXsrB(ujxUlzok),
+                    "warning"
+                )
+            elseif GpCYQIsOilaM > 0 then
+                foUSPDNDz(
+                    "Collected "
+                        .. DfrqgXXsrB(GpCYQIsOilaM)
+                        .. " fruit(s) | total "
+                        .. DfrqgXXsrB(euyMjRhaK.FruitCollectCount),
+                    "success"
+                )
+                fCZgzZoj = os.clock()
+            elseif os.clock() - fCZgzZoj >= 3 then
+                if mwLRTkUYiu > 0 then
+                    foUSPDNDz(
+                        "Fruit matched; waiting before retrying collection",
+                        "warning"
+                    )
+                elseif ibVEMhwTQRuM.CollectAllFruit then
+                    foUSPDNDz("No fruit ready to collect")
+                else
+                    foUSPDNDz(
+                        "No fruit has "
+                            .. DfrqgXXsrB(ibVEMhwTQRuM.MinFruitMutations)
+                            .. "+ mutation(s) yet"
+                    )
+                end
+
+                fCZgzZoj = os.clock()
+            end
+
+            if not pQFNwZAvvQA(
+                ibVEMhwTQRuM.FruitCollectInterval,
+                lSSAtRsxOpy
+            ) then
+                break
+            end
+        end
+
+        wpFutleQBCyz:ReleaseAction("AutoCollectFruit")
+
+        if not wpFutleQBCyz:IsPlantBusy() then
+            HXuhwCIQZAB("IDLE")
+        end
+    end
+
+    return xIPKitYl
+end
+
+local kMZYSSjK =
+    ErFGTEfyIlQM()
+
+local function UuxadzuPhcII()
+    local function LLzZMVPHPnSt(CRwBIXohMQ)
+        CRwBIXohMQ = DfrqgXXsrB(CRwBIXohMQ or "")
+
+        for group in CRwBIXohMQ:gmatch("%(([^%)]*)%)") do
+            local tShfQYgpdzVr =
+                cagbPKyCDdA(xiZaGgEVoUD(group))
+
+            if tShfQYgpdzVr ~= ""
+                and not tShfQYgpdzVr:match("^[%d%.]+%s*[xX]$") then
+
+                return tShfQYgpdzVr
+            end
+        end
+
+        return ""
+    end
+
+    local function jwQjUPUNPfoz(XUWueugAwuSw)
+        XUWueugAwuSw = DfrqgXXsrB(XUWueugAwuSw or "")
+
+        local MxRPMdGNQWn =
+            XUWueugAwuSw:match("%(([%d%.]+)%s*[xX]%)")
+            or XUWueugAwuSw:match("([%d%.]+)%s*[xX]")
+
+        return FPwbuFJZR(MxRPMdGNQWn)
+    end
+
+    local function wQCkYsiuAmfU(XUWueugAwuSw)
+        XUWueugAwuSw = xiZaGgEVoUD(XUWueugAwuSw)
+        XUWueugAwuSw = XUWueugAwuSw:gsub("[\r\n]+", " ")
+        XUWueugAwuSw = XUWueugAwuSw:gsub("%s+", " ")
+        return cagbPKyCDdA(XUWueugAwuSw)
+    end
+
+    local function kjoiCYVHEhgt(XUWueugAwuSw)
+        XUWueugAwuSw = wQCkYsiuAmfU(XUWueugAwuSw)
+
+        if XUWueugAwuSw == "" then
+            return false
+        end
+
+        if not UrKxbeTklwO(XUWueugAwuSw, "fruit") then
+            return false
+        end
+
+        return UrKxbeTklwO(XUWueugAwuSw, "basket")
+            or UrKxbeTklwO(XUWueugAwuSw, "crate")
+            or UrKxbeTklwO(XUWueugAwuSw, "box")
+            or UrKxbeTklwO(XUWueugAwuSw, "pack")
+            or UrKxbeTklwO(XUWueugAwuSw, "bundle")
+            or UrKxbeTklwO(XUWueugAwuSw, "container")
+    end
+
+    local function nbaNjbSc(XUWueugAwuSw)
+        XUWueugAwuSw = wQCkYsiuAmfU(XUWueugAwuSw)
+
+        if XUWueugAwuSw == ""
+            or #XUWueugAwuSw > 180
+            or jvVkYVzFo(XUWueugAwuSw) == "fruit"
+            or jvVkYVzFo(XUWueugAwuSw) == "fruits"
+            or kjoiCYVHEhgt(XUWueugAwuSw)
+            or UrKxbeTklwO(XUWueugAwuSw, "seed")
+            or (
+                UrKxbeTklwO(XUWueugAwuSw, "dead")
+                and UrKxbeTklwO(XUWueugAwuSw, "tree")
+            ) then
+
+            return false
+        end
+
+        return UrKxbeTklwO(XUWueugAwuSw, "fruit")
+    end
+
+    local function qjXQywHRDBbP(CvVgzwvx)
+        local BSPGrulBdTMz =
+            LiOmaZCFo(CvVgzwvx, "mutations")
+            or LiOmaZCFo(CvVgzwvx, "Mutations")
+            or LiOmaZCFo(CvVgzwvx, "mutation")
+            or LiOmaZCFo(CvVgzwvx, "Mutation")
+
+        if type(BSPGrulBdTMz) == "table" then
+            local NQYAzsomZ = {}
+            local QZYVNgIzkz = {}
+
+            for LvOjTWuqYW = 1, #BSPGrulBdTMz do
+                local XUWueugAwuSw =
+                    cagbPKyCDdA(xiZaGgEVoUD(BSPGrulBdTMz[LvOjTWuqYW]))
+                local eRdipkcQbcnW =
+                    jvVkYVzFo(XUWueugAwuSw)
+
+                if XUWueugAwuSw ~= ""
+                    and eRdipkcQbcnW ~= "none"
+                    and not QZYVNgIzkz[eRdipkcQbcnW] then
+
+                    QZYVNgIzkz[eRdipkcQbcnW] = true
+                    NQYAzsomZ[#NQYAzsomZ + 1] = XUWueugAwuSw
+                end
+            end
+
+            for _, XUWueugAwuSw in OFjzDxmLK(BSPGrulBdTMz) do
+                if type(XUWueugAwuSw) ~= "table" then
+                    local QtoBGFWIF =
+                        cagbPKyCDdA(xiZaGgEVoUD(XUWueugAwuSw))
+                    local eRdipkcQbcnW =
+                        jvVkYVzFo(QtoBGFWIF)
+
+                    if QtoBGFWIF ~= ""
+                        and eRdipkcQbcnW ~= "none"
+                        and not QZYVNgIzkz[eRdipkcQbcnW] then
+
+                        QZYVNgIzkz[eRdipkcQbcnW] = true
+                        NQYAzsomZ[#NQYAzsomZ + 1] = QtoBGFWIF
+                    end
+                end
+            end
+
+            return table.concat(NQYAzsomZ, " + ")
+        end
+
+        if BSPGrulBdTMz ~= nil then
+            return cagbPKyCDdA(xiZaGgEVoUD(BSPGrulBdTMz))
+        end
+
+        return ""
+    end
+
+    local function nTRqdnwSZ(CvVgzwvx)
+        if type(CvVgzwvx) ~= "table" then
+            return nil
+        end
+
+        local pZWezDiISM =
+            jvVkYVzFo(
+                LiOmaZCFo(CvVgzwvx, "itemType")
+                or LiOmaZCFo(CvVgzwvx, "ItemType")
+            )
+
+        if pZWezDiISM == "seed"
+            or UrKxbeTklwO(pZWezDiISM, "seed")
+            or rdJrWNGbGThM(CvVgzwvx) ~= nil then
+
+            return nil
+        end
+
+        local wjRCgzROOWzU =
+            LiOmaZCFo(CvVgzwvx, "fruitName")
+            or LiOmaZCFo(CvVgzwvx, "FruitName")
+        local brFeJHrLrSF =
+            LiOmaZCFo(CvVgzwvx, "seedType")
+            or LiOmaZCFo(CvVgzwvx, "SeedType")
+        local nPBKoHmyT =
+            LiOmaZCFo(CvVgzwvx, "fruitType")
+            or LiOmaZCFo(CvVgzwvx, "FruitType")
+
+        if pZWezDiISM == "fruit"
+            or wjRCgzROOWzU ~= nil
+            or nPBKoHmyT ~= nil then
+
+            local QpGRyxcf =
+                qjXQywHRDBbP(CvVgzwvx)
+            local wnnztFOY = 0
+            local QnFyVawVul = {}
+
+            if QpGRyxcf ~= "" then
+                wnnztFOY, QnFyVawVul =
+                    TRBZSzHi(QpGRyxcf)
+            end
+
+            local dqXNyVJbsaq =
+                wjRCgzROOWzU
+                or LiOmaZCFo(CvVgzwvx, "name")
+                or LiOmaZCFo(CvVgzwvx, "Name")
+                or LiOmaZCFo(CvVgzwvx, "displayName")
+                or LiOmaZCFo(CvVgzwvx, "DisplayName")
+                or nPBKoHmyT
+                or "Fruit"
+
+            return {FruitType=
+                    brFeJHrLrSF
+                    or nPBKoHmyT
+                    or dqXNyVJbsaq
+                    or "Fruit",
+                DisplayName = dqXNyVJbsaq,
+                Multiplier =
+                    FPwbuFJZR(
+                        LiOmaZCFo(CvVgzwvx, "multiplier")
+                        or LiOmaZCFo(CvVgzwvx, "Multiplier")
+                        or LiOmaZCFo(CvVgzwvx, "mult")
+                        or LiOmaZCFo(CvVgzwvx, "Mult")
+                    ),
+                SellValue =
+                    FPwbuFJZR(
+                        LiOmaZCFo(CvVgzwvx, "sellValue")
+                        or LiOmaZCFo(CvVgzwvx, "SellValue")
+                    ),
+                MutationText = QpGRyxcf,
+                MutationCount = wnnztFOY,
+                MutationParts = QnFyVawVul,
+                ItemId = frrntFCxtLm(CvVgzwvx),
+                Raw = CvVgzwvx,
+            }
+        end
+
+        local TbsynaNqjIVh = false
+        local WdfNOCpFotZw = nil
+        local dqXNyVJbsaq = nil
+        local MxRPMdGNQWn = nil
+        local QpGRyxcf = nil
+        local sKvykwKmzSJv = frrntFCxtLm(CvVgzwvx)
+        local QZcesAMXLRbt = false
+
+        local function crxMacQFGB(XUWueugAwuSw)
+            return kjoiCYVHEhgt(XUWueugAwuSw)
+        end
+
+        local function DrExoqpZBW(XUWueugAwuSw)
+            return nbaNjbSc(XUWueugAwuSw)
+        end
+
+        local function YufPwtBAKRQM(XUWueugAwuSw, mDHEjrNgJ)
+            XUWueugAwuSw = DfrqgXXsrB(XUWueugAwuSw or "")
+
+            if XUWueugAwuSw == "" then
+                return
+            end
+
+            if crxMacQFGB(XUWueugAwuSw) then
+                QZcesAMXLRbt = true
+                return
+            end
+
+            if DrExoqpZBW(XUWueugAwuSw) then
+                TbsynaNqjIVh = true
+
+                if not dqXNyVJbsaq then
+                    dqXNyVJbsaq = XUWueugAwuSw
+                end
+            end
+
+            if UrKxbeTklwO(XUWueugAwuSw, "fruit") then
+                TbsynaNqjIVh = true
+            end
+
+            if not WdfNOCpFotZw
+                and (
+                    mDHEjrNgJ == "fruittype"
+                    or mDHEjrNgJ == "fruit"
+                    or mDHEjrNgJ == "seedtype"
+                ) then
+
+                WdfNOCpFotZw = XUWueugAwuSw
+            end
+
+            MxRPMdGNQWn =
+                MxRPMdGNQWn
+                or jwQjUPUNPfoz(XUWueugAwuSw)
+
+            local OhjWNJad =
+                LLzZMVPHPnSt(XUWueugAwuSw)
+
+            if OhjWNJad ~= ""
+                and not QpGRyxcf then
+
+                QpGRyxcf = OhjWNJad
+            end
+        end
+
+        local function eydOEnaha(XUWueugAwuSw, eRdipkcQbcnW, depth, FtEBEyLZpOZP)
+            if depth > 5 then
+                return
+            end
+
+            local mDHEjrNgJ =
+                jvVkYVzFo(eRdipkcQbcnW)
+
+            if type(XUWueugAwuSw) == "string" then
+                if mDHEjrNgJ == "id"
+                    or mDHEjrNgJ == "itemid"
+                    or mDHEjrNgJ == "uuid" then
+
+                    sKvykwKmzSJv = sKvykwKmzSJv or XUWueugAwuSw
+                end
+
+                if string.find(mDHEjrNgJ, "fruit", 1, true) then
+                    TbsynaNqjIVh = true
+                end
+
+                if string.find(mDHEjrNgJ, "mutation", 1, true)
+                    and not QpGRyxcf then
+
+                    QpGRyxcf = XUWueugAwuSw
+                end
+
+                YufPwtBAKRQM(XUWueugAwuSw, mDHEjrNgJ)
+            elseif type(XUWueugAwuSw) == "number" then
+                if string.find(mDHEjrNgJ, "mult", 1, true)
+                    or mDHEjrNgJ == "multiplier" then
+
+                    MxRPMdGNQWn = MxRPMdGNQWn or XUWueugAwuSw
+                end
+            elseif type(XUWueugAwuSw) == "table" then
+                FtEBEyLZpOZP = FtEBEyLZpOZP or {}
+
+                if FtEBEyLZpOZP[XUWueugAwuSw] then
+                    return
+                end
+
+                FtEBEyLZpOZP[XUWueugAwuSw] = true
+
+                local uyNUuLrLQw = 0
+
+                for childKey, childValue in OFjzDxmLK(XUWueugAwuSw) do
+                    uyNUuLrLQw += 1
+
+                    if uyNUuLrLQw > 140 then
+                        break
+                    end
+
+                    eydOEnaha(childValue, childKey, depth + 1, FtEBEyLZpOZP)
+                end
+
+                FtEBEyLZpOZP[XUWueugAwuSw] = nil
+            end
+        end
+
+        YufPwtBAKRQM(
+            LiOmaZCFo(CvVgzwvx, "name")
+            or LiOmaZCFo(CvVgzwvx, "Name")
+            or LiOmaZCFo(CvVgzwvx, "displayName")
+            or LiOmaZCFo(CvVgzwvx, "DisplayName")
+            or LiOmaZCFo(CvVgzwvx, "fruitType")
+            or LiOmaZCFo(CvVgzwvx, "FruitType")
+            or LiOmaZCFo(CvVgzwvx, "seedType")
+            or LiOmaZCFo(CvVgzwvx, "SeedType"),
+            "name"
+        )
+
+        eydOEnaha(CvVgzwvx, "", 0, {})
+
+        local hDAdlIkB =
+            dqXNyVJbsaq
+            or LiOmaZCFo(CvVgzwvx, "name")
+            or LiOmaZCFo(CvVgzwvx, "Name")
+            or LiOmaZCFo(CvVgzwvx, "displayName")
+            or LiOmaZCFo(CvVgzwvx, "DisplayName")
+            or pZWezDiISM
+
+        if crxMacQFGB(hDAdlIkB)
+            and not WdfNOCpFotZw
+            and not MxRPMdGNQWn
+            and not QpGRyxcf then
+
+            return nil
+        end
+
+        if UrKxbeTklwO(pZWezDiISM, "fruit")
+            or LiOmaZCFo(CvVgzwvx, "fruitType") ~= nil
+            or LiOmaZCFo(CvVgzwvx, "FruitType") ~= nil then
+
+            TbsynaNqjIVh = true
+        end
+
+        if not TbsynaNqjIVh then
+            return nil
+        end
+
+        local wnnztFOY = 0
+        local QnFyVawVul = {}
+
+        if QpGRyxcf then
+            wnnztFOY, QnFyVawVul =
+                TRBZSzHi(QpGRyxcf)
+        end
+
+        return {FruitType= WdfNOCpFotZw or "Fruit",
+            DisplayName = dqXNyVJbsaq,
+            Multiplier = MxRPMdGNQWn,
+            MutationText = QpGRyxcf,
+            MutationCount = wnnztFOY,
+            MutationParts = QnFyVawVul,
+            ItemId = sKvykwKmzSJv,
+            Raw = CvVgzwvx,
+        }
+    end
+
+    local function UlWCzTFgJsk(ksXdsOKIx)
+        if not ksXdsOKIx then
+            return "Fruit"
+        end
+
+        local CRwBIXohMQ =
+            cagbPKyCDdA(ksXdsOKIx.DisplayName or "")
+
+        if CRwBIXohMQ == "" then
+            CRwBIXohMQ = DfrqgXXsrB(ksXdsOKIx.FruitType or "Fruit")
+        end
+
+        if not UrKxbeTklwO(CRwBIXohMQ, "fruit") then
+            CRwBIXohMQ = CRwBIXohMQ .. " Fruit"
+        end
+
+        if ksXdsOKIx.Multiplier
+            and not CRwBIXohMQ:match("%([%d%.]+%s*[xX]%)") then
+
+            CRwBIXohMQ = CRwBIXohMQ
+                .. " ("
+                .. DfrqgXXsrB(ksXdsOKIx.Multiplier)
+                .. "x)"
+        end
+
+        return CRwBIXohMQ
+    end
+
+    local function IePsMfSJ()
+        if not ZMZXtZNTlb:IsReady() then
+            hfBLUgtjD()
+        end
+
+        local CnnSbMNHy =
+            ZMZXtZNTlb:GetInventory()
+
+        local XYuqTCClIeZ = {}
+
+        if type(CnnSbMNHy) == "table" then
+            TjIHhQMpnV(
+                CnnSbMNHy,
+                "Inventory",
+                function(CvVgzwvx, path)
+                    local VthIAVxSEI =
+                        oCsyfpJnzjH(path)
+
+                    if not VthIAVxSEI then
+                        return
+                    end
+
+                    local ksXdsOKIx =
+                        nTRqdnwSZ(CvVgzwvx)
+
+                    if ksXdsOKIx then
+                        ksXdsOKIx.Index = VthIAVxSEI.Index
+                        ksXdsOKIx.IsHotbar = VthIAVxSEI.IsHotbar
+                        ksXdsOKIx.Container = VthIAVxSEI.Container
+                        ksXdsOKIx.Path = path
+                        ksXdsOKIx.Location = VthIAVxSEI
+
+                        XYuqTCClIeZ[#XYuqTCClIeZ + 1] = ksXdsOKIx
+                    end
+                end
+            )
+        end
+
+        local ECBzCRvri = {}
+
+        for _, ksXdsOKIx in ZVOoBlCEzTM(XYuqTCClIeZ) do
+            if ksXdsOKIx.ItemId ~= nil then
+                ECBzCRvri[DfrqgXXsrB(ksXdsOKIx.ItemId)] = true
+            end
+        end
+
+        local function SFoJKgcRI(iZoQeOxOdO)
+            if not iZoQeOxOdO or not iZoQeOxOdO:IsA("Tool") then
+                return false
+            end
+
+            local CRwBIXohMQ =
+                DfrqgXXsrB(iZoQeOxOdO.Name or "")
+
+            if CRwBIXohMQ == ""
+                or UrKxbeTklwO(CRwBIXohMQ, "seed")
+                or UrKxbeTklwO(CRwBIXohMQ, "basket")
+                or UrKxbeTklwO(CRwBIXohMQ, "crate")
+                or UrKxbeTklwO(CRwBIXohMQ, "box")
+                or UrKxbeTklwO(CRwBIXohMQ, "pack")
+                or UrKxbeTklwO(CRwBIXohMQ, "bundle")
+                or UrKxbeTklwO(CRwBIXohMQ, "container")
+                or (
+                    UrKxbeTklwO(CRwBIXohMQ, "dead")
+                    and UrKxbeTklwO(CRwBIXohMQ, "tree")
+                ) then
+
+                return false
+            end
+
+            local pZWezDiISM =
+                jvVkYVzFo(
+                    iZoQeOxOdO:GetAttribute("ItemType")
+                    or iZoQeOxOdO:GetAttribute("itemType")
+                )
+
+            return UrKxbeTklwO(CRwBIXohMQ, "fruit")
+                or pZWezDiISM == "fruit"
+                or UrKxbeTklwO(pZWezDiISM, "fruit")
+                or iZoQeOxOdO:GetAttribute("FruitType") ~= nil
+                or iZoQeOxOdO:GetAttribute("fruitType") ~= nil
+        end
+
+        local function PXwEpaVjQupp(iZoQeOxOdO, containerName)
+            if not SFoJKgcRI(iZoQeOxOdO) then
+                return
+            end
+
+            local sKvykwKmzSJv = UhasFEscpy(iZoQeOxOdO)
+
+            if sKvykwKmzSJv ~= nil
+                and ECBzCRvri[DfrqgXXsrB(sKvykwKmzSJv)] then
+                return
+            end
+
+            local TqnClSCVSK =
+                "Tool."
+                .. DfrqgXXsrB(containerName or "Bag")
+                .. "."
+                .. DfrqgXXsrB(iZoQeOxOdO.Name)
+
+            if sKvykwKmzSJv == nil
+                and ECBzCRvri[TqnClSCVSK] then
+                return
+            end
+
+            ECBzCRvri[sKvykwKmzSJv ~= nil and DfrqgXXsrB(sKvykwKmzSJv) or TqnClSCVSK] = true
+
+            local CRwBIXohMQ =
+                DfrqgXXsrB(iZoQeOxOdO.Name or "Fruit")
+            local WdfNOCpFotZw =
+                iZoQeOxOdO:GetAttribute("FruitType")
+                or iZoQeOxOdO:GetAttribute("fruitType")
+                or CRwBIXohMQ:match("^%s*(.-)%s+[Ff]ruit")
+                or "Fruit"
+            local QpGRyxcf =
+                iZoQeOxOdO:GetAttribute("Mutations")
+                or iZoQeOxOdO:GetAttribute("Mutation")
+                or LLzZMVPHPnSt(CRwBIXohMQ)
+            local wnnztFOY = 0
+            local QnFyVawVul = {}
+
+            if QpGRyxcf then
+                wnnztFOY, QnFyVawVul =
+                    TRBZSzHi(QpGRyxcf)
+            end
+
+            XYuqTCClIeZ[#XYuqTCClIeZ + 1] = {FruitType= WdfNOCpFotZw,
+                DisplayName = CRwBIXohMQ,
+                Multiplier =
+                    FPwbuFJZR(iZoQeOxOdO:GetAttribute("Multiplier"))
+                    or FPwbuFJZR(iZoQeOxOdO:GetAttribute("multiplier"))
+                    or jwQjUPUNPfoz(CRwBIXohMQ),
+                MutationText = QpGRyxcf,
+                MutationCount = wnnztFOY,
+                MutationParts = QnFyVawVul,
+                ItemId = sKvykwKmzSJv,
+                Tool = iZoQeOxOdO,
+                Path = TqnClSCVSK,
+                Raw = iZoQeOxOdO,
+            }
+        end
+
+        local wERpewMzabU =
+            yfAvfulpTS()
+
+        if wERpewMzabU then
+            for _, child in ZVOoBlCEzTM(wERpewMzabU:GetChildren()) do
+                PXwEpaVjQupp(child, "Character")
+            end
+        end
+
+        local EpqpXlAKwSFT =
+            dxLeYzjrD:FindFirstChild("Backpack")
+
+        if EpqpXlAKwSFT then
+            for _, child in ZVOoBlCEzTM(EpqpXlAKwSFT:GetChildren()) do
+                PXwEpaVjQupp(child, "Backpack")
+            end
+        end
+
+        table.sort(XYuqTCClIeZ, function(a, b)
+            local hTrUggddvX = FPwbuFJZR(a.Multiplier) or 0
+            local HDnHfXdy = FPwbuFJZR(b.Multiplier) or 0
+
+            if hTrUggddvX == HDnHfXdy then
+                return DfrqgXXsrB(a.Path) < DfrqgXXsrB(b.Path)
+            end
+
+            return hTrUggddvX < HDnHfXdy
+        end)
+
+        return XYuqTCClIeZ
+    end
+
+    local function OEuDdXtu(iZoQeOxOdO, ksXdsOKIx, allowLoose)
+        if not iZoQeOxOdO or not iZoQeOxOdO:IsA("Tool") or not ksXdsOKIx then
+            return false
+        end
+
+        local rsBADmaybXb =
+            DfrqgXXsrB(iZoQeOxOdO.Name or "")
+
+        if UrKxbeTklwO(rsBADmaybXb, "seed")
+            or (
+                UrKxbeTklwO(rsBADmaybXb, "fruit")
+                and (
+                    UrKxbeTklwO(rsBADmaybXb, "basket")
+                    or UrKxbeTklwO(rsBADmaybXb, "crate")
+                    or UrKxbeTklwO(rsBADmaybXb, "box")
+                    or UrKxbeTklwO(rsBADmaybXb, "pack")
+                    or UrKxbeTklwO(rsBADmaybXb, "bundle")
+                    or UrKxbeTklwO(rsBADmaybXb, "container")
+                )
+            )
+            or (
+                UrKxbeTklwO(rsBADmaybXb, "dead")
+                and UrKxbeTklwO(rsBADmaybXb, "tree")
+            ) then
+
+            return false
+        end
+
+        if ksXdsOKIx.Tool ~= nil
+            and iZoQeOxOdO == ksXdsOKIx.Tool then
+            return true
+        end
+
+        local gvsPDuYXO =
+            ksXdsOKIx.ItemId
+
+        local iwPALJXk =
+            UhasFEscpy(iZoQeOxOdO)
+
+        if gvsPDuYXO ~= nil then
+            if iwPALJXk ~= nil then
+                return DfrqgXXsrB(iwPALJXk) == DfrqgXXsrB(gvsPDuYXO)
+            end
+
+            if allowLoose ~= true then
+                return false
+            end
+        end
+
+        if UrKxbeTklwO(rsBADmaybXb, "fruit") then
+            return true
+        end
+
+        local qUGiGWtRUR =
+            jvVkYVzFo(
+                iZoQeOxOdO:GetAttribute("ItemType")
+                or iZoQeOxOdO:GetAttribute("itemType")
+            )
+
+        if qUGiGWtRUR == "fruit"
+            or UrKxbeTklwO(qUGiGWtRUR, "fruit")
+            or iZoQeOxOdO:GetAttribute("FruitType") ~= nil
+            or iZoQeOxOdO:GetAttribute("fruitType") ~= nil then
+
+            return true
+        end
+
+        return false
+    end
+
+    local function ndpVdJKNFYAj(ksXdsOKIx, timeout)
+        local QHmwcvVZcPU =
+            os.clock() + (FPwbuFJZR(timeout) or 2)
+
+        while PKTqUhNlA.Alive and os.clock() < QHmwcvVZcPU do
+            local gfGCiliPwd =
+                OyZLrMivikrp()
+
+            if #gfGCiliPwd == 1
+                and OEuDdXtu(gfGCiliPwd[1], ksXdsOKIx, true) then
+
+                return gfGCiliPwd[1]
+            end
+
+            task.wait(0.03)
+        end
+
+        return nil
+    end
+
+    local function uafXIOxOu(ksXdsOKIx)
+        if not ksXdsOKIx then
+            return nil, "fruit info missing"
+        end
+
+        local jIsUVHAQEx =
+            jdMXqPJlODtA()
+
+        if OEuDdXtu(jIsUVHAQEx, ksXdsOKIx, false) then
+            return jIsUVHAQEx
+        end
+
+        nyVtovxYkT()
+
+        if ksXdsOKIx.Tool and ksXdsOKIx.Tool.Parent then
+            local iaojDScxh = QRxoupMChfPU()
+
+            if iaojDScxh then
+                BwoodiEAFu(function()
+                    iaojDScxh:EquipTool(ksXdsOKIx.Tool)
+                end)
+
+                local wBmRAlRrmt =
+                    ndpVdJKNFYAj(ksXdsOKIx, 1)
+
+                if wBmRAlRrmt then
+                    return wBmRAlRrmt
+                end
+            end
+        end
+
+        if not ksXdsOKIx.Location then
+            return nil, "inventory location missing"
+        end
+
+        local uPirkaZfGG, ujxUlzok =
+            BwoodiEAFu(function()
+                HDDdNMSaA:FireServer(
+                    ksXdsOKIx.Location.IsHotbar,
+                    ksXdsOKIx.Location.Index
+                )
+            end)
+
+        if not uPirkaZfGG then
+            return nil, "Equip failed: " .. DfrqgXXsrB(ujxUlzok)
+        end
+
+        local wBmRAlRrmt =
+            ndpVdJKNFYAj(ksXdsOKIx, 2)
+
+        if not wBmRAlRrmt then
+            return nil,
+                "Could not equip " .. UlWCzTFgJsk(ksXdsOKIx)
+        end
+
+        return wBmRAlRrmt
+    end
+
+    local function ZaLSvEGNgb(ksXdsOKIx)
+        if ksXdsOKIx and ksXdsOKIx.ItemId ~= nil then
+            return "id:" .. DfrqgXXsrB(ksXdsOKIx.ItemId)
+        end
+
+        return "path:" .. DfrqgXXsrB(ksXdsOKIx and ksXdsOKIx.Path or "")
+    end
+
+    local function yPIunlDL(ksXdsOKIx)
+        PKTqUhNlA.ClearInventoryLocation(
+            ksXdsOKIx and ksXdsOKIx.Location,
+            ksXdsOKIx and ksXdsOKIx.ItemId
+        )
+    end
+
+    local function KfPvKIFJOy(ksXdsOKIx, lSSAtRsxOpy)
+        if not egNXrkSOdCn then
+            return false, "Sell service was not found"
+        end
+
+        if not wpFutleQBCyz:AcquireBackgroundEquipment(
+            "AutoSellFruit",
+            lSSAtRsxOpy
+        ) then
+            return false, "cancelled"
+        end
+
+        local uPirkaZfGG, WfmhLERIYGg =
+            bltBKQceuE(function()
+                local iZoQeOxOdO, OJzlPmkLd =
+                    uafXIOxOu(ksXdsOKIx)
+
+                if not iZoQeOxOdO then
+                    ltAcELvGzk(OJzlPmkLd or "Could not equip fruit")
+                end
+
+                if ksXdsOKIx.ItemId ~= nil then
+                    local iwPALJXk =
+                        UhasFEscpy(iZoQeOxOdO)
+
+                    if iwPALJXk ~= nil
+                        and DfrqgXXsrB(iwPALJXk) ~= DfrqgXXsrB(ksXdsOKIx.ItemId) then
+
+                        ltAcELvGzk("Equipped item changed before selling")
+                    end
+                end
+
+                HXuhwCIQZAB("SELLING", "warning")
+                foUSPDNDz(
+                    "Selling "
+                        .. UlWCzTFgJsk(ksXdsOKIx)
+                        .. "...",
+                    "warning"
+                )
+
+                local dQSktSlt =
+                    egNXrkSOdCn:InvokeServer()
+
+                euyMjRhaK.SellFruitCount += 1
+                euyMjRhaK.LastSoldFruit = {Name= UlWCzTFgJsk(ksXdsOKIx),
+                    Path = ksXdsOKIx.Path,
+                    Result = dQSktSlt,
+                }
+
+                yPIunlDL(ksXdsOKIx)
+
+                return dQSktSlt
+            end, debug.traceback)
+
+        wpFutleQBCyz:ReleaseBackgroundEquipment("AutoSellFruit")
+
+        if not wpFutleQBCyz:IsPlantBusy() then
+            HXuhwCIQZAB("IDLE")
+        end
+
+        if not uPirkaZfGG then
+            local uRQanNSTiFqN =
+                DfrqgXXsrB(WfmhLERIYGg):match("^[^\n]+")
+                or DfrqgXXsrB(WfmhLERIYGg)
+
+            foUSPDNDz(
+                "Sell fruit failed: " .. uRQanNSTiFqN,
+                "danger"
+            )
+
+            return false, uRQanNSTiFqN
+        end
+
+        return true, WfmhLERIYGg
+    end
+
+    local function xIPKitYl(lSSAtRsxOpy)
+        local yLbjhpVKOB = {}
+
+        while PKTqUhNlA.Alive
+            and ibVEMhwTQRuM.AutoSellFruit
+            and not lSSAtRsxOpy() do
+
+            if not ZMZXtZNTlb:IsReady() then
+                hfBLUgtjD()
+                foUSPDNDz(
+                    "Waiting for bag data before selling fruit...",
+                    "warning"
+                )
+
+                if not pQFNwZAvvQA(0.5, lSSAtRsxOpy) then
+                    break
+                end
+            else
+                local SOmfoAbH = os.clock()
+                local YbeigJdp = IePsMfSJ()
+                local otMRsdmAPve = nil
+
+                for _, bTjKsleJ in ZVOoBlCEzTM(YbeigJdp) do
+                    local OVYmLrNOMZpK =
+                        yLbjhpVKOB[ZaLSvEGNgb(bTjKsleJ)]
+
+                    if not OVYmLrNOMZpK
+                        or OVYmLrNOMZpK <= SOmfoAbH then
+                        otMRsdmAPve = bTjKsleJ
+                        break
+                    end
+                end
+
+                if otMRsdmAPve then
+                    local XgKJlGmpyrd =
+                        PKTqUhNlA.GetInventoryVersion()
+                    local yFYedyPjpUi =
+                        KfPvKIFJOy(otMRsdmAPve, lSSAtRsxOpy)
+
+                    if yFYedyPjpUi then
+                        foUSPDNDz(
+                            "Sold "
+                                .. UlWCzTFgJsk(otMRsdmAPve)
+                                .. " | total "
+                                .. DfrqgXXsrB(euyMjRhaK.SellFruitCount),
+                            "success"
+                        )
+
+                        if not PKTqUhNlA.WaitForInventoryRefresh(
+                            XgKJlGmpyrd,
+                            lSSAtRsxOpy,
+                            2
+                        ) then
+                            yLbjhpVKOB[ZaLSvEGNgb(otMRsdmAPve)] =
+                                os.clock() + 1.5
+                        end
+
+                        if not pQFNwZAvvQA(
+                            ibVEMhwTQRuM.SellDelay,
+                            lSSAtRsxOpy
+                        ) then
+                            break
+                        end
+                    else
+                        yLbjhpVKOB[ZaLSvEGNgb(otMRsdmAPve)] =
+                            os.clock() + 5
+
+                        if not pQFNwZAvvQA(0.35, lSSAtRsxOpy) then
+                            break
+                        end
+                    end
+                else
+                    if #YbeigJdp == 0 then
+                        foUSPDNDz("No fruit in your bag")
+                    else
+                        foUSPDNDz(
+                            "Waiting before retrying fruit sales",
+                            "warning"
+                        )
+                    end
+
+                    if not pQFNwZAvvQA(1, lSSAtRsxOpy) then
+                        break
+                    end
+                end
+            end
+        end
+
+        wpFutleQBCyz:ReleaseBackgroundEquipment("AutoSellFruit")
+
+        if not wpFutleQBCyz:IsPlantBusy() then
+            HXuhwCIQZAB("IDLE")
+        end
+    end
+
+    PKTqUhNlA.GetFruits = IePsMfSJ
+
+    PKTqUhNlA.PrintFruits = function()
+        local YbeigJdp =
+            IePsMfSJ()
+
+        EaksGWapyD("")
+        EaksGWapyD("===== KIRA FRUITS =====")
+
+        for LvOjTWuqYW, ksXdsOKIx in ZVOoBlCEzTM(YbeigJdp) do
+            EaksGWapyD(
+                LvOjTWuqYW,
+                ksXdsOKIx.Path,
+                "|",
+                UlWCzTFgJsk(ksXdsOKIx),
+                "| ID:",
+                DfrqgXXsrB(ksXdsOKIx.ItemId)
+            )
+        end
+
+        EaksGWapyD("Total:", #YbeigJdp)
+        EaksGWapyD("=======================")
+    end
+
+    return xIPKitYl
+end
+
+local yNkNYPlA =
+    UuxadzuPhcII()
+
+--============================================================
+-- AUTO BUY QUEUE
+--============================================================
+
+--============================================================
+-- AUTO BUY - PROXIMITY PROMPT + MONEY SAFETY
+--============================================================
+
+local rkvmSXwQtNqI =
+    setmetatable({}, {__mode= "k",
+    })
+
+local PBVhQLUjGPc = {}
+local XgoxmCVrJL = {}
+
+local YCXNjPztYiv = {
+    [""] = 1,
+
+    k = 1e3,
+    m = 1e6,
+    b = 1e9,
+    t = 1e12,
+
+    q = 1e15,
+    qa = 1e15,
+    qi = 1e18,
+    sx = 1e21,
+    sp = 1e24,
+    oc = 1e27,
+    no = 1e30,
+    dc = 1e33,
+    de = 1e33,
+
+    ud = 1e36,
+    dd = 1e39,
+    td = 1e42,
+    qad = 1e45,
+    qid = 1e48,
+    sxd = 1e51,
+    spd = 1e54,
+    ocd = 1e57,
+    nod = 1e60,
+    vg = 1e63,
+}
+
+local function LUSjWilitB(QtoBGFWIF)
+    QtoBGFWIF = DfrqgXXsrB(QtoBGFWIF or "")
+    QtoBGFWIF = QtoBGFWIF:gsub("<.->", "")
+    QtoBGFWIF = QtoBGFWIF:gsub(",", "")
+    QtoBGFWIF = QtoBGFWIF:gsub("%s+", "")
+
+    if QtoBGFWIF == "" then
+        return nil
+    end
+
+    if jvVkYVzFo(QtoBGFWIF) == "free"
+        or string.find(jvVkYVzFo(QtoBGFWIF), "free", 1, true) then
+        return 0
+    end
+
+    -- Keep digits, decimal point, minus sign and alphabetic suffix.
+    QtoBGFWIF = QtoBGFWIF:gsub("[%$€£¥]", "")
+
+    local mJpacLslinIi =
+        FPwbuFJZR(QtoBGFWIF)
+
+    if mJpacLslinIi ~= nil then
+        return mJpacLslinIi
+    end
+
+    local pQvnqyZnr, jfWmUADzLmk =
+        QtoBGFWIF:match("([%+%-]?[%d%.]+)([%a]*)")
+
+    local ERQNGrtnl = FPwbuFJZR(pQvnqyZnr)
+
+    if not ERQNGrtnl then
+        return nil
+    end
+
+    jfWmUADzLmk = jvVkYVzFo(jfWmUADzLmk)
+
+    local MxRPMdGNQWn =
+        YCXNjPztYiv[jfWmUADzLmk]
+
+    if MxRPMdGNQWn == nil then
+        return nil
+    end
+
+    return ERQNGrtnl * MxRPMdGNQWn
+end
+
+local function xuILeEJFvfld()
+    local HpFVOrUUhoMi =
+        dxLeYzjrD:FindFirstChild("leaderstats")
+
+    if not HpFVOrUUhoMi then
+        return nil, "leaderstats not found"
+    end
+
+    local function XNMWfkUDyi(stat)
+        if not stat then
+            return nil
+        end
+
+        local uPirkaZfGG, rKvIshOMn =
+            BwoodiEAFu(function()
+                return stat.Value
+            end)
+
+        if not uPirkaZfGG or rKvIshOMn == nil then
+            return nil
+        end
+
+        if typeof(rKvIshOMn) == "number" then
+            return rKvIshOMn,
+                DfrqgXXsrB(stat.Name) .. ": " .. DfrqgXXsrB(rKvIshOMn)
+        end
+
+        local rxyOhZAzx =
+            LUSjWilitB(rKvIshOMn)
+
+        if rxyOhZAzx ~= nil then
+            return rxyOhZAzx,
+                DfrqgXXsrB(stat.Name) .. ": " .. DfrqgXXsrB(rKvIshOMn)
+        end
+
+        return nil
+    end
+
+    local gxgxwYsxMTli = {
+        "Cash",
+        "Money",
+        "Coins",
+        "Coin",
+        "Wallet",
+        "Gold",
+        "$",
+    }
+
+    for _, NrtELUjWkSE in ZVOoBlCEzTM(gxgxwYsxMTli) do
+        local rFCibROv, GLUFZLLAdGTy =
+            XNMWfkUDyi(
+                HpFVOrUUhoMi:FindFirstChild(NrtELUjWkSE)
+            )
+
+        if rFCibROv ~= nil then
+            return rFCibROv, GLUFZLLAdGTy
+        end
+    end
+
+    for _, stat in ZVOoBlCEzTM(HpFVOrUUhoMi:GetChildren()) do
+        local NrtELUjWkSE =
+            jvVkYVzFo(stat.Name)
+
+        if string.find(NrtELUjWkSE, "cash", 1, true)
+            or string.find(NrtELUjWkSE, "money", 1, true)
+            or string.find(NrtELUjWkSE, "coin", 1, true)
+            or string.find(NrtELUjWkSE, "wallet", 1, true)
+            or string.find(NrtELUjWkSE, "gold", 1, true)
+            or string.find(NrtELUjWkSE, "$", 1, true) then
+
+            local rFCibROv, GLUFZLLAdGTy =
+                XNMWfkUDyi(stat)
+
+            if rFCibROv ~= nil then
+                return rFCibROv, GLUFZLLAdGTy
+            end
+        end
+    end
+
+    return nil, "money leaderstat not found"
+end
+
+local function TsFvnjHxAxe()
+    local NPUdyLjr =
+        vhsjTXIP:FindFirstChild("HUD")
+
+    local ylMHxxRSQ =
+        NPUdyLjr and NPUdyLjr:FindFirstChild("BottomLeft")
+
+    local TpFFslNP =
+        ylMHxxRSQ and ylMHxxRSQ:FindFirstChild("CoinsWallet")
+
+    local ROxVchvm =
+        TpFFslNP and TpFFslNP:FindFirstChild("TextLabel")
+
+    if ROxVchvm and (
+        ROxVchvm:IsA("TextLabel")
+        or ROxVchvm:IsA("TextButton")
+        or ROxVchvm:IsA("TextBox")
+    ) then
+        return ROxVchvm
+    end
+
+    return nil
+end
+
+local function AcshXZuiGq()
+    local QNzDYCbfs, glWSLyQzCjhv =
+        xuILeEJFvfld()
+
+    if QNzDYCbfs ~= nil then
+        return QNzDYCbfs, glWSLyQzCjhv
+    end
+
+    local ROxVchvm = TsFvnjHxAxe()
+
+    if not ROxVchvm then
+        return nil,
+            DfrqgXXsrB(glWSLyQzCjhv or "wallet label not found")
+    end
+
+    local XUWueugAwuSw =
+        LUSjWilitB(ROxVchvm.Text)
+
+    if XUWueugAwuSw == nil then
+        return nil,
+            "could not parse wallet: "
+                .. DfrqgXXsrB(ROxVchvm.Text)
+    end
+
+    return XUWueugAwuSw, ROxVchvm.Text
+end
+
+local function tWMOxzAahiG(holder)
+    if not holder then
+        return nil
+    end
+
+    local EQkOFXGQS =
+        holder:GetAttribute("SeedType")
+        or holder:GetAttribute("Seed")
+        or holder:GetAttribute("SeedName")
+
+    local KJQdzwwjQOsx =
+        holder:GetAttribute("Rarity")
+        or "UNKNOWN"
+
+    local QNrflgyBEk =
+        holder:GetAttribute("SpawnId")
+
+    local dzGwxesc =
+        holder:FindFirstChild("BillboardGui")
+
+    local urBeLPAnpTv =
+        dzGwxesc and dzGwxesc:FindFirstChild("Frame")
+
+    local qvXpGfeYxWHS =
+        urBeLPAnpTv and urBeLPAnpTv:FindFirstChild("Cost")
+
+    if not qvXpGfeYxWHS then
+        qvXpGfeYxWHS =
+            holder:FindFirstChild("Cost", true)
+    end
+
+    local uBCyouiP = nil
+
+    if qvXpGfeYxWHS and (
+        qvXpGfeYxWHS:IsA("TextLabel")
+        or qvXpGfeYxWHS:IsA("TextButton")
+        or qvXpGfeYxWHS:IsA("TextBox")
+    ) then
+        uBCyouiP = qvXpGfeYxWHS.Text
+    end
+
+    -- Billboard cost is the source of truth; catalog price is only a
+    -- fallback if the UI object has not replicated yet.
+    if not uBCyouiP or uBCyouiP == "" then
+        uBCyouiP =
+            ITzawOckSLt[
+                DfrqgXXsrB(EQkOFXGQS or "")
+            ]
+    end
+
+    local yQJrjaPZKi =
+        holder:FindFirstChild("ProximityPrompt")
+        or holder:FindFirstChildWhichIsA(
+            "ProximityPrompt",
+            true
+        )
+
+    return {Holder= holder,
+        SeedType = DfrqgXXsrB(EQkOFXGQS or "Unknown Seed"),
+        Rarity = DfrqgXXsrB(KJQdzwwjQOsx),
+        SpawnId = QNrflgyBEk,
+        CostObject = qvXpGfeYxWHS,
+        CostText = uBCyouiP,
+        Cost = LUSjWilitB(uBCyouiP),
+        Prompt = yQJrjaPZKi,
+    }
+end
+
+PKTqUhNlA.GetSeedHolderInfo = tWMOxzAahiG
+PKTqUhNlA.ParseGameNumber = LUSjWilitB
+PKTqUhNlA.GetCoins = AcshXZuiGq
+
+local function lyfSfMMiH(holderInfo)
+    local otMRsdmAPve = caURwNsUKyWo()
+
+    if #otMRsdmAPve == #fzMNsCGQ then
+        return true
+    end
+
+    local VuDvjaRnSLZL = jvVkYVzFo(holderInfo.Rarity)
+
+    for _, KJQdzwwjQOsx in ZVOoBlCEzTM(otMRsdmAPve) do
+        if jvVkYVzFo(KJQdzwwjQOsx) == VuDvjaRnSLZL then
+            return true
+        end
+    end
+
+    return false
+end
+
+local function JYfSlbWdE(holderInfo)
+    local otMRsdmAPve = BKheSqKQSiI()
+
+    if #otMRsdmAPve == #MKjocGYu then
+        return true
+    end
+
+    local VuDvjaRnSLZL = jvVkYVzFo(holderInfo.SeedType)
+
+    for _, DhaBjHwh in ZVOoBlCEzTM(otMRsdmAPve) do
+        if jvVkYVzFo(DhaBjHwh) == VuDvjaRnSLZL then
+            return true
+        end
+    end
+
+    return false
+end
+
+local function ZOErpbzRT(holderInfo)
+    if holderInfo.SpawnId ~= nil then
+        return DfrqgXXsrB(holderInfo.SpawnId)
+            .. ":"
+            .. jvVkYVzFo(holderInfo.SeedType)
+    end
+
+    return DfrqgXXsrB(holderInfo.Holder)
+        .. ":"
+        .. jvVkYVzFo(holderInfo.SeedType)
+end
+
+local function WYIEBUUAT()
+    -- Kept as a compatibility API for the existing System button.
+    PBVhQLUjGPc = {}
+end
+
+local function XarpitBPFIg()
+    -- AutoBuy is intentionally polling GetChildren now; no queue/event needed.
+    local uyNUuLrLQw = 0
+
+    for _, holder in ZVOoBlCEzTM(xgfYDVTAxpy:GetChildren()) do
+        if holder.Name == "SeedHolder" then
+            uyNUuLrLQw += 1
+        end
+    end
+
+    return uyNUuLrLQw
+end
+
+local function yLKgAPTB(holder, lSSAtRsxOpy)
+    if not holder
+        or not holder.Parent
+        or holder.Name ~= "SeedHolder" then
+        return false, "invalid-holder"
+    end
+
+    local ksXdsOKIx =
+        tWMOxzAahiG(holder)
+
+    if not ksXdsOKIx then
+        return false, "no-info"
+    end
+
+    if not lyfSfMMiH(ksXdsOKIx)
+        or not JYfSlbWdE(ksXdsOKIx) then
+        return false, "filtered"
+    end
+
+    if not ksXdsOKIx.Prompt then
+        return false, "prompt-missing"
+    end
+
+    if ksXdsOKIx.Cost == nil then
+        foUSPDNDz(
+            "Skipped "
+                .. ksXdsOKIx.SeedType
+                .. ": unknown cost "
+                .. DfrqgXXsrB(ksXdsOKIx.CostText),
+            "warning"
+        )
+
+        return false, "cost-unreadable"
+    end
+
+    local rFCibROv, WVWFXsiIeOm =
+        AcshXZuiGq()
+
+    if rFCibROv == nil then
+        foUSPDNDz(
+            "AutoBuy paused: "
+                .. DfrqgXXsrB(WVWFXsiIeOm),
+            "danger"
+        )
+
+        return false, "wallet-unreadable"
+    end
+
+    if rFCibROv < ksXdsOKIx.Cost then
+        local eRdipkcQbcnW =
+            ZOErpbzRT(ksXdsOKIx)
+
+        local SOmfoAbH = os.clock()
+
+        if SOmfoAbH
+            - (XgoxmCVrJL[eRdipkcQbcnW] or 0)
+            >= 3 then
+
+            XgoxmCVrJL[eRdipkcQbcnW] = SOmfoAbH
+
+            foUSPDNDz(
+                "Not enough money for "
+                    .. ksXdsOKIx.SeedType
+                    .. " ("
+                    .. DfrqgXXsrB(ksXdsOKIx.CostText)
+                    .. ")",
+                "warning"
+            )
+        end
+
+        return false, "insufficient"
+    end
+
+    local eRdipkcQbcnW =
+        ZOErpbzRT(ksXdsOKIx)
+
+    if rkvmSXwQtNqI[holder] == eRdipkcQbcnW then
+        return true, "already-purchased"
+    end
+
+    if (PBVhQLUjGPc[eRdipkcQbcnW] or 0)
+        > os.clock() then
+        return false, "cooldown"
+    end
+
+    -- Plant intent blocks new purchases from touching equipment.
+    if not wpFutleQBCyz:AcquireBackgroundEquipment(
+        "AutoBuy",
+        lSSAtRsxOpy
+    ) then
+        return false, "cancelled"
+    end
+
+    -- Re-read immediately after waiting for the lock.
+    if not holder.Parent or not ibVEMhwTQRuM.AutoBuy then
+        wpFutleQBCyz:ReleaseBackgroundEquipment("AutoBuy")
+        return false, "cancelled"
+    end
+
+    ksXdsOKIx = tWMOxzAahiG(holder)
+
+    if not ksXdsOKIx
+        or not lyfSfMMiH(ksXdsOKIx)
+        or not JYfSlbWdE(ksXdsOKIx) then
+
+        wpFutleQBCyz:ReleaseBackgroundEquipment("AutoBuy")
+        return false, "changed"
+    end
+
+    local rMjOglHbK = AcshXZuiGq()
+
+    if rMjOglHbK == nil
+        or ksXdsOKIx.Cost == nil
+        or rMjOglHbK < ksXdsOKIx.Cost then
+
+        wpFutleQBCyz:ReleaseBackgroundEquipment("AutoBuy")
+        return false, "insufficient"
+    end
+
+    local LtolXkUgwI =
+        ZMZXtZNTlb:GetSeedCount(
+            ksXdsOKIx.SeedType
+        )
+    local RnCJjUHos =
+        PKTqUhNlA.GetInventoryVersion()
+
+    HXuhwCIQZAB("BUYING")
+
+    foUSPDNDz(
+        "Buying "
+            .. ksXdsOKIx.SeedType
+            .. " ["
+            .. ksXdsOKIx.Rarity
+            .. "] "
+            .. DfrqgXXsrB(ksXdsOKIx.CostText)
+    )
+
+    if type(fireproximityprompt) ~= "function" then
+        wpFutleQBCyz:ReleaseBackgroundEquipment("AutoBuy")
+
+        foUSPDNDz(
+            "fireproximityprompt is unavailable",
+            "danger"
+        )
+
+        return false, "fireproximityprompt-unavailable"
+    end
+
+    PBVhQLUjGPc[eRdipkcQbcnW] =
+        os.clock() + 1.25
+
+    local XbUDFIepRJM, aAIBWyUMkPz =
+        BwoodiEAFu(function()
+            fireproximityprompt(
+                ksXdsOKIx.Prompt
+            )
+        end)
+
+    if not XbUDFIepRJM then
+        wpFutleQBCyz:ReleaseBackgroundEquipment("AutoBuy")
+
+        foUSPDNDz(
+            "Prompt failed: "
+                .. DfrqgXXsrB(aAIBWyUMkPz),
+            "danger"
+        )
+
+        return false, "prompt-error"
+    end
+
+    -- Wait for one of three purchase proofs:
+    -- inventory increased, wallet decreased, or this holder disappeared.
+    local RcEgnLXWKPPQ = false
+    local QHmwcvVZcPU =
+        os.clock()
+        + math.max(
+            1.25,
+            ibVEMhwTQRuM.BuyDelay + 1.0
+        )
+
+    while PKTqUhNlA.Alive
+        and os.clock() < QHmwcvVZcPU do
+
+        if not holder.Parent then
+            RcEgnLXWKPPQ = true
+            break
+        end
+
+        local pFVaxqaMiOae =
+            ZMZXtZNTlb:GetSeedCount(
+                ksXdsOKIx.SeedType
+            )
+
+        if pFVaxqaMiOae > LtolXkUgwI then
+            RcEgnLXWKPPQ = true
+            break
+        end
+
+        local ZifQgOjeaRO =
+            AcshXZuiGq()
+
+        if ksXdsOKIx.Cost > 0
+            and ZifQgOjeaRO ~= nil
+            and ZifQgOjeaRO < rMjOglHbK then
+
+            RcEgnLXWKPPQ = true
+            break
+        end
+
+        task.wait(0.04)
+    end
+
+    -- Buying may auto-equip the purchased seed. That is fine.
+    -- AutoPlant only equips its selected seed inside plantTransaction.
+
+    wpFutleQBCyz:ReleaseBackgroundEquipment("AutoBuy")
+
+    if not wpFutleQBCyz:IsPlantBusy() then
+        HXuhwCIQZAB("IDLE")
+    end
+
+    if not RcEgnLXWKPPQ then
+        foUSPDNDz(
+            "Purchase unverified: "
+                .. ksXdsOKIx.SeedType,
+            "warning"
+        )
+
+        return false, "unverified"
+    end
+
+    PKTqUhNlA.WaitForInventoryRefresh(
+        RnCJjUHos,
+        lSSAtRsxOpy,
+        1.5
+    )
+
+    rkvmSXwQtNqI[holder] = eRdipkcQbcnW
+    euyMjRhaK.PurchaseCount += 1
+
+    euyMjRhaK.LastPurchase = {SeedType= ksXdsOKIx.SeedType,
+        Rarity = ksXdsOKIx.Rarity,
+        SpawnId = ksXdsOKIx.SpawnId,
+        Cost = ksXdsOKIx.Cost,
+        CostText = ksXdsOKIx.CostText,
+        PurchasedAt = os.clock(),
+    }
+
+    foUSPDNDz(
+        "Bought "
+            .. ksXdsOKIx.SeedType
+            .. " for "
+            .. DfrqgXXsrB(ksXdsOKIx.CostText)
+    )
+
+    return true, "purchased"
+end
+
+local function tgBBKFdcBcp(lSSAtRsxOpy)
+    while PKTqUhNlA.Alive
+        and ibVEMhwTQRuM.AutoBuy
+        and not lSSAtRsxOpy() do
+
+        local RnhjkjusFM =
+            xgfYDVTAxpy:GetChildren()
+
+        for _, holder in ZVOoBlCEzTM(RnhjkjusFM) do
+            if lSSAtRsxOpy()
+                or not ibVEMhwTQRuM.AutoBuy then
+                break
+            end
+
+            if holder.Name == "SeedHolder" then
+                yLKgAPTB(
+                    holder,
+                    lSSAtRsxOpy
+                )
+
+                -- Tiny yield keeps UI/game responsive while many seeds are present.
+                task.wait(0.025)
+            end
+        end
+
+        -- The conveyor is small; polling avoids stale DescendantAdded/attribute races.
+        task.wait(0.12)
+    end
+
+    wpFutleQBCyz:ReleaseBackgroundEquipment("AutoBuy")
+end
+
+--============================================================
+-- PLANT TRANSACTION
+--============================================================
+
+local function HUjHZUVvW(XUWueugAwuSw)
+    for _, mmeTHSsPZRY in ZVOoBlCEzTM(RLYSHrriuiBl) do
+        if mmeTHSsPZRY == XUWueugAwuSw then
+            return true
+        end
+    end
+    return false
+end
+
+local function nYFNFuIM()
+    local mbPXivzXVClC, CSJzVWFOz = ZtkuZoIr()
+
+    if not mbPXivzXVClC then
+        return nil,
+            "Waiting for weather before planting (current: "
+                .. DfrqgXXsrB(CSJzVWFOz)
+                .. ")"
+    end
+
+    local DhaBjHwh, MHYAAEXgCdz = XiRANzkuIiam()
+
+    if not DhaBjHwh then
+        return nil, MHYAAEXgCdz or "No plant seed selected"
+    end
+
+    local mmeTHSsPZRY = ibVEMhwTQRuM.Fertilizer
+
+    if not HUjHZUVvW(mmeTHSsPZRY) then
+        return nil, "Invalid fertilizer: " .. DfrqgXXsrB(mmeTHSsPZRY)
+    end
+
+    local ZZEpQIODx =
+        ZMZXtZNTlb:GetSeedCount(
+            DhaBjHwh
+        )
+
+    if ZZEpQIODx <= 0 then
+        return nil,
+            "No "
+                .. DfrqgXXsrB(DhaBjHwh)
+                .. " seed in Inventory"
+    end
+
+    return {SeedName= DhaBjHwh,
+        Fertilizer = mmeTHSsPZRY,
+        OwnedCount = ZZEpQIODx,
+        Weather = CSJzVWFOz,
+    }
+end
+
+local function gSrVNXcYPyKa(owner, lSSAtRsxOpy)
+    owner = owner or "AutoPlant"
+
+    local zcivxxfdJ, NqFalTNWDKg = nYFNFuIM()
+
+    if not zcivxxfdJ then
+        foUSPDNDz(
+            "Auto Plant waiting: " .. DfrqgXXsrB(NqFalTNWDKg),
+            "warning"
+        )
+        return false, NqFalTNWDKg
+    end
+
+    if not wpFutleQBCyz:BeginPlant(owner, lSSAtRsxOpy) then
+        return false, "cancelled"
+    end
+
+    local DhaBjHwh = zcivxxfdJ.SeedName
+    local mmeTHSsPZRY = zcivxxfdJ.Fertilizer
+    local uZCJXEOYcHhL = nil
+    local WwZAUNwWsX = false
+    local RnCJjUHos = nil
+
+    local uPirkaZfGG, HqvmSTue = bltBKQceuE(function()
+        local vCwajuOLYX,
+            freshError =
+                nYFNFuIM()
+
+        if not vCwajuOLYX then
+            ltAcELvGzk(freshError)
+        end
+
+        DhaBjHwh = vCwajuOLYX.SeedName
+        mmeTHSsPZRY = vCwajuOLYX.Fertilizer
+
+        local XDnMSwceHFM =
+            type(PKTqUhNlA.GetWormSettingsForSeed) == "function"
+            and PKTqUhNlA.GetWormSettingsForSeed(DhaBjHwh)
+            or nil
+
+        local ZZEpQIODx =
+            vCwajuOLYX.OwnedCount
+
+        foUSPDNDz(
+            "Equipping "
+                .. DfrqgXXsrB(DhaBjHwh)
+                .. " (owned x"
+                .. DfrqgXXsrB(ZZEpQIODx)
+                .. ")..."
+        )
+
+        local wBmRAlRrmt,
+            loPlXfSGwyxw,
+            OJzlPmkLd =
+                RKToqRBd(DhaBjHwh)
+
+        if not wBmRAlRrmt or not loPlXfSGwyxw then
+            ltAcELvGzk(
+                OJzlPmkLd
+                or (
+                    "Seed tool not found/equipped: "
+                    .. DfrqgXXsrB(DhaBjHwh)
+                )
+            )
+        end
+
+        -- Triple stability verification checks SeedType AND exact ItemId.
+        local RcEgnLXWKPPQ, fZOfTTWSLl =
+            rRUUBuGfgaxk(
+                DhaBjHwh,
+                loPlXfSGwyxw.Id
+            )
+
+        if not RcEgnLXWKPPQ then
+            ltAcELvGzk(fZOfTTWSLl)
+        end
+
+        -- Final immediate exact check before the remote call.
+        local UQMPeCrGpeMo =
+            OyZLrMivikrp()
+
+        local wyWAjqLPEb =
+            UQMPeCrGpeMo[1]
+
+        if #UQMPeCrGpeMo ~= 1
+            or not wyWAjqLPEb
+            or not MLuVxMKxGY(
+                wyWAjqLPEb,
+                DhaBjHwh,
+                loPlXfSGwyxw.Id
+            ) then
+
+            ltAcELvGzk(
+                "Equipped seed changed/ambiguous immediately before StartRound"
+            )
+        end
+
+        local qWfYuUYtlujd,
+            beforeMaxSerial =
+                eymQWPKD()
+
+        local TqnUoHdHB = nil
+        local KOAQgbtKrF = mmeTHSsPZRY
+
+        if XDnMSwceHFM
+            and XDnMSwceHFM.Use
+            and PKTqUhNlA.WormBridge then
+
+            TqnUoHdHB =
+                PKTqUhNlA.WormBridge:Resolve(
+                    XDnMSwceHFM
+                )
+
+            if TqnUoHdHB
+                and PKTqUhNlA.WormBridge:Reserve(
+                    TqnUoHdHB,
+                    owner
+                ) then
+
+                uZCJXEOYcHhL = TqnUoHdHB.Id
+                KOAQgbtKrF = "None"
+            else
+                TqnUoHdHB = nil
+            end
+        end
+
+        foUSPDNDz(
+            "Planting "
+                .. DhaBjHwh
+                .. " + "
+                .. (
+                    TqnUoHdHB
+                    and (PKTqUhNlA.FormatWorm and PKTqUhNlA.FormatWorm(TqnUoHdHB) or "Worm")
+                    or mmeTHSsPZRY
+                )
+                .. (
+                    XDnMSwceHFM
+                    and XDnMSwceHFM.Use
+                    and not TqnUoHdHB
+                    and " (no matching Worm)"
+                    or ""
+                )
+                .. "..."
+        )
+
+        local xOZqsPjGFS = os.clock()
+        local zxiTFWnr
+        RnCJjUHos =
+            PKTqUhNlA.GetInventoryVersion()
+
+        if TqnUoHdHB then
+            WwZAUNwWsX = true
+            zxiTFWnr =
+                KplnAOsvyjN:InvokeServer(
+                    DhaBjHwh,
+                    "None",
+                    TqnUoHdHB.Id
+                )
+        else
+            zxiTFWnr =
+                KplnAOsvyjN:InvokeServer(
+                    DhaBjHwh,
+                    mmeTHSsPZRY
+                )
+        end
+
+
+        if zxiTFWnr == false then
+            ltAcELvGzk("StartRound returned false")
+        end
+
+        local WbivZzCrXard =
+            UFtCUOsISQtE(
+                qWfYuUYtlujd,
+                beforeMaxSerial,
+                3
+            )
+
+        if not WbivZzCrXard then
+            ltAcELvGzk(
+                "StartRound returned but no new owned PlantRound appeared"
+            )
+        end
+
+        if TqnUoHdHB and uZCJXEOYcHhL then
+            PKTqUhNlA.WormBridge:Mark(
+                uZCJXEOYcHhL,
+                "CONSUMED"
+            )
+        end
+
+        local LNufBNUJAR = {Seed= DhaBjHwh,
+            SeedItemId = loPlXfSGwyxw.Id,
+            SeedInventoryPath = loPlXfSGwyxw.Path,
+            SeedMutation = loPlXfSGwyxw.Mutation,
+            SeedCountBeforePlant = ZZEpQIODx,
+            Fertilizer = KOAQgbtKrF,
+            RequestedFertilizer = mmeTHSsPZRY,
+            UsedWorm = TqnUoHdHB ~= nil,
+            WormId = TqnUoHdHB and TqnUoHdHB.Id or nil,
+            WormType = TqnUoHdHB and TqnUoHdHB.RawType or nil,
+            WormDisplayType = TqnUoHdHB and TqnUoHdHB.DisplayType or nil,
+            WormMutation = TqnUoHdHB and TqnUoHdHB.Mutation or nil,
+            WormMult = TqnUoHdHB and TqnUoHdHB.Mult or nil,
+            WormSettings = XDnMSwceHFM and JsWrmjlSRyvZ(XDnMSwceHFM) or nil,
+            HarvestTarget = DGUSmiSQl(DhaBjHwh),
+            StartResponse = zxiTFWnr,
+            StartedAt = xOZqsPjGFS,
+            InventoryVersionBefore = RnCJjUHos,
+            Plot = kUPNnQqxT(),
+
+            BeforeRoundSerial = beforeMaxSerial,
+            PlantRound = WbivZzCrXard,
+            PlantRoundSerial = RfAxgCjnjg(WbivZzCrXard),
+        }
+
+        if type(LLTinptsjcFz.VerifyPlant) == "function" then
+            local LaJJbgnJbW, HUIbpYBpNWYP = BwoodiEAFu(LLTinptsjcFz.VerifyPlant, LNufBNUJAR)
+            if not LaJJbgnJbW then
+                ltAcELvGzk("VerifyPlant adapter error: " .. DfrqgXXsrB(HUIbpYBpNWYP))
+            end
+            if HUIbpYBpNWYP == false then
+                ltAcELvGzk("VerifyPlant adapter rejected the plant")
+            end
+        end
+
+        vrGYPXgh(WbivZzCrXard, DhaBjHwh)
+
+        euyMjRhaK.LastPlantContext = LNufBNUJAR
+        euyMjRhaK.CurrentPlantRound = WbivZzCrXard
+        euyMjRhaK.CurrentMultiplier = 0
+        euyMjRhaK.CurrentSeed = DhaBjHwh
+        euyMjRhaK.CurrentHarvestTarget = LNufBNUJAR.HarvestTarget
+        euyMjRhaK.LastUsedWorm = TqnUoHdHB and {Id= TqnUoHdHB.Id,
+            Type = TqnUoHdHB.RawType,
+            DisplayType = TqnUoHdHB.DisplayType,
+            Mutation = TqnUoHdHB.Mutation,
+            Mult = TqnUoHdHB.Mult,
+        } or nil
+        euyMjRhaK.PlantCount = euyMjRhaK.PlantCount + 1
+        return LNufBNUJAR
+    end, debug.traceback)
+
+    wpFutleQBCyz:EndPlant(owner)
+
+    if not uPirkaZfGG then
+        if uZCJXEOYcHhL and PKTqUhNlA.WormBridge then
+            if WwZAUNwWsX then
+                PKTqUhNlA.WormBridge:Mark(
+                    uZCJXEOYcHhL,
+                    "UNCERTAIN"
+                )
+            else
+                PKTqUhNlA.WormBridge:Release(
+                    uZCJXEOYcHhL
+                )
+            end
+        end
+
+        local uRQanNSTiFqN = DfrqgXXsrB(HqvmSTue):match("^[^\n]+") or DfrqgXXsrB(HqvmSTue)
+        foUSPDNDz("Plant failed: " .. uRQanNSTiFqN, "danger")
+        return false, uRQanNSTiFqN
+    end
+
+    if RnCJjUHos ~= nil then
+        PKTqUhNlA.WaitForInventoryRefresh(
+            RnCJjUHos,
+            lSSAtRsxOpy,
+            2
+        )
+    end
+
+    foUSPDNDz("Plant verified: " .. DfrqgXXsrB(DhaBjHwh))
+    return true, HqvmSTue
+end
+
+PKTqUhNlA.PlantOnce = function()
+    return gSrVNXcYPyKa("ExternalPlant", function()
+        return not PKTqUhNlA.Alive
+    end)
+end
+
+--============================================================
+-- LIVE PLANT ROUND MONITOR / HARVEST
+--============================================================
+
+local wCAQCoWrgLd = {}
+
+local function cqPcOyLkvPtH(kHtWakxlAm, timeout)
+    local QHmwcvVZcPU =
+        os.clock() + (FPwbuFJZR(timeout) or 1.5)
+
+    while os.clock() < QHmwcvVZcPU do
+        if not kHtWakxlAm or not kHtWakxlAm.Parent then
+            return true
+        end
+
+        task.wait(0.04)
+    end
+
+    return not kHtWakxlAm or not kHtWakxlAm.Parent
+end
+
+local function TtzKyEKPf(yQJrjaPZKi)
+    if not yQJrjaPZKi then
+        return false, "ProximityPrompt missing"
+    end
+
+    if type(fireproximityprompt) ~= "function" then
+        return false, "fireproximityprompt unavailable"
+    end
+
+    local uPirkaZfGG, ujxUlzok = BwoodiEAFu(function()
+        fireproximityprompt(yQJrjaPZKi)
+    end)
+
+    if not uPirkaZfGG then
+        return false, DfrqgXXsrB(ujxUlzok)
+    end
+
+    return true
+end
+
+local function txPqbIUDrkAR(kHtWakxlAm, ggLmjaobdy, lSSAtRsxOpy)
+    if not kHtWakxlAm
+        or not kHtWakxlAm.Parent
+        or not VXbzSdNydTv(kHtWakxlAm) then
+        return false, "round-missing"
+    end
+
+    local OVYmLrNOMZpK = wCAQCoWrgLd[kHtWakxlAm] or 0
+
+    if OVYmLrNOMZpK > os.clock() then
+        return false, "cooldown"
+    end
+
+    -- Planting has priority over every collect/harvest interaction.
+    if wpFutleQBCyz:IsPlantBusy() then
+        return false, "plant-busy"
+    end
+
+    if not wpFutleQBCyz:AcquireAction(
+        "RoundMonitor",
+        lSSAtRsxOpy,
+        1
+    ) then
+        return false, "busy"
+    end
+
+    if not XbOuitZgCfm:Acquire(
+        "RoundMonitor",
+        lSSAtRsxOpy,
+        1
+    ) then
+        wpFutleQBCyz:ReleaseAction("RoundMonitor")
+        return false, "busy"
+    end
+
+    local ksXdsOKIx = ciyEOPymQW(kHtWakxlAm)
+
+    if not ksXdsOKIx then
+        XbOuitZgCfm:Release("RoundMonitor")
+        wpFutleQBCyz:ReleaseAction("RoundMonitor")
+        return false, "round-invalid"
+    end
+
+    if ksXdsOKIx.OwnerId ~= nil
+        and ksXdsOKIx.OwnerId ~= dxLeYzjrD.UserId then
+        XbOuitZgCfm:Release("RoundMonitor")
+        wpFutleQBCyz:ReleaseAction("RoundMonitor")
+        return false, "wrong-owner"
+    end
+
+    local YpOnPFFzN =
+        ggLmjaobdy == "dead"
+        and "COLLECT DEAD"
+        or "HARVESTING"
+
+    local DhaBjHwh = EgiwikUN(kHtWakxlAm)
+    local mheQJrvIu = PwPdrJwbG(kHtWakxlAm)
+
+    HXuhwCIQZAB(
+        YpOnPFFzN,
+        ggLmjaobdy == "dead" and "danger" or "warning"
+    )
+
+    local yzFftzeHecos = false
+    local RyfILevMgb = nil
+    local RnCJjUHos =
+        PKTqUhNlA.GetInventoryVersion()
+
+    if ggLmjaobdy == "dead" then
+        foUSPDNDz(
+            "Collecting dead tree "
+                .. kHtWakxlAm.Name
+                .. "...",
+            "warning"
+        )
+
+        -- Exact-round prompt first.
+        if ksXdsOKIx.Prompt then
+            yzFftzeHecos,
+                RyfILevMgb =
+                    TtzKyEKPf(ksXdsOKIx.Prompt)
+        end
+
+        -- If the prompt did not remove it, use the no-arg dead-tree RF fallback.
+        if not yzFftzeHecos
+            or not cqPcOyLkvPtH(kHtWakxlAm, 0.45) then
+
+            local uPirkaZfGG, dQSktSlt = BwoodiEAFu(function()
+                return hxVkjLkuFG:InvokeServer()
+            end)
+
+            if uPirkaZfGG and dQSktSlt ~= false then
+                yzFftzeHecos = true
+            elseif not yzFftzeHecos then
+                RyfILevMgb = DfrqgXXsrB(dQSktSlt)
+            end
+        end
+    else
+        foUSPDNDz(
+            "Harvesting "
+                .. kHtWakxlAm.Name
+                .. " at "
+                .. DfrqgXXsrB(ksXdsOKIx.Multiplier or "?")
+                .. "x / target "
+                .. DfrqgXXsrB(mheQJrvIu)
+                .. "x..."
+        )
+
+        yzFftzeHecos,
+            RyfILevMgb =
+                TtzKyEKPf(ksXdsOKIx.Prompt)
+    end
+
+    local aDOqObTqCh = false
+
+    if yzFftzeHecos then
+        aDOqObTqCh = cqPcOyLkvPtH(kHtWakxlAm, 1.5)
+    end
+
+    XbOuitZgCfm:Release("RoundMonitor")
+    wpFutleQBCyz:ReleaseAction("RoundMonitor")
+
+    if not wpFutleQBCyz:IsPlantBusy() then
+        HXuhwCIQZAB("IDLE")
+    end
+
+    if not yzFftzeHecos then
+        wCAQCoWrgLd[kHtWakxlAm] = os.clock() + 0.75
+
+        foUSPDNDz(
+            YpOnPFFzN
+                .. " failed: "
+                .. DfrqgXXsrB(RyfILevMgb),
+            "danger"
+        )
+
+        return false, RyfILevMgb
+    end
+
+    if not aDOqObTqCh then
+        wCAQCoWrgLd[kHtWakxlAm] = os.clock() + 0.75
+
+        foUSPDNDz(
+            YpOnPFFzN
+                .. " unverified: round still exists",
+            "warning"
+        )
+
+        return false, "round-still-exists"
+    end
+
+    wCAQCoWrgLd[kHtWakxlAm] = nil
+
+    PKTqUhNlA.WaitForInventoryRefresh(
+        RnCJjUHos,
+        lSSAtRsxOpy,
+        1.75
+    )
+
+    euyMjRhaK.LastHarvest = {Mode= ggLmjaobdy,
+        RoundName = kHtWakxlAm.Name,
+        Seed = DhaBjHwh,
+        Multiplier = ksXdsOKIx.Multiplier,
+        Target = mheQJrvIu,
+        At = os.clock(),
+    }
+
+    if ggLmjaobdy == "dead" then
+        euyMjRhaK.DeadCollectCount += 1
+        foUSPDNDz("Dead tree collected")
+    else
+        euyMjRhaK.HarvestCount += 1
+        foUSPDNDz(
+            "Harvested at "
+                .. DfrqgXXsrB(ksXdsOKIx.Multiplier or "?")
+                .. "x"
+        )
+    end
+
+    if euyMjRhaK.CurrentPlantRound == kHtWakxlAm then
+        euyMjRhaK.CurrentPlantRound = nil
+        euyMjRhaK.CurrentMultiplier = 0
+        euyMjRhaK.CurrentSeed = nil
+        euyMjRhaK.CurrentHarvestTarget = ibVEMhwTQRuM.HarvestMultiplier
+    end
+
+    return true
+end
+
+local function FSpVeFeSC()
+    return ibVEMhwTQRuM.AutoHarvest or ibVEMhwTQRuM.AutoCollectDead
+end
+
+local function MYPWVjAymKiW(lSSAtRsxOpy)
+    while PKTqUhNlA.Alive
+        and FSpVeFeSC()
+        and not lSSAtRsxOpy() do
+
+        local meYmQTnufS = lciEiyCr()
+
+        for _, kHtWakxlAm in ZVOoBlCEzTM(meYmQTnufS) do
+            if lSSAtRsxOpy()
+                or not FSpVeFeSC() then
+                break
+            end
+
+            local ksXdsOKIx = ciyEOPymQW(kHtWakxlAm)
+
+            if ksXdsOKIx then
+                local mheQJrvIu =
+                    PwPdrJwbG(kHtWakxlAm)
+
+                if euyMjRhaK.CurrentPlantRound == kHtWakxlAm then
+                    euyMjRhaK.CurrentMultiplier =
+                        FPwbuFJZR(ksXdsOKIx.Multiplier) or 0
+                    euyMjRhaK.CurrentSeed =
+                        EgiwikUN(kHtWakxlAm)
+                    euyMjRhaK.CurrentHarvestTarget =
+                        mheQJrvIu
+                end
+
+                if ksXdsOKIx.Dead then
+                    if ibVEMhwTQRuM.AutoCollectDead then
+                        txPqbIUDrkAR(
+                            kHtWakxlAm,
+                            "dead",
+                            lSSAtRsxOpy
+                        )
+                    end
+                elseif ibVEMhwTQRuM.AutoHarvest
+                    and ksXdsOKIx.Multiplier ~= nil
+                    and ksXdsOKIx.Multiplier >= mheQJrvIu then
+
+                    txPqbIUDrkAR(
+                        kHtWakxlAm,
+                        "live",
+                        lSSAtRsxOpy
+                    )
+                end
+            end
+        end
+
+        task.wait(ibVEMhwTQRuM.PlantRoundScanInterval)
+    end
+
+    XbOuitZgCfm:Release("RoundMonitor")
+    wpFutleQBCyz:ReleaseAction("RoundMonitor")
+end
+
+local function ETfcENxgk()
+    PxzWtllXIL("RoundMonitor")
+
+    if FSpVeFeSC() then
+        nFPpZjLd(
+            "RoundMonitor",
+            MYPWVjAymKiW
+        )
+    end
+end
+
+local function nFqnaXQCZe(LNufBNUJAR, lSSAtRsxOpy)
+    local kHtWakxlAm = SQlPAyWBEQ(LNufBNUJAR)
+
+    if not kHtWakxlAm then
+        foUSPDNDz(
+            "The growing plant could not be found after planting",
+            "danger"
+        )
+        return false
+    end
+
+    euyMjRhaK.CurrentPlantRound = kHtWakxlAm
+
+    while PKTqUhNlA.Alive
+        and ibVEMhwTQRuM.AutoPlant
+        and not lSSAtRsxOpy() do
+
+        if not kHtWakxlAm.Parent then
+            euyMjRhaK.CurrentPlantRound = nil
+            euyMjRhaK.CurrentMultiplier = 0
+            euyMjRhaK.CurrentSeed = nil
+            euyMjRhaK.CurrentHarvestTarget = ibVEMhwTQRuM.HarvestMultiplier
+            HXuhwCIQZAB("IDLE")
+            return true
+        end
+
+        local ksXdsOKIx = ciyEOPymQW(kHtWakxlAm)
+
+        if ksXdsOKIx then
+            local mheQJrvIu =
+                PwPdrJwbG(kHtWakxlAm)
+
+            euyMjRhaK.CurrentMultiplier =
+                FPwbuFJZR(ksXdsOKIx.Multiplier) or 0
+            euyMjRhaK.CurrentSeed =
+                LNufBNUJAR.Seed or EgiwikUN(kHtWakxlAm)
+            euyMjRhaK.CurrentHarvestTarget =
+                mheQJrvIu
+
+            if ksXdsOKIx.Dead then
+                HXuhwCIQZAB("DEAD", "danger")
+
+                if ibVEMhwTQRuM.AutoCollectDead then
+                    foUSPDNDz(
+                        "Tree died; waiting for dead-tree collection",
+                        "warning"
+                    )
+                else
+                    foUSPDNDz(
+                        "Tree is dead. Enable Auto Collect Dead to continue.",
+                        "danger"
+                    )
+                end
+            elseif ibVEMhwTQRuM.AutoHarvest
+                and ksXdsOKIx.Multiplier ~= nil
+                and ksXdsOKIx.Multiplier >= mheQJrvIu then
+
+                HXuhwCIQZAB("READY", "warning")
+            else
+                HXuhwCIQZAB("GROWING")
+            end
+        end
+
+        -- Equipment lock is intentionally free while the tree grows.
+        task.wait(0.08)
+    end
+
+    return false
+end
+
+local function gDWpmugEBns(lSSAtRsxOpy)
+    while PKTqUhNlA.Alive
+        and ibVEMhwTQRuM.AutoPlant
+        and not lSSAtRsxOpy() do
+
+        if not tZYyGNtS(lSSAtRsxOpy) then
+            break
+        end
+
+        if lSSAtRsxOpy() or not ibVEMhwTQRuM.AutoPlant then
+            break
+        end
+
+        local IYaMnUzVcMk, LNufBNUJAR =
+            gSrVNXcYPyKa(
+                "AutoPlant",
+                lSSAtRsxOpy
+            )
+
+        if lSSAtRsxOpy() or not ibVEMhwTQRuM.AutoPlant then
+            break
+        end
+
+        if IYaMnUzVcMk then
+            if not nFqnaXQCZe(LNufBNUJAR, lSSAtRsxOpy) then
+                break
+            end
+        else
+            if not pQFNwZAvvQA(0.5, lSSAtRsxOpy) then
+                break
+            end
+        end
+    end
+
+    wpFutleQBCyz:EndPlant("AutoPlant")
+    Guqfamwp:Release("AutoPlant")
+    MogsXTREOt:Release("AutoPlant")
+    CskrVDMQyUS:Release("AutoPlant")
+
+    if not wpFutleQBCyz:IsPlantBusy() then
+        HXuhwCIQZAB("IDLE")
+    end
+end
+
+PKTqUhNlA.CollectPlantRound = txPqbIUDrkAR
+
+--============================================================
+-- KIRA UI
+--============================================================
+
+local function GDUgNLxkAhS()
+local ZVSHaxVHqSBo = ahrBAuuaAFi:CreateWindow({SingletonName= "KiraGreedyGrowersScript",
+    Title = "Kira Hub",
+    Subtitle = "Greedy Growers Script",
+    Size = Vector2.new(1000, 600),
+    MinSize = Vector2.new(600, 400),
+    MaxSize = Vector2.new(1400, 900),
+    ToggleKey = Enum.KeyCode.RightShift,
+    ShowCloseButton = false,
+    ShadowEnabled = false,
+    LauncherShadowEnabled = false,
+    BackdropEnabled = false,
+    ConfigFolder = "KiraUI/Configs/KiraGreedyGrowers",
+    DefaultConfigName = "Config 1",
+    Status = "Initializing Greedy Growers controller...",
+    Phase = "IDLE",
+})
+
+PKTqUhNlA.Window = ZVSHaxVHqSBo
+
+local vdYASBydim = ZVSHaxVHqSBo:AddTab("Automation", "A")
+local KsIgBRYnWLp = ZVSHaxVHqSBo:AddTab("Garden", "G")
+local qHYNwkwkLcVy = ZVSHaxVHqSBo:AddTab("System", "S")
+
+--============================================================
+-- AUTOMATION TAB
+--============================================================
+
+local NfdrVYlg = vdYASBydim:AddSection("Buying")
+
+local BnraZFVTJ = NfdrVYlg:AddToggle({Text= "Auto Buy Seeds",
+    Default = ibVEMhwTQRuM.AutoBuy,
+    Flag = "auto_buy",
+})
+
+local uOKRbmFS
+local ZsjhWQpGBDRm = false
+
+if type(NfdrVYlg.AddMultiSelect) == "function" then
+    ZsjhWQpGBDRm = true
+    uOKRbmFS = NfdrVYlg:AddMultiSelect({Text= "Buy Seeds",
+        Values = SwXZMPqV,
+        Default = yhyrfMddESAN(BKheSqKQSiI()),
+        Placeholder = "Select seeds...",
+        MaxVisibleItems = 8,
+        Flag = "buy_seed",
+    })
+else
+    uOKRbmFS = NfdrVYlg:AddDropdown({Text= "Buy Seed",
+        Values = BMBjiIBTo,
+        Default = ibVEMhwTQRuM.BuySeed == "ALL"
+            and "ALL"
+            or (ESIHFmWdFau[ibVEMhwTQRuM.BuySeed] or "ALL"),
+        Flag = "buy_seed",
+    })
+end
+
+local MEQYmxrci
+local jhfnmoBic = false
+
+if type(NfdrVYlg.AddMultiSelect) == "function" then
+    jhfnmoBic = true
+    MEQYmxrci = NfdrVYlg:AddMultiSelect({Text= "Buy Rarities",
+        Values = fzMNsCGQ,
+        Default = caURwNsUKyWo(),
+        Placeholder = "Select rarities...",
+        MaxVisibleItems = 6,
+        Flag = "buy_rarity",
+    })
+else
+    MEQYmxrci = NfdrVYlg:AddDropdown({Text= "Buy Rarity",
+        Values = dmbppbxeQ,
+        Default = ibVEMhwTQRuM.BuyRarity == "NONE"
+            and "ALL"
+            or ibVEMhwTQRuM.BuyRarity,
+        Flag = "buy_rarity",
+    })
+end
+
+local UekcHSdHOg = NfdrVYlg:AddSlider({Text= "Buy Check Delay",
+    Min = 0.05,
+    Max = 1.00,
+    Default = ibVEMhwTQRuM.BuyDelay,
+    Step = 0.05,
+    Suffix = "s",
+    Flag = "buy_delay",
+})
+
+NfdrVYlg:AddLabel({Text= "Auto Buy only buys seeds that match your filters and skips anything you cannot afford.",
+    Wrap = true,
+    Muted = true,
+    Height = 44,
+})
+
+local BeaqiqCFv = vdYASBydim:AddSection("Planting")
+
+local WSHzliWt = BeaqiqCFv:AddToggle({Text= "Auto Plant",
+    Default = ibVEMhwTQRuM.AutoPlant,
+    Flag = "auto_plant",
+})
+
+local OeQwwvFUSS = BeaqiqCFv:AddToggle({Text= "Only Plant During Weather",
+    Default = ibVEMhwTQRuM.PlantOnlyDuringWeather,
+    Flag = "plant_weather_only",
+})
+
+local vsTbpMygwUx
+
+if type(BeaqiqCFv.AddMultiSelect) == "function" then
+    vsTbpMygwUx = BeaqiqCFv:AddMultiSelect({Text= "Seeds",
+        Values = tqxPJvMCxC,
+        Default = KMlaDNlrszI(RyYbdTkwDtE()),
+        Placeholder = "Select seeds...",
+        MaxVisibleItems = 8,
+        Flag = "plant_seeds",
+    })
+else
+    vsTbpMygwUx = BeaqiqCFv:AddDropdown({Text= "Seed",
+        Values = tqxPJvMCxC,
+        Default = ESIHFmWdFau[ibVEMhwTQRuM.PlantSeed],
+        Flag = "plant_seed",
+    })
+end
+
+local txexGZwAUQ = BeaqiqCFv:AddDropdown({Text= "Fertilizer",
+    Values = RLYSHrriuiBl,
+    Default = ibVEMhwTQRuM.Fertilizer,
+    Flag = "fertilizer",
+})
+
+do
+    local BhPAHmHGP = false
+    local ZWwEhaoIJ
+    local xkmiuosYFq
+    local kVkwDEtd
+    local bNdFHBYlOkP = {
+        "Lowest",
+        "Highest",
+    }
+
+    local function RPRukCuTHV(XUWueugAwuSw)
+        return DfrqgXXsrB(XUWueugAwuSw) == "Highest"
+            and "Highest"
+            or "Lowest"
+    end
+
+    local function hdeSYWqGAnr(vPMLceeu)
+        if type(PKTqUhNlA.NormalizeWormTypeSelection) == "function" then
+            return PKTqUhNlA.NormalizeWormTypeSelection(vPMLceeu, true)
+        end
+
+        return {}
+    end
+
+    local function KastlRMLXa(ephNnOXqNlUd)
+        if type(PKTqUhNlA.WormTypesToLabels) == "function" then
+            return PKTqUhNlA.WormTypesToLabels(ephNnOXqNlUd, true)
+        end
+
+        return {}
+    end
+
+    local function RFNbBEMMJ()
+        if type(PKTqUhNlA.ExportWormSettingsState) == "function" then
+            return PKTqUhNlA.ExportWormSettingsState()
+        end
+
+        return {Locked= true,
+            TypesLocked = true,
+            PriorityLocked = true,
+            Shared = {Use= false,
+                Types = {},
+                SortMode = "Lowest",
+                MinMult = 5,
+                MaxMult = 10,
+            },
+            Values = {},
+        }
+    end
+
+    local function WfzvYZcR(CQQfyKmnCw, hVKRNUmvaW)
+        CQQfyKmnCw = type(CQQfyKmnCw) == "table" and CQQfyKmnCw or {}
+        hVKRNUmvaW = type(hVKRNUmvaW) == "table" and hVKRNUmvaW or {}
+
+        local ephNnOXqNlUd =
+            hdeSYWqGAnr(
+                CQQfyKmnCw.Types
+                or CQQfyKmnCw.WormTypes
+                or hVKRNUmvaW.Types
+                or {}
+            )
+
+        local eKAmKQGHBuwj =
+            CQQfyKmnCw.Use ~= nil
+            and CQQfyKmnCw.Use == true
+            or (
+                CQQfyKmnCw.Use == nil
+                and hVKRNUmvaW.Use == true
+            )
+
+        if not eKAmKQGHBuwj then
+            ephNnOXqNlUd = {}
+        end
+
+        return {Use= eKAmKQGHBuwj and #ephNnOXqNlUd > 0,
+            Types = ephNnOXqNlUd,
+            SortMode =
+                RPRukCuTHV(
+                    CQQfyKmnCw.SortMode
+                    or CQQfyKmnCw.Priority
+                    or hVKRNUmvaW.SortMode
+                ),
+            MinMult = 5,
+            MaxMult = 10,
+        }
+    end
+
+    local function ZeGSRENWDqTA()
+        local tBOlbjGIlYW = RFNbBEMMJ()
+        local tpSFmqQNLSF = WfzvYZcR(tBOlbjGIlYW.Shared)
+        local BNnGQGeIA = {}
+
+        for DhaBjHwh, CQQfyKmnCw in oYANaOHUQcPs(tBOlbjGIlYW.Values or {}) do
+            local KOnCliJlsM =
+                WfzvYZcR(CQQfyKmnCw, tpSFmqQNLSF)
+
+            BNnGQGeIA[DfrqgXXsrB(DhaBjHwh)] =
+                KOnCliJlsM.Use
+                and KastlRMLXa(KOnCliJlsM.Types)
+                or {}
+        end
+
+        return {Locked= tBOlbjGIlYW.TypesLocked ~= false,
+            Shared =
+                tpSFmqQNLSF.Use
+                and KastlRMLXa(tpSFmqQNLSF.Types)
+                or {},
+            Values = BNnGQGeIA,
+            Items = wTksbWBOfVL(),
+        }
+    end
+
+    local function sJODHOrMToH()
+        local tBOlbjGIlYW = RFNbBEMMJ()
+        local tpSFmqQNLSF = WfzvYZcR(tBOlbjGIlYW.Shared)
+        local BNnGQGeIA = {}
+
+        for DhaBjHwh, CQQfyKmnCw in oYANaOHUQcPs(tBOlbjGIlYW.Values or {}) do
+            BNnGQGeIA[DfrqgXXsrB(DhaBjHwh)] =
+                RPRukCuTHV(
+                    type(CQQfyKmnCw) == "table"
+                    and CQQfyKmnCw.SortMode
+                    or tpSFmqQNLSF.SortMode
+                )
+        end
+
+        return {Locked= tBOlbjGIlYW.PriorityLocked ~= false,
+            Shared = tpSFmqQNLSF.SortMode,
+            Values = BNnGQGeIA,
+            Items = wTksbWBOfVL(),
+        }
+    end
+
+    local function kAXktpLdMRZU()
+        if not kVkwDEtd then
+            return
+        end
+
+        local tBOlbjGIlYW = RFNbBEMMJ()
+        local tpSFmqQNLSF = WfzvYZcR(tBOlbjGIlYW.Shared)
+        local pHerSwhB =
+            tpSFmqQNLSF.Use
+            and (
+                table.concat(
+                    KastlRMLXa(tpSFmqQNLSF.Types),
+                    ", "
+                )
+                .. " | "
+                .. tpSFmqQNLSF.SortMode
+            )
+            or "use fertilizer"
+
+        local ceWxoeag = {
+            "Types: "
+                .. (
+                    tBOlbjGIlYW.TypesLocked ~= false
+                    and "same for all seeds"
+                    or "custom per seed"
+                ),
+            "Priority: "
+                .. (
+                    tBOlbjGIlYW.PriorityLocked ~= false
+                    and "same for all seeds"
+                    or "custom per seed"
+                ),
+            "Shared: " .. pHerSwhB,
+            "No Worm selected means that seed uses fertilizer.",
+        }
+
+        if PKTqUhNlA.WormBridge then
+            ceWxoeag[#ceWxoeag + 1] =
+                PKTqUhNlA.WormBridge:GetSummaryText()
+        end
+
+        kVkwDEtd:SetText(
+            table.concat(ceWxoeag, "\n")
+        )
+    end
+
+    function PKTqUhNlA.RefreshWormControls()
+        if not ZWwEhaoIJ
+            or not xkmiuosYFq then
+            return
+        end
+
+        BhPAHmHGP = true
+        ZWwEhaoIJ:SetValue(ZeGSRENWDqTA(), true)
+        xkmiuosYFq:SetValue(sJODHOrMToH(), true)
+        BhPAHmHGP = false
+
+        kAXktpLdMRZU()
+    end
+
+    local function DtTNYXEYgNaI()
+        if BhPAHmHGP then
+            return
+        end
+
+        BhPAHmHGP = true
+
+        local ZlcOnaLiC =
+            ZWwEhaoIJ
+            and ZWwEhaoIJ.Value
+            or ZeGSRENWDqTA()
+
+        local ljxPHfbqsln =
+            xkmiuosYFq
+            and xkmiuosYFq.Value
+            or sJODHOrMToH()
+
+        local vQEhivhgdBO =
+            ibVEMhwTQRuM.WormTypesLocked ~= false
+
+        local FcKkRKYEIUlz =
+            ibVEMhwTQRuM.WormPriorityLocked ~= false
+
+        ibVEMhwTQRuM.WormTypesLocked =
+            ZlcOnaLiC.Locked ~= false
+
+        ibVEMhwTQRuM.WormPriorityLocked =
+            ljxPHfbqsln.Locked ~= false
+
+        ibVEMhwTQRuM.WormSettingsLocked =
+            ibVEMhwTQRuM.WormTypesLocked
+            and ibVEMhwTQRuM.WormPriorityLocked
+
+        local zvdwcpRxNqwo =
+            hdeSYWqGAnr(ZlcOnaLiC.Shared)
+
+        if type(PKTqUhNlA.SetSharedWormSettings) == "function" then
+            PKTqUhNlA.SetSharedWormSettings({Use= #zvdwcpRxNqwo > 0,
+                Types = zvdwcpRxNqwo,
+                SortMode = RPRukCuTHV(ljxPHfbqsln.Shared),
+                MinMult = 5,
+                MaxMult = 10,
+            })
+        end
+
+        local TgnMQPnw =
+            ibVEMhwTQRuM.WormSettings or {}
+
+        local WqCuKzClFUmx = {}
+
+        for DhaBjHwh in oYANaOHUQcPs(TgnMQPnw) do
+            WqCuKzClFUmx[DfrqgXXsrB(DhaBjHwh)] = true
+        end
+
+        for DhaBjHwh in oYANaOHUQcPs(ZlcOnaLiC.Values or {}) do
+            WqCuKzClFUmx[DfrqgXXsrB(DhaBjHwh)] = true
+        end
+
+        for DhaBjHwh in oYANaOHUQcPs(ljxPHfbqsln.Values or {}) do
+            WqCuKzClFUmx[DfrqgXXsrB(DhaBjHwh)] = true
+        end
+
+        ibVEMhwTQRuM.WormSettings = {}
+
+        for DhaBjHwh in oYANaOHUQcPs(WqCuKzClFUmx) do
+            if ESIHFmWdFau[DhaBjHwh] then
+                local ePsFdTwtV =
+                    WfzvYZcR(
+                        TgnMQPnw[DhaBjHwh],
+                        {Use= #zvdwcpRxNqwo > 0,
+                            Types = zvdwcpRxNqwo,
+                            SortMode =
+                                RPRukCuTHV(
+                                    ljxPHfbqsln.Shared
+                                ),
+                        }
+                    )
+
+                local BCckXWVK =
+                    ZlcOnaLiC.Values
+                    and ZlcOnaLiC.Values[DhaBjHwh]
+
+                local LfoaIEwDuiep =
+                    BCckXWVK
+
+                if LfoaIEwDuiep == nil then
+                    LfoaIEwDuiep =
+                        KastlRMLXa(ePsFdTwtV.Types)
+                end
+
+                local ephNnOXqNlUd =
+                    hdeSYWqGAnr(
+                        LfoaIEwDuiep ~= nil
+                        and LfoaIEwDuiep
+                        or ZlcOnaLiC.Shared
+                    )
+
+                local XYYfagCRE =
+                    ljxPHfbqsln.Values
+                    and ljxPHfbqsln.Values[DhaBjHwh]
+
+                ibVEMhwTQRuM.WormSettings[DhaBjHwh] = {Use= #ephNnOXqNlUd > 0,
+                    Types = ephNnOXqNlUd,
+                    SortMode =
+                        RPRukCuTHV(
+                            XYYfagCRE
+                            or ePsFdTwtV.SortMode
+                            or ljxPHfbqsln.Shared
+                        ),
+                    MinMult = 5,
+                    MaxMult = 10,
+                }
+            end
+        end
+
+        BhPAHmHGP = false
+
+        if vQEhivhgdBO ~= ibVEMhwTQRuM.WormTypesLocked
+            or FcKkRKYEIUlz ~= ibVEMhwTQRuM.WormPriorityLocked then
+            foUSPDNDz(
+                "Worm: types "
+                    .. (
+                        ibVEMhwTQRuM.WormTypesLocked
+                        and "locked"
+                        or "custom"
+                    )
+                    .. ", priority "
+                    .. (
+                        ibVEMhwTQRuM.WormPriorityLocked
+                        and "locked"
+                        or "custom"
+                    )
+            )
+        end
+
+        kAXktpLdMRZU()
+    end
+
+    ZWwEhaoIJ = BeaqiqCFv:AddMultiSelectMap({Text= "Worm Types",
+        Values = PKTqUhNlA.WormLabels or {"Worm"},
+        Items = wTksbWBOfVL,
+        Locked = ibVEMhwTQRuM.WormTypesLocked ~= false,
+        Shared = ZeGSRENWDqTA().Shared,
+        ItemValues = ZeGSRENWDqTA().Values,
+        EmptyText = "Use fertilizer",
+        MaxVisibleItems = 6,
+        MaxVisibleChoices = 8,
+        MaxLabels = 1,
+        ItemControlWidth = 166,
+    })
+
+    xkmiuosYFq = BeaqiqCFv:AddSelectMap({Text= "Worm Priority",
+        Values = bNdFHBYlOkP,
+        Items = wTksbWBOfVL,
+        Locked = ibVEMhwTQRuM.WormPriorityLocked ~= false,
+        Shared = sJODHOrMToH().Shared,
+        ItemValues = sJODHOrMToH().Values,
+        MaxVisibleItems = 6,
+        ItemControlWidth = 112,
+    })
+
+    kVkwDEtd = BeaqiqCFv:AddLabel({Text= "Worm inventory is loading...",
+        Wrap = true,
+        Muted = true,
+        Height = 118,
+    })
+
+    ZWwEhaoIJ:OnChanged(function()
+        DtTNYXEYgNaI("types")
+    end)
+
+    xkmiuosYFq:OnChanged(function()
+        DtTNYXEYgNaI("priority")
+    end)
+
+    if type(ZVSHaxVHqSBo.RegisterConfigItem) == "function" then
+        ZVSHaxVHqSBo:RegisterConfigItem("worm_settings", {}, {Getter= function()
+                return PKTqUhNlA.ExportWormSettingsState()
+            end,
+            Setter = function(XUWueugAwuSw)
+                PKTqUhNlA.ApplyWormSettingsState(XUWueugAwuSw)
+                PKTqUhNlA.RefreshWormControls()
+            end,
+        })
+    end
+
+    task.spawn(function()
+        while PKTqUhNlA.Alive
+            and ZVSHaxVHqSBo.Gui
+            and ZVSHaxVHqSBo.Gui.Parent do
+
+            kAXktpLdMRZU()
+            task.wait(1)
+        end
+    end)
+
+    PKTqUhNlA.RefreshWormControls()
+end
+
+local BnNzdXHmmx =
+    vdYASBydim:AddSection(
+        "Harvest"
+    )
+
+local kMAWeIWI =
+    BnNzdXHmmx:AddToggle({Text= "Auto Harvest",
+        Default = ibVEMhwTQRuM.AutoHarvest,
+        Flag = "auto_harvest",
+    })
+
+local VzhdfHEI =
+    BnNzdXHmmx:AddToggle({Text= "Clear Dead Trees",
+        Default = ibVEMhwTQRuM.AutoCollectDead,
+        Flag = "clear_dead_trees",
+    })
+
+local fSONraohYAAG =
+    BnNzdXHmmx:AddToggle({Text= "Auto Collect Fruit",
+        Default = ibVEMhwTQRuM.AutoCollectFruit,
+        Flag = "auto_collect_fruit",
+    })
+
+local BxZCavsNlG =
+    BnNzdXHmmx:AddToggle({Text= "Collect All Fruit",
+        Default = ibVEMhwTQRuM.CollectAllFruit,
+        Flag = "collect_all_fruit",
+    })
+
+local mQWmyXAPG =
+    BnNzdXHmmx:AddInput({Text= "Minimum Fruit Mutations",
+        Numeric = true,
+        Min = 0,
+        Default = ibVEMhwTQRuM.MinFruitMutations,
+        Step = 1,
+        Placeholder = "5",
+        Flag = "min_fruit_mutations",
+    })
+
+local nLHwcAJvJ =
+    BnNzdXHmmx:AddSlider({Text= "Fruit Check Delay",
+        Min = 0.25,
+        Max = 5.00,
+        Default = ibVEMhwTQRuM.FruitCollectInterval,
+        Step = 0.25,
+        Suffix = "s",
+        Flag = "fruit_collect_interval",
+    })
+
+local RxASKBGxtwI
+
+if type(BnNzdXHmmx.AddNumberMap) == "function" then
+    RxASKBGxtwI =
+        BnNzdXHmmx:AddNumberMap({Text= "Harvest Targets",
+            Items = wTksbWBOfVL,
+            Locked = ibVEMhwTQRuM.HarvestMultiplierLocked,
+            Shared = ibVEMhwTQRuM.HarvestMultiplier,
+            Values = ibVEMhwTQRuM.HarvestMultipliers,
+            Min = 0.01,
+            Step = 0.01,
+            Suffix = "x",
+            Placeholder = "Shared multiplier",
+            MaxVisibleItems = 6,
+            Flag = "harvest_targets",
+        })
+else
+    RxASKBGxtwI =
+        BnNzdXHmmx:AddInput({Text= "Harvest At Multiplier",
+            Numeric = true,
+            Min = 0.01,
+            Default = ibVEMhwTQRuM.HarvestMultiplier,
+            Step = 0.01,
+            Placeholder = "100 or 94.57",
+            Flag = "harvest_multiplier",
+        })
+end
+
+local NEAVSpcFZG =
+    BnNzdXHmmx:AddLabel({Text= "Waiting for a plant to grow...",
+        Wrap = true,
+        Muted = true,
+        Height = 78,
+    })
+
+BnNzdXHmmx:AddLabel({Text= "Auto Harvest watches your growing plant and collects it when it reaches your target. Auto Collect Fruit picks fruit from your plot; Collect All Fruit ignores the mutation minimum.",
+    Wrap = true,
+    Muted = true,
+    Height = 74,
+})
+
+local HNjWdzMJTsV = vdYASBydim:AddSection("Selling")
+
+local wPDpgXsd = HNjWdzMJTsV:AddToggle({Text= "Auto Sell Dead Trees",
+    Default = ibVEMhwTQRuM.AutoSellDeadTree,
+    Flag = "auto_sell_dead_trees",
+})
+
+local RdrxvLvuX = HNjWdzMJTsV:AddToggle({Text= "Auto Sell Fruit",
+    Default = ibVEMhwTQRuM.AutoSellFruit,
+    Flag = "auto_sell_fruit",
+})
+
+local ohSqYrSVs = HNjWdzMJTsV:AddSlider({Text= "Sell Delay",
+    Min = 0.05,
+    Max = 1.00,
+    Default = ibVEMhwTQRuM.SellDelay,
+    Step = 0.05,
+    Suffix = "s",
+    Flag = "sell_delay",
+})
+
+HNjWdzMJTsV:AddLabel({Text= "Auto Sell sells dead trees and collected fruit from your bag. It waits if another action is using your held item.",
+    Wrap = true,
+    Muted = true,
+    Height = 54,
+})
+
+local yOgaIYwGhsb = vdYASBydim:AddSection("Composting")
+
+local tXdecIiUV =
+    yOgaIYwGhsb:AddToggle({Text= "Auto Compost Seed",
+        Default = ibVEMhwTQRuM.AutoCompostSeed,
+        Flag = "auto_compost_seed",
+    })
+
+local OwKkmqTff
+local gdxDTXid = false
+
+if type(yOgaIYwGhsb.AddMultiSelect) == "function" then
+    gdxDTXid = true
+    OwKkmqTff =
+        yOgaIYwGhsb:AddMultiSelect({Text= "Compost Seeds",
+            Values = tqxPJvMCxC,
+            Default = vAvhLYicjXw(XuodfQsedbd()),
+            Placeholder = "Select seeds...",
+            MaxVisibleItems = 8,
+            Flag = "compost_seeds",
+        })
+else
+    OwKkmqTff =
+        yOgaIYwGhsb:AddDropdown({Text= "Compost Seed",
+            Values = tqxPJvMCxC,
+            Default = ESIHFmWdFau[ibVEMhwTQRuM.CompostSeed],
+            Flag = "compost_seed",
+        })
+end
+
+local YvipksYoZh =
+    yOgaIYwGhsb:AddSlider({Text= "Compost Delay",
+        Min = 0.10,
+        Max = 2.00,
+        Default = ibVEMhwTQRuM.CompostDelay,
+        Step = 0.05,
+        Suffix = "s",
+        Flag = "compost_delay",
+    })
+
+yOgaIYwGhsb:AddLabel({Text= "Auto Compost uses the selected seeds from Hotbar and Storage, including seeds with weather or special names, then collects the reward when it is ready.",
+    Wrap = true,
+    Muted = true,
+    Height = 58,
+})
+
+local xTNVQxhAY = vdYASBydim:AddSection("Live Status", {Span= "full",
+})
+
+local zvVSqHrMlO = xTNVQxhAY:AddLabel({Text= "Getting Kira Hub ready...",
+    Wrap = true,
+    Height = 232,
+})
+
+--============================================================
+-- GARDEN TAB
+--============================================================
+
+local BDxpiojPQKbS = KsIgBRYnWLp:AddSection("My Plot")
+
+local yUSlqYqU = BDxpiojPQKbS:AddLabel({Text= "Finding your plot...",
+    Wrap = true,
+    Height = 64,
+})
+
+BDxpiojPQKbS:AddButton({Text= "Refresh My Plot",
+    Callback = function()
+        local EojeQsclmwhy = kUPNnQqxT()
+        if EojeQsclmwhy then
+            yUSlqYqU:SetText(
+                "Your plot: " .. EojeQsclmwhy.Name
+            )
+            foUSPDNDz("My plot: " .. EojeQsclmwhy.Name)
+        else
+            yUSlqYqU:SetText("My plot was not found")
+            foUSPDNDz("My plot was not found", "danger")
+        end
+    end,
+})
+
+local OMllaFECG = KsIgBRYnWLp:AddSection("My Fruit Mutations", {Span= "full",
+})
+
+local UGIVRgvBE = OMllaFECG:AddToggle({Text= "Auto Refresh Fruit List",
+    Default = ibVEMhwTQRuM.AutoMutationScan,
+    Flag = "auto_refresh_fruits",
+})
+
+local uvOCyyAiZ = OMllaFECG:AddSlider({Text= "Fruit Refresh Interval",
+    Min = 0.5,
+    Max = 10,
+    Default = ibVEMhwTQRuM.MutationScanInterval,
+    Step = 0.5,
+    Suffix = "s",
+    Flag = "fruit_refresh_interval",
+})
+
+local HmwGeiVS = OMllaFECG:AddLabel({Text= "Press Refresh Fruit List to show every fruit on your plot and its mutation.",
+    Wrap = true,
+    RichText = true,
+    Height = 190,
+})
+
+if HmwGeiVS and type(HmwGeiVS.SetRichText) == "function" then
+    HmwGeiVS:SetRichText(true)
+elseif HmwGeiVS and HmwGeiVS.Label then
+    HmwGeiVS.Label.RichText = true
+end
+
+local function WZvhEZmy(ksXdsOKIx, height)
+    height = math.max(64, FPwbuFJZR(height) or 190)
+
+    if ksXdsOKIx and type(ksXdsOKIx.SetHeight) == "function" then
+        ksXdsOKIx:SetHeight(height)
+        return
+    end
+
+    if ksXdsOKIx and ksXdsOKIx.Instance then
+        ksXdsOKIx.Instance.Size = UDim2.new(ksXdsOKIx.Instance.Size.X.Scale, ksXdsOKIx.Instance.Size.X.Offset, 0, height)
+    end
+end
+
+local function iPexFYUa(silent)
+    local tBOlbjGIlYW, ujxUlzok = psKuspqQP()
+
+    if ujxUlzok then
+        WZvhEZmy(HmwGeiVS, 190)
+        HmwGeiVS:SetText(ujxUlzok)
+        if not silent then
+            foUSPDNDz(ujxUlzok, "danger")
+        end
+        return
+    end
+
+    if #tBOlbjGIlYW == 0 then
+        WZvhEZmy(HmwGeiVS, 190)
+        HmwGeiVS:SetText("No fruit mutation data found on my plot.")
+        if not silent then
+            foUSPDNDz("Fruit list: 0 fruit")
+        end
+        return
+    end
+
+    local ceWxoeag = {}
+    ceWxoeag[#ceWxoeag + 1] = "Total: " .. DfrqgXXsrB(#tBOlbjGIlYW) .. " fruit(s)"
+    ceWxoeag[#ceWxoeag + 1] = ""
+
+    for LvOjTWuqYW = 1, #tBOlbjGIlYW do
+        local bTjKsleJ = tBOlbjGIlYW[LvOjTWuqYW]
+        local sMYoMwHBBUgT = {
+            "Value: " .. zIwNzVxielXw(bTjKsleJ.FruitValue or "?"),
+            "Mutations: " .. DfrqgXXsrB(bTjKsleJ.MutationCount or 0),
+        }
+
+        ceWxoeag[#ceWxoeag + 1] =
+            DfrqgXXsrB(LvOjTWuqYW)
+            .. ". "
+            .. zIwNzVxielXw(bTjKsleJ.Name)
+
+        ceWxoeag[#ceWxoeag + 1] =
+            "   " .. table.concat(sMYoMwHBBUgT, " | ")
+
+        ceWxoeag[#ceWxoeag + 1] =
+            "   Mutation: " .. (bTjKsleJ.MutationRichText or "None")
+    end
+
+    WZvhEZmy(HmwGeiVS, (#ceWxoeag * 16) + 18)
+    HmwGeiVS:SetText(table.concat(ceWxoeag, "\n"))
+
+    if not silent then
+        foUSPDNDz("Fruit list: " .. DfrqgXXsrB(#tBOlbjGIlYW) .. " fruit(s)")
+    end
+end
+
+OMllaFECG:AddButton({Text= "Refresh Fruit List",
+    Callback = function()
+        iPexFYUa(false)
+    end,
+})
+
+--============================================================
+-- SYSTEM TAB
+--============================================================
+
+local KqlWmKAYClRC = qHYNwkwkLcVy:AddSection("Controls")
+
+local RLjbrIMQz = KqlWmKAYClRC:AddToggle({Text= "Show Extra Logs",
+    Default = ibVEMhwTQRuM.Debug,
+    Flag = "show_extra_logs",
+})
+
+if type(KqlWmKAYClRC.AddKeybind) == "function" then
+    KqlWmKAYClRC:AddKeybind({Text= "Show / Hide Key",
+        WindowToggle = true,
+        Flag = "show_hide_key",
+    })
+else
+    KqlWmKAYClRC:AddLabel({Text= "Show / Hide: RightShift",
+        Muted = true,
+        Height = 28,
+    })
+end
+
+local asRVVntKCLIk = KqlWmKAYClRC:AddToggle({Text= "Anti-AFK",
+    Default = ibVEMhwTQRuM.AntiAfk,
+    Flag = "anti_afk",
+})
+
+KqlWmKAYClRC:AddButton({Text= "Refresh Shop List",
+    Callback = function()
+        WYIEBUUAT()
+
+        foUSPDNDz(
+            "Shop list refreshed: "
+                .. DfrqgXXsrB(
+                    XarpitBPFIg()
+                )
+                .. " item(s)"
+        )
+    end,
+})
+
+KqlWmKAYClRC:AddButton({Text= "Hide UI",
+    Callback = function()
+        if type(ZVSHaxVHqSBo.SetVisible) == "function" then
+            ZVSHaxVHqSBo:SetVisible(false)
+            foUSPDNDz("UI hidden. Press the show/hide key or the K launcher.")
+        end
+    end,
+})
+
+KqlWmKAYClRC:AddButton({Text= "STOP ALL",
+    Danger = true,
+    Callback = function()
+        ibVEMhwTQRuM.AutoBuy = false
+        ibVEMhwTQRuM.AutoPlant = false
+        ibVEMhwTQRuM.AutoHarvest = false
+        ibVEMhwTQRuM.AutoCollectDead = false
+        ibVEMhwTQRuM.AutoMutationScan = false
+        ibVEMhwTQRuM.AutoSellDeadTree = false
+        ibVEMhwTQRuM.AutoSellFruit = false
+        ibVEMhwTQRuM.AutoCollectFruit = false
+        ibVEMhwTQRuM.AutoCompostSeed = false
+        ibVEMhwTQRuM.AntiAfk = false
+
+        bQLHthvj()
+        WFtZRMBScv()
+        WYIEBUUAT()
+
+        BnraZFVTJ:SetValue(false, true)
+        WSHzliWt:SetValue(false, true)
+        kMAWeIWI:SetValue(false, true)
+        VzhdfHEI:SetValue(false, true)
+        UGIVRgvBE:SetValue(false, true)
+        wPDpgXsd:SetValue(false, true)
+        RdrxvLvuX:SetValue(false, true)
+        fSONraohYAAG:SetValue(false, true)
+        tXdecIiUV:SetValue(false, true)
+        asRVVntKCLIk:SetValue(false, true)
+
+        if not wpFutleQBCyz:IsPlantBusy()
+            and MogsXTREOt.Owner == nil
+            and Guqfamwp.Owner == nil
+            and CskrVDMQyUS.Owner == nil
+            and XbOuitZgCfm.Owner == nil then
+            HXuhwCIQZAB("IDLE")
+        else
+            HXuhwCIQZAB("STOPPING", "warning")
+        end
+
+        foUSPDNDz("Stopping automation safely...", "warning")
+    end,
+})
+
+KqlWmKAYClRC:AddButton({Text= "Destroy Script",
+    Danger = true,
+    Callback = function()
+        PKTqUhNlA:Destroy()
+    end,
+})
+
+if type(ZVSHaxVHqSBo.AddConfigSection) == "function" then
+    ZVSHaxVHqSBo:AddConfigSection(qHYNwkwkLcVy, {Title= "Saved Settings",
+        Span = 1,
+        DefaultName = "Config 1",
+    })
+end
+
+--============================================================
+-- ATTACH UI BEHAVIOR AFTER UI EXISTS
+--============================================================
+
+BnraZFVTJ:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.AutoBuy = XUWueugAwuSw == true
+
+    if ibVEMhwTQRuM.AutoBuy then
+        foUSPDNDz("Auto Buy enabled")
+        nFPpZjLd("AutoBuy", tgBBKFdcBcp)
+    else
+        PxzWtllXIL("AutoBuy")
+        WYIEBUUAT()
+        foUSPDNDz("Auto Buy disabled")
+    end
+end)
+
+uOKRbmFS:OnChanged(function(XUWueugAwuSw)
+    local otMRsdmAPve = cMtFJivxtN(XUWueugAwuSw)
+
+    if ZsjhWQpGBDRm
+        and type(uOKRbmFS.SetValue) == "function" then
+        uOKRbmFS:SetValue(yhyrfMddESAN(otMRsdmAPve), true)
+    end
+
+    WYIEBUUAT()
+    foUSPDNDz("Buy seeds: " .. AyxJZxZvpa())
+end)
+
+MEQYmxrci:OnChanged(function(XUWueugAwuSw)
+    local otMRsdmAPve = QOGIdmUgLGgH(XUWueugAwuSw)
+
+    if jhfnmoBic
+        and type(MEQYmxrci.SetValue) == "function" then
+        MEQYmxrci:SetValue(otMRsdmAPve, true)
+    end
+
+    WYIEBUUAT()
+    foUSPDNDz("Buy rarities: " .. OObSspcJge())
+end)
+
+UekcHSdHOg:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.BuyDelay = FPwbuFJZR(XUWueugAwuSw) or 0.15
+end)
+
+WSHzliWt:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.AutoPlant = XUWueugAwuSw == true
+
+    if ibVEMhwTQRuM.AutoPlant then
+        local CSJzVWFOz, UnCMwRYd = dHqyhbRECjo()
+
+        if ibVEMhwTQRuM.PlantOnlyDuringWeather and not UnCMwRYd then
+            foUSPDNDz(
+                "Auto Plant enabled; waiting for weather (current: "
+                    .. CSJzVWFOz
+                    .. ")",
+                "warning"
+            )
+        else
+            foUSPDNDz("Auto Plant enabled")
+        end
+
+        nFPpZjLd("AutoPlant", gDWpmugEBns)
+    else
+        PxzWtllXIL("AutoPlant")
+
+        if not wpFutleQBCyz:IsPlantBusy() then
+            HXuhwCIQZAB("IDLE")
+        else
+            HXuhwCIQZAB("STOPPING", "warning")
+        end
+
+        foUSPDNDz("Auto Plant disabled")
+    end
+end)
+
+OeQwwvFUSS:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.PlantOnlyDuringWeather = XUWueugAwuSw == true
+
+    local CSJzVWFOz, UnCMwRYd = dHqyhbRECjo()
+
+    if ibVEMhwTQRuM.PlantOnlyDuringWeather then
+        if UnCMwRYd then
+            foUSPDNDz(
+                "Weather-only planting ON: "
+                    .. CSJzVWFOz
+            )
+        else
+            foUSPDNDz(
+                "Weather-only planting ON; waiting for weather (current: "
+                    .. CSJzVWFOz
+                    .. ")",
+                "warning"
+            )
+        end
+    else
+        foUSPDNDz("Weather-only planting OFF")
+
+        if ibVEMhwTQRuM.AutoPlant and not wpFutleQBCyz:IsPlantBusy() then
+            HXuhwCIQZAB("IDLE")
+        end
+    end
+end)
+
+vsTbpMygwUx:OnChanged(function(XUWueugAwuSw)
+    local otMRsdmAPve =
+        type(XUWueugAwuSw) == "table"
+        and XkuqAzFB(XUWueugAwuSw)
+        or XkuqAzFB({XUWueugAwuSw})
+
+    otMRsdmAPve = xvfaxgVJgb(otMRsdmAPve)
+
+    if #otMRsdmAPve == 0 then
+        foUSPDNDz("No plant seed selected", "warning")
+        if RxASKBGxtwI
+            and type(RxASKBGxtwI.SetItems) == "function" then
+            RxASKBGxtwI:SetItems({}, true)
+        end
+        return
+    end
+
+    if RxASKBGxtwI
+        and type(RxASKBGxtwI.SetItems) == "function" then
+        RxASKBGxtwI:SetItems(wTksbWBOfVL(), true)
+    end
+
+    if type(PKTqUhNlA.RefreshWormControls) == "function" then
+        PKTqUhNlA.RefreshWormControls()
+    end
+
+    local LPawgQwRR = {}
+
+    for _, DhaBjHwh in ZVOoBlCEzTM(otMRsdmAPve) do
+        if ZMZXtZNTlb:GetSeedCount(DhaBjHwh) > 0 then
+            LPawgQwRR[#LPawgQwRR + 1] = DhaBjHwh
+        end
+    end
+
+    if #LPawgQwRR > 0 then
+        foUSPDNDz(
+            "Plant seeds: "
+                .. table.concat(otMRsdmAPve, ", ")
+                .. " | owned: "
+                .. table.concat(LPawgQwRR, ", ")
+        )
+    else
+        foUSPDNDz(
+            "Plant seeds: "
+                .. table.concat(otMRsdmAPve, ", ")
+                .. " (not currently owned)",
+            "warning"
+        )
+    end
+end)
+
+txexGZwAUQ:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.Fertilizer = DfrqgXXsrB(XUWueugAwuSw)
+    foUSPDNDz("Fertilizer: " .. ibVEMhwTQRuM.Fertilizer)
+end)
+
+kMAWeIWI:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.AutoHarvest = XUWueugAwuSw == true
+    ETfcENxgk()
+
+    foUSPDNDz(
+        "Auto Harvest: "
+            .. (ibVEMhwTQRuM.AutoHarvest and "ON" or "OFF")
+    )
+end)
+
+VzhdfHEI:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.AutoCollectDead = XUWueugAwuSw == true
+    ETfcENxgk()
+
+    foUSPDNDz(
+        "Auto Collect Dead: "
+            .. (ibVEMhwTQRuM.AutoCollectDead and "ON" or "OFF")
+    )
+end)
+
+fSONraohYAAG:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.AutoCollectFruit = XUWueugAwuSw == true
+
+    if ibVEMhwTQRuM.AutoCollectFruit then
+        foUSPDNDz("Auto Collect Fruit enabled")
+        nFPpZjLd("AutoCollectFruit", kMZYSSjK)
+    else
+        PxzWtllXIL("AutoCollectFruit")
+        wpFutleQBCyz:ReleaseAction("AutoCollectFruit")
+        foUSPDNDz("Auto Collect Fruit disabled")
+
+        if not wpFutleQBCyz:IsPlantBusy() then
+            HXuhwCIQZAB("IDLE")
+        end
+    end
+end)
+
+BxZCavsNlG:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.CollectAllFruit = XUWueugAwuSw == true
+
+    if ibVEMhwTQRuM.CollectAllFruit then
+        foUSPDNDz("Collect All Fruit enabled")
+    else
+        foUSPDNDz(
+            "Collecting fruit with "
+                .. DfrqgXXsrB(ibVEMhwTQRuM.MinFruitMutations)
+                .. "+ mutation(s)"
+        )
+    end
+end)
+
+mQWmyXAPG:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.MinFruitMutations =
+        math.max(
+            0,
+            math.floor(
+                (FPwbuFJZR(XUWueugAwuSw) or ibVEMhwTQRuM.MinFruitMutations or 0)
+                + 0.5
+            )
+        )
+
+    foUSPDNDz(
+        "Minimum fruit mutations: "
+            .. DfrqgXXsrB(ibVEMhwTQRuM.MinFruitMutations)
+    )
+end)
+
+nLHwcAJvJ:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.FruitCollectInterval =
+        math.max(0.25, FPwbuFJZR(XUWueugAwuSw) or 1)
+end)
+
+RxASKBGxtwI:OnChanged(function(XUWueugAwuSw)
+    XLZYOtQEIi(XUWueugAwuSw)
+
+    foUSPDNDz(
+        "Harvest targets: "
+            .. rdYzIypaIF()
+    )
+end)
+
+wPDpgXsd:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.AutoSellDeadTree = XUWueugAwuSw == true
+
+    if ibVEMhwTQRuM.AutoSellDeadTree then
+        foUSPDNDz("Auto Sell Dead Trees enabled")
+        nFPpZjLd("AutoSellDeadTree", FbIMnaYWL)
+    else
+        PxzWtllXIL("AutoSellDeadTree")
+        wpFutleQBCyz:ReleaseBackgroundEquipment("AutoSellDeadTree")
+        foUSPDNDz("Auto Sell Dead Trees disabled")
+
+        if not wpFutleQBCyz:IsPlantBusy() then
+            HXuhwCIQZAB("IDLE")
+        end
+    end
+end)
+
+RdrxvLvuX:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.AutoSellFruit = XUWueugAwuSw == true
+
+    if ibVEMhwTQRuM.AutoSellFruit then
+        foUSPDNDz("Auto Sell Fruit enabled")
+        nFPpZjLd("AutoSellFruit", yNkNYPlA)
+    else
+        PxzWtllXIL("AutoSellFruit")
+        wpFutleQBCyz:ReleaseBackgroundEquipment("AutoSellFruit")
+        foUSPDNDz("Auto Sell Fruit disabled")
+
+        if not wpFutleQBCyz:IsPlantBusy() then
+            HXuhwCIQZAB("IDLE")
+        end
+    end
+end)
+
+ohSqYrSVs:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.SellDelay = FPwbuFJZR(XUWueugAwuSw) or 0.15
+end)
+
+tXdecIiUV:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.AutoCompostSeed = XUWueugAwuSw == true
+
+    if ibVEMhwTQRuM.AutoCompostSeed then
+        if ibVEMhwTQRuM.AutoPlant then
+            ibVEMhwTQRuM.AutoPlant = false
+            PxzWtllXIL("AutoPlant")
+
+            if WSHzliWt
+                and type(WSHzliWt.SetValue) == "function" then
+                WSHzliWt:SetValue(false, true)
+            end
+
+            AoDYQAJZTEZM(
+                "Auto Compost Seed",
+                "Auto Plant đã tạm dừng để giữ bạn ở khu vực Compost Bin.",
+                "warning",
+                4
+            )
+        end
+
+        foUSPDNDz("Auto Compost Seed enabled")
+        nFPpZjLd("AutoCompostSeed", TQQVQyTiPrA)
+    else
+        PxzWtllXIL("AutoCompostSeed")
+        PxzWtllXIL("CompostMovementGuard")
+        wpFutleQBCyz:ReleaseBackgroundEquipment("AutoCompostSeed")
+        euyMjRhaK.CompostAnchor = nil
+        euyMjRhaK.CompostPrompt = nil
+        euyMjRhaK.CompostAnchorPrompt = nil
+        foUSPDNDz("Auto Compost Seed disabled")
+
+        if not wpFutleQBCyz:IsPlantBusy() then
+            HXuhwCIQZAB("IDLE")
+        end
+    end
+end)
+
+OwKkmqTff:OnChanged(function(XUWueugAwuSw)
+    local otMRsdmAPve =
+        type(XUWueugAwuSw) == "table"
+        and vfTaHKJkC(XUWueugAwuSw)
+        or vfTaHKJkC({XUWueugAwuSw})
+
+    otMRsdmAPve = ivsIiUzIw(otMRsdmAPve)
+
+    if type(OwKkmqTff.SetValue) == "function" then
+        if gdxDTXid then
+            OwKkmqTff:SetValue(
+                vAvhLYicjXw(otMRsdmAPve),
+                true
+            )
+        else
+            OwKkmqTff:SetValue(
+                ESIHFmWdFau[otMRsdmAPve[1] or ibVEMhwTQRuM.CompostSeed],
+                true
+            )
+        end
+    end
+
+    foUSPDNDz("Compost seeds: " .. cXqsYNhLLg())
+end)
+
+YvipksYoZh:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.CompostDelay =
+        math.max(0.1, FPwbuFJZR(XUWueugAwuSw) or 0.25)
+end)
+
+uvOCyyAiZ:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.MutationScanInterval = FPwbuFJZR(XUWueugAwuSw) or 2
+end)
+
+UGIVRgvBE:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.AutoMutationScan = XUWueugAwuSw == true
+
+    if ibVEMhwTQRuM.AutoMutationScan then
+        nFPpZjLd("AutoMutationScan", function(lSSAtRsxOpy)
+            while PKTqUhNlA.Alive and ibVEMhwTQRuM.AutoMutationScan and not lSSAtRsxOpy() do
+                iPexFYUa(true)
+                if not pQFNwZAvvQA(ibVEMhwTQRuM.MutationScanInterval, lSSAtRsxOpy) then
+                    break
+                end
+            end
+        end)
+        foUSPDNDz("Auto Refresh Fruit List enabled")
+    else
+        PxzWtllXIL("AutoMutationScan")
+        foUSPDNDz("Auto Refresh Fruit List disabled")
+    end
+end)
+
+RLjbrIMQz:OnChanged(function(XUWueugAwuSw)
+    ibVEMhwTQRuM.Debug = XUWueugAwuSw == true
+    foUSPDNDz("Extra logs: " .. (ibVEMhwTQRuM.Debug and "ON" or "OFF"))
+end)
+
+asRVVntKCLIk:OnChanged(function(XUWueugAwuSw)
+    vHRPUjRYZUZk(XUWueugAwuSw == true)
+end)
+
+--============================================================
+-- INITIAL PLOT + LIVE COORDINATOR INFO
+--============================================================
+
+task.defer(function()
+    if not PKTqUhNlA.Alive then
+        return
+    end
+
+    local EojeQsclmwhy = kUPNnQqxT()
+
+    if EojeQsclmwhy then
+        yUSlqYqU:SetText(
+            "Your plot: " .. EojeQsclmwhy.Name
+        )
+    else
+        yUSlqYqU:SetText("My plot was not detected yet")
+    end
+end)
+
+task.spawn(function()
+    while PKTqUhNlA.Alive and ZVSHaxVHqSBo.Gui and ZVSHaxVHqSBo.Gui.Parent do
+        local DcAmitWhFX = jdMXqPJlODtA()
+
+        local rFCibROv, WVWFXsiIeOm =
+            AcshXZuiGq()
+
+        local SazuaLvhPq = "none"
+
+        if euyMjRhaK.LastPurchase then
+            SazuaLvhPq =
+                DfrqgXXsrB(euyMjRhaK.LastPurchase.SeedType)
+                .. " "
+                .. DfrqgXXsrB(euyMjRhaK.LastPurchase.CostText)
+        end
+
+        zvVSqHrMlO:SetText(table.concat({
+            "Status: " .. DfrqgXXsrB(euyMjRhaK.Phase),
+            "Key: No Key",
+            "Coins: " .. DfrqgXXsrB(WVWFXsiIeOm or rFCibROv or "?"),
+            "Worms: "
+                .. DfrqgXXsrB(euyMjRhaK.WormCount or 0)
+                .. " | "
+                .. DfrqgXXsrB(euyMjRhaK.LastWormSource or "none"),
+            "Inventory: "
+                .. DfrqgXXsrB(euyMjRhaK.LastInventorySource or "none")
+                .. " | v"
+                .. DfrqgXXsrB(ZMZXtZNTlb.Version or 0),
+            "Weather: " .. DfrqgXXsrB(euyMjRhaK.CurrentWeather)
+                .. (
+                    euyMjRhaK.WeatherActive
+                    and " (active)"
+                    or " (normal)"
+                ),
+            "Anti-AFK: "
+                .. (
+                    ibVEMhwTQRuM.AntiAfk
+                    and "ON"
+                    or "OFF"
+                ),
+            "Held item: " .. DfrqgXXsrB(DcAmitWhFX and DcAmitWhFX.Name or "none"),
+            "Action lock: " .. DfrqgXXsrB(MogsXTREOt.Owner or "none"),
+            "Tool lock: " .. DfrqgXXsrB(Guqfamwp.Owner or "none"),
+            "Last buy: " .. SazuaLvhPq,
+            "Last worm: "
+                .. DfrqgXXsrB(
+                    euyMjRhaK.LastUsedWorm
+                    and (
+                        DfrqgXXsrB(euyMjRhaK.LastUsedWorm.DisplayType)
+                        .. " "
+                        .. DfrqgXXsrB(euyMjRhaK.LastUsedWorm.Mult)
+                        .. "x"
+                    )
+                    or "none"
+                ),
+            "Bought: " .. DfrqgXXsrB(euyMjRhaK.PurchaseCount)
+                .. "   |   Planted: " .. DfrqgXXsrB(euyMjRhaK.PlantCount)
+                .. "   |   Harvested: " .. DfrqgXXsrB(euyMjRhaK.HarvestCount)
+                .. "   |   Cleared: " .. DfrqgXXsrB(euyMjRhaK.DeadCollectCount)
+                .. "   |   Fruit: " .. DfrqgXXsrB(euyMjRhaK.FruitCollectCount),
+            "Dead trees sold: " .. DfrqgXXsrB(euyMjRhaK.SellDeadTreeCount),
+            "Fruit sold: " .. DfrqgXXsrB(euyMjRhaK.SellFruitCount),
+            "Compost: "
+                .. DfrqgXXsrB(euyMjRhaK.CompostMode or "UNKNOWN")
+                .. " | distance "
+                .. DfrqgXXsrB(euyMjRhaK.CompostDistance or 0)
+                .. " | given "
+                .. DfrqgXXsrB(euyMjRhaK.CompostGiveCount or 0)
+                .. " | collected "
+                .. DfrqgXXsrB(euyMjRhaK.CompostCollectCount or 0),
+            "Fruit listed: " .. DfrqgXXsrB(euyMjRhaK.FruitListedCount),
+        }, "\n"))
+
+        local WbXuprlRWe = euyMjRhaK.CurrentPlantRound
+
+        if not WbXuprlRWe or not WbXuprlRWe.Parent then
+            local meYmQTnufS = lciEiyCr()
+            WbXuprlRWe = meYmQTnufS[#meYmQTnufS]
+        end
+
+        if WbXuprlRWe then
+            local AmHzJvpYeo = ciyEOPymQW(WbXuprlRWe)
+
+            if AmHzJvpYeo then
+                local DhaBjHwh =
+                    EgiwikUN(WbXuprlRWe)
+                    or "unknown"
+                local mheQJrvIu =
+                    PwPdrJwbG(WbXuprlRWe)
+
+                NEAVSpcFZG:SetText(
+                    table.concat({
+                        "Current plant: " .. DfrqgXXsrB(DhaBjHwh),
+                        "Growth: "
+                            .. DfrqgXXsrB(AmHzJvpYeo.Multiplier or "?")
+                            .. "x / "
+                            .. DfrqgXXsrB(mheQJrvIu)
+                            .. "x",
+                        "Target: "
+                            .. rdYzIypaIF(),
+                        "Worm: "
+                            .. (
+                                euyMjRhaK.LastPlantContext
+                                and euyMjRhaK.LastPlantContext.PlantRound == WbXuprlRWe
+                                and euyMjRhaK.LastPlantContext.UsedWorm
+                                and (
+                                    DfrqgXXsrB(euyMjRhaK.LastPlantContext.WormDisplayType)
+                                    .. " "
+                                    .. DfrqgXXsrB(euyMjRhaK.LastPlantContext.WormMult)
+                                    .. "x"
+                                )
+                                or "none"
+                            ),
+                        "Health: "
+                            .. (
+                                AmHzJvpYeo.Dead
+                                and "needs clearing"
+                                or "growing"
+                            ),
+                    }, "\n")
+                )
+            end
+        else
+            NEAVSpcFZG:SetText(
+                "No plant is growing right now."
+            )
+        end
+
+        task.wait(0.35)
+    end
+end)
+
+-- Character respawn: no feature restart is needed; helpers always resolve Character fresh.
+PKTqUhNlA:Track(dxLeYzjrD.CharacterAdded:Connect(function()
+    task.wait(0.75)
+    if PKTqUhNlA.Alive then
+        foUSPDNDz("Character reloaded; automation retained")
+    end
+end))
+
+-- If Kira UI is closed/destroyed, stop runtime too.
+PKTqUhNlA:Track(ZVSHaxVHqSBo.Gui.AncestryChanged:Connect(function(_, ODlrNcZGPi)
+    if ODlrNcZGPi == nil and PKTqUhNlA.Alive then
+        PKTqUhNlA:Destroy()
+    end
+end))
+
+if FSpVeFeSC() then
+    ETfcENxgk()
+end
+
+HXuhwCIQZAB("IDLE")
+foUSPDNDz("Kira Hub ready")
+
+if type(ZVSHaxVHqSBo.LoadAutoConfig) == "function" then
+    task.defer(function()
+        if not PKTqUhNlA.Alive then
+            return
+        end
+
+        local uPirkaZfGG, dQSktSlt, CRwBIXohMQ = ZVSHaxVHqSBo:LoadAutoConfig()
+
+        if uPirkaZfGG and CRwBIXohMQ then
+            foUSPDNDz(
+                "Autoload config loaded: "
+                    .. DfrqgXXsrB(CRwBIXohMQ)
+                    .. " ("
+                    .. DfrqgXXsrB(dQSktSlt)
+                    .. " setting(s))",
+                "success"
+            )
+        elseif not uPirkaZfGG then
+            foUSPDNDz(
+                "Autoload failed: " .. DfrqgXXsrB(dQSktSlt),
+                "danger"
+            )
+        end
+    end)
+end
+
+-- Expose useful functions for later patching/debugging.
+PKTqUhNlA.RefreshMutations = iPexFYUa
+PKTqUhNlA.ClearBuyQueue = WYIEBUUAT
+PKTqUhNlA.ScanConveyor = XarpitBPFIg
+PKTqUhNlA.GetInventory = function()
+    return ZMZXtZNTlb:GetInventory()
+end
+PKTqUhNlA.GetSeeds = function()
+    return ZMZXtZNTlb:GetSeeds()
+end
+PKTqUhNlA.GetSeedCount = function(DhaBjHwh)
+    return ZMZXtZNTlb:GetSeedCount(DhaBjHwh)
+end
+PKTqUhNlA.GetPlantSeeds = function()
+    return RyYbdTkwDtE()
+end
+PKTqUhNlA.GetHarvestTargets = function()
+    return {Locked= ibVEMhwTQRuM.HarvestMultiplierLocked,
+        Shared = ibVEMhwTQRuM.HarvestMultiplier,
+        Values = PyoJDKby(ibVEMhwTQRuM.HarvestMultipliers),
+    }
+end
+PKTqUhNlA.GetWeather = function()
+    local CSJzVWFOz, UnCMwRYd = dHqyhbRECjo()
+
+    return {Current= CSJzVWFOz,
+        Active = UnCMwRYd,
+        PlantOnlyDuringWeather = ibVEMhwTQRuM.PlantOnlyDuringWeather,
+    }
+end
+PKTqUhNlA.ResolveSeed = function(DhaBjHwh)
+    return ZMZXtZNTlb:ResolveSeed(
+        DhaBjHwh,
+        jdMXqPJlODtA()
+    )
+end
+PKTqUhNlA.AllSeeds = MKjocGYu
+PKTqUhNlA.SeedCatalog = qrOkZyKh
+PKTqUhNlA.SeedPriceText = ITzawOckSLt
+PKTqUhNlA.RefreshRoundMonitor = ETfcENxgk
+PKTqUhNlA.KiraUI = ahrBAuuaAFi
+
+end
+
+GDUgNLxkAhS()
+
+return PKTqUhNlA
+
+end)()
