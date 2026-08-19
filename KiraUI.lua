@@ -2517,6 +2517,725 @@ function KiraUI:CreateWindow(config)
             section.AddPerItemNumber = section.AddNumberMap
             section.AddNumberList = section.AddNumberMap
 
+            function section:AddSelectMap(options)
+                options = options or {}
+                local multi = options.Multi == true or options.MultiSelect == true
+                local emptyText = tostring(options.EmptyText or options.Placeholder or "Select...")
+                local itemControlWidth = tonumber(options.ItemControlWidth) or (multi and 156 or 126)
+                local maxLabels = tonumber(options.MaxLabels) or 1
+
+                local function copyArray(values)
+                    local out = {}
+                    for _, value in ipairs(values or {}) do
+                        out[#out + 1] = value
+                    end
+                    return out
+                end
+
+                local function copyItems(items)
+                    local out = {}
+                    local seen = {}
+                    for _, item in ipairs(items or {}) do
+                        local key
+                        local text
+                        if type(item) == "table" then
+                            key = item.Key or item.Id or item.Value or item.Name or item.Text or item.Label
+                            text = item.Text or item.Label or item.Name or key
+                        else
+                            key = item
+                            text = item
+                        end
+
+                        key = tostring(key or "")
+                        text = tostring(text or key)
+                        if key ~= "" and not seen[key] then
+                            seen[key] = true
+                            out[#out + 1] = {
+                                Key = key,
+                                Text = text,
+                            }
+                        end
+                    end
+                    return out
+                end
+
+                local function readItems()
+                    if type(options.Items) == "function" then
+                        local ok, result = pcall(options.Items)
+                        return copyItems(ok and result or {})
+                    elseif type(options.Provider) == "function" then
+                        local ok, result = pcall(options.Provider)
+                        return copyItems(ok and result or {})
+                    end
+                    return copyItems(options.Items or {})
+                end
+
+                local function readChoices()
+                    local values
+                    if type(options.Choices) == "function" then
+                        local ok, result = pcall(options.Choices)
+                        values = ok and result or {}
+                    elseif type(options.Values) == "function" then
+                        local ok, result = pcall(options.Values)
+                        values = ok and result or {}
+                    else
+                        values = options.Choices or options.Values or options.Options or {}
+                    end
+
+                    local out = {}
+                    local seen = {}
+                    for _, value in ipairs(values or {}) do
+                        local text = tostring(value or "")
+                        if text ~= "" and not seen[text] then
+                            seen[text] = true
+                            out[#out + 1] = text
+                        end
+                    end
+                    return out
+                end
+
+                local function choiceSet()
+                    local set = {}
+                    for _, choice in ipairs(readChoices()) do
+                        set[choice] = true
+                    end
+                    return set
+                end
+
+                local function normalizeMulti(values)
+                    if type(values) ~= "table" then
+                        values = values == nil and {} or {values}
+                    end
+
+                    local allowed = choiceSet()
+                    local out = {}
+                    local seen = {}
+                    for _, value in ipairs(values) do
+                        local text = tostring(value or "")
+                        if text ~= "" and allowed[text] and not seen[text] then
+                            seen[text] = true
+                            out[#out + 1] = text
+                        end
+                    end
+                    return out
+                end
+
+                local function normalizeSingle(value, fallback)
+                    local text = tostring(value or "")
+                    local allowed = choiceSet()
+
+                    if text ~= "" and allowed[text] then
+                        return text
+                    end
+
+                    local fallbackText = tostring(fallback or "")
+                    if fallbackText ~= "" and allowed[fallbackText] then
+                        return fallbackText
+                    end
+
+                    local choices = readChoices()
+                    return choices[1] or ""
+                end
+
+                local function normalizeValue(value, fallback)
+                    if multi then
+                        return normalizeMulti(value)
+                    end
+                    return normalizeSingle(value, fallback)
+                end
+
+                local function copyValue(value)
+                    if multi then
+                        return copyArray(value)
+                    end
+                    return tostring(value or "")
+                end
+
+                local function copyMap(values, fallback)
+                    local out = {}
+                    for key, value in pairs(values or {}) do
+                        out[tostring(key)] = normalizeValue(value, fallback)
+                    end
+                    return out
+                end
+
+                local defaultShared = options.Shared
+                    or options.Default
+                    or options.Value
+                    or (multi and {} or nil)
+
+                local state = {
+                    Locked = options.Locked ~= false,
+                    Shared = normalizeValue(defaultShared),
+                    Values = {},
+                    Items = readItems(),
+                }
+                state.Values = copyMap(options.ItemValues or options.DefaultValues or {}, state.Shared)
+
+                local function copyState()
+                    return {
+                        Locked = state.Locked,
+                        Shared = copyValue(state.Shared),
+                        Values = copyMap(state.Values, state.Shared),
+                        Items = copyItems(state.Items),
+                    }
+                end
+
+                local object = makeValueObject(copyState(), options.Callback)
+                local row = controlFrame(68)
+                local itemButtons = {}
+                local popup
+                local selectApi = {}
+
+                local label = new("TextLabel", {
+                    BackgroundTransparency = 1,
+                    Position = UDim2.fromOffset(0, 0),
+                    Size = UDim2.new(1, 0, 0, 18),
+                    Font = Enum.Font.Gotham,
+                    Text = string.upper(tostring(options.Text or options.Name or "Select Map")),
+                    TextSize = 10,
+                    TextColor3 = theme.MutedText,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    ZIndex = 17,
+                }, row)
+
+                local sharedButton = new("TextButton", {
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    Position = UDim2.fromOffset(0, 22),
+                    Size = UDim2.new(1, -98, 0, 36),
+                    Font = Enum.Font.GothamMedium,
+                    Text = "",
+                    TextSize = 11,
+                    TextColor3 = theme.Text,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    AutoButtonColor = false,
+                    ZIndex = 17,
+                }, row)
+                corner(sharedButton, 8)
+                padding(sharedButton, 11, 28, 0, 0)
+
+                local sharedArrow = new("TextLabel", {
+                    BackgroundTransparency = 1,
+                    AnchorPoint = Vector2.new(1, 0),
+                    Position = UDim2.new(1, -106, 0, 22),
+                    Size = UDim2.fromOffset(20, 36),
+                    Font = Enum.Font.GothamBold,
+                    Text = "v",
+                    TextSize = 13,
+                    TextColor3 = theme.MutedText,
+                    ZIndex = 18,
+                }, row)
+
+                local lockButton = new("TextButton", {
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    AnchorPoint = Vector2.new(1, 0),
+                    Position = UDim2.new(1, 0, 0, 22),
+                    Size = UDim2.fromOffset(88, 36),
+                    Font = Enum.Font.GothamBold,
+                    Text = "",
+                    TextSize = 10,
+                    TextColor3 = theme.Text,
+                    AutoButtonColor = false,
+                    ZIndex = 17,
+                }, row)
+                corner(lockButton, 8)
+
+                local list = new("ScrollingFrame", {
+                    Name = "SelectMapItems",
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    Position = UDim2.fromOffset(0, 66),
+                    Size = UDim2.new(1, 0, 0, 0),
+                    CanvasSize = UDim2.fromOffset(0, 0),
+                    ScrollBarThickness = 2,
+                    ScrollBarImageColor3 = theme.Border,
+                    ScrollBarImageTransparency = 0.1,
+                    Visible = false,
+                    ZIndex = 17,
+                }, row)
+                corner(list, 10)
+                stroke(list, theme.Border, 0.35, 1)
+                padding(list, 6, 6, 6, 6)
+
+                local listLayout = new("UIListLayout", {
+                    Padding = UDim.new(0, 6),
+                    SortOrder = Enum.SortOrder.LayoutOrder,
+                }, list)
+
+                local function formatDisplay(value)
+                    if multi then
+                        value = normalizeMulti(value)
+                        if #value == 0 then
+                            return emptyText
+                        elseif #value <= maxLabels then
+                            return table.concat(value, ", ")
+                        end
+                        return tostring(#value) .. " selected"
+                    end
+
+                    value = normalizeSingle(value, state.Shared)
+                    return value ~= "" and value or emptyText
+                end
+
+                local function valueForKey(key)
+                    local value = state.Values[key]
+                    if value == nil then
+                        value = state.Shared
+                    end
+                    return normalizeValue(value, state.Shared)
+                end
+
+                local function renderButton(button, value)
+                    button.Text = "  " .. formatDisplay(value)
+                    if multi and #normalizeMulti(value) == 0 then
+                        button.TextColor3 = theme.MutedText
+                    else
+                        button.TextColor3 = theme.Text
+                    end
+                end
+
+                local function emit(silent)
+                    object.Value = copyState()
+                    if not silent then
+                        object:_emit(copyState())
+                    end
+                end
+
+                local function closePopup()
+                    if popup then
+                        popup:Destroy()
+                        popup = nil
+                    end
+                    dismissLayer.Visible = false
+                    sharedArrow.Text = "v"
+                    if window._openDropdown == selectApi then
+                        window._openDropdown = nil
+                    end
+                end
+
+                function selectApi:Close()
+                    closePopup()
+                end
+
+                local function openPopup(trigger, currentValue, applyValue)
+                    window:_closeDropdown()
+                    dismissLayer.Visible = true
+                    sharedArrow.Text = trigger == sharedButton and "^" or "v"
+
+                    local choices = readChoices()
+                    local itemHeight = 34
+                    local controlsHeight = multi and 34 or 0
+                    local maxVisibleItems = tonumber(options.MaxVisibleChoices) or tonumber(options.MaxVisibleItems) or 7
+                    local contentHeight = (#choices * itemHeight) + controlsHeight + 8
+                    local popupHeight = math.min(
+                        math.max(itemHeight, contentHeight),
+                        (maxVisibleItems * itemHeight) + controlsHeight + 8
+                    )
+                    local triggerPos = trigger.AbsolutePosition
+                    local triggerSize = trigger.AbsoluteSize
+                    local viewportSize = getViewport()
+                    local x = triggerPos.X
+                    local belowY = triggerPos.Y + triggerSize.Y + 6
+                    local aboveY = triggerPos.Y - popupHeight - 6
+                    local spaceBelow = viewportSize.Y - belowY
+                    local y = (spaceBelow >= popupHeight or aboveY < 8) and belowY or aboveY
+                    local popupWidth = math.max(triggerSize.X, options.MinPopupWidth or (multi and 220 or 160))
+
+                    if x + popupWidth > viewportSize.X - 8 then
+                        x = viewportSize.X - popupWidth - 8
+                    end
+                    x = math.max(8, x)
+                    y = math.max(8, math.min(y, viewportSize.Y - popupHeight - 8))
+
+                    popup = new("ScrollingFrame", {
+                        Name = "SelectMapPopup",
+                        BackgroundColor3 = theme.Surface3,
+                        BorderSizePixel = 0,
+                        Position = UDim2.fromOffset(x, y),
+                        Size = UDim2.fromOffset(popupWidth, popupHeight),
+                        CanvasSize = UDim2.fromOffset(0, math.max(0, contentHeight)),
+                        ScrollBarThickness = 2,
+                        ScrollBarImageColor3 = theme.Border,
+                        ScrollBarImageTransparency = 0.1,
+                        ZIndex = 910,
+                    }, portal)
+                    corner(popup, 10)
+                    stroke(popup, theme.Border, 0.18, 1)
+                    padding(popup, 4, 4, 4, 4)
+
+                    new("UIListLayout", {
+                        Padding = UDim.new(0, 0),
+                        SortOrder = Enum.SortOrder.LayoutOrder,
+                    }, popup)
+
+                    if multi then
+                        local selected = normalizeMulti(currentValue)
+                        local selectedSet = {}
+                        for _, value in ipairs(selected) do
+                            selectedSet[value] = true
+                        end
+
+                        local buttons = {}
+
+                        local function selectedArray()
+                            local out = {}
+                            for _, choice in ipairs(choices) do
+                                if selectedSet[choice] then
+                                    out[#out + 1] = choice
+                                end
+                            end
+                            return out
+                        end
+
+                        local function renderItems()
+                            for choice, item in pairs(buttons) do
+                                local active = selectedSet[choice] == true
+                                item.Text = (active and "  [x] " or "  [ ] ") .. choice
+                                item.TextColor3 = active and theme.Accent or theme.Text
+                            end
+                        end
+
+                        local controlsRow = new("Frame", {
+                            BackgroundTransparency = 1,
+                            Size = UDim2.new(1, 0, 0, controlsHeight),
+                            ZIndex = 911,
+                        }, popup)
+
+                        local function actionButton(text, xScale, widthScale, callback)
+                            local button = new("TextButton", {
+                                BackgroundColor3 = theme.Surface2,
+                                BorderSizePixel = 0,
+                                Position = UDim2.new(xScale, 2, 0, 2),
+                                Size = UDim2.new(widthScale, -4, 1, -6),
+                                Font = Enum.Font.GothamMedium,
+                                Text = text,
+                                TextSize = 10,
+                                TextColor3 = theme.Text,
+                                AutoButtonColor = false,
+                                ZIndex = 912,
+                            }, controlsRow)
+                            corner(button, 7)
+                            window:_connect(button.MouseButton1Click, callback)
+                        end
+
+                        actionButton("All", 0, 0.33, function()
+                            for _, choice in ipairs(choices) do
+                                selectedSet[choice] = true
+                            end
+                            applyValue(selectedArray())
+                            renderItems()
+                        end)
+                        actionButton("Clear", 0.33, 0.34, function()
+                            selectedSet = {}
+                            applyValue({})
+                            renderItems()
+                        end)
+                        actionButton("Done", 0.67, 0.33, closePopup)
+
+                        for _, choice in ipairs(choices) do
+                            local item = new("TextButton", {
+                                BackgroundTransparency = 1,
+                                BorderSizePixel = 0,
+                                Size = UDim2.new(1, 0, 0, itemHeight),
+                                Font = Enum.Font.GothamMedium,
+                                Text = "",
+                                TextSize = 10,
+                                TextXAlignment = Enum.TextXAlignment.Left,
+                                AutoButtonColor = false,
+                                ZIndex = 911,
+                            }, popup)
+                            buttons[choice] = item
+
+                            window:_connect(item.MouseEnter, function()
+                                item.BackgroundTransparency = 0
+                                item.BackgroundColor3 = theme.Surface2
+                            end)
+                            window:_connect(item.MouseLeave, function()
+                                item.BackgroundTransparency = 1
+                            end)
+                            window:_connect(item.MouseButton1Click, function()
+                                selectedSet[choice] = not selectedSet[choice] or nil
+                                applyValue(selectedArray())
+                                renderItems()
+                            end)
+                        end
+
+                        renderItems()
+                    elseif #choices == 0 then
+                        new("TextLabel", {
+                            BackgroundTransparency = 1,
+                            Size = UDim2.new(1, 0, 0, itemHeight),
+                            Font = Enum.Font.Gotham,
+                            Text = tostring(options.EmptyChoicesText or "No options"),
+                            TextSize = 10,
+                            TextColor3 = theme.MutedText,
+                            ZIndex = 911,
+                        }, popup)
+                    else
+                        for _, choice in ipairs(choices) do
+                            local item = new("TextButton", {
+                                BackgroundTransparency = 1,
+                                BorderSizePixel = 0,
+                                Size = UDim2.new(1, 0, 0, itemHeight),
+                                Font = Enum.Font.GothamMedium,
+                                Text = "  " .. choice,
+                                TextSize = 10,
+                                TextColor3 = choice == currentValue and theme.Accent or theme.Text,
+                                TextXAlignment = Enum.TextXAlignment.Left,
+                                AutoButtonColor = false,
+                                ZIndex = 911,
+                            }, popup)
+
+                            window:_connect(item.MouseEnter, function()
+                                item.BackgroundTransparency = 0
+                                item.BackgroundColor3 = theme.Surface2
+                            end)
+                            window:_connect(item.MouseLeave, function()
+                                item.BackgroundTransparency = 1
+                            end)
+                            window:_connect(item.MouseButton1Click, function()
+                                applyValue(choice)
+                                closePopup()
+                            end)
+                        end
+                    end
+
+                    window._openDropdown = selectApi
+                end
+
+                local function syncRowHeight()
+                    local itemHeight = 36
+                    local maxVisibleItems = tonumber(options.MaxVisibleItems) or 5
+                    local listHeight = state.Locked and 0 or math.min(
+                        math.max(1, #state.Items) * (itemHeight + 6) + 6,
+                        (maxVisibleItems * (itemHeight + 6)) + 6
+                    )
+
+                    list.Visible = not state.Locked
+                    list.Size = UDim2.new(1, 0, 0, listHeight)
+                    row.Size = UDim2.new(1, 0, 0, state.Locked and 68 or (72 + listHeight))
+                    list.CanvasSize = UDim2.fromOffset(0, math.max(0, listLayout.AbsoluteContentSize.Y + 12))
+                end
+
+                local function clearList()
+                    itemButtons = {}
+                    for _, child in ipairs(list:GetChildren()) do
+                        if child:IsA("Frame") then
+                            child:Destroy()
+                        end
+                    end
+                end
+
+                local function render()
+                    renderButton(sharedButton, state.Shared)
+                    lockButton.Text = state.Locked and "LOCKED" or "CUSTOM"
+                    lockButton.BackgroundColor3 = state.Locked and theme.AccentSoft or theme.Surface3
+                    lockButton.TextColor3 = state.Locked and theme.Text or theme.Warning
+                    for key, button in pairs(itemButtons) do
+                        renderButton(button, valueForKey(key))
+                    end
+                    syncRowHeight()
+                end
+
+                local function rebuildList()
+                    clearList()
+
+                    if #state.Items == 0 then
+                        local empty = new("Frame", {
+                            BackgroundTransparency = 1,
+                            Size = UDim2.new(1, 0, 0, 36),
+                            ZIndex = 18,
+                        }, list)
+                        new("TextLabel", {
+                            BackgroundTransparency = 1,
+                            Size = UDim2.fromScale(1, 1),
+                            Font = Enum.Font.Gotham,
+                            Text = tostring(options.EmptyItemsText or "No items"),
+                            TextSize = 10,
+                            TextColor3 = theme.MutedText,
+                            ZIndex = 19,
+                        }, empty)
+                        syncRowHeight()
+                        return
+                    end
+
+                    for index, item in ipairs(state.Items) do
+                        local key = item.Key
+                        local line = new("Frame", {
+                            BackgroundTransparency = 1,
+                            Size = UDim2.new(1, 0, 0, 36),
+                            LayoutOrder = index,
+                            ZIndex = 18,
+                        }, list)
+
+                        new("TextLabel", {
+                            BackgroundTransparency = 1,
+                            Position = UDim2.fromOffset(0, 0),
+                            Size = UDim2.new(1, -(itemControlWidth + 12), 1, 0),
+                            Font = Enum.Font.GothamMedium,
+                            Text = item.Text,
+                            TextSize = 10,
+                            TextColor3 = theme.Text,
+                            TextXAlignment = Enum.TextXAlignment.Left,
+                            TextTruncate = Enum.TextTruncate.AtEnd,
+                            ZIndex = 19,
+                        }, line)
+
+                        local button = new("TextButton", {
+                            BackgroundColor3 = theme.Surface2,
+                            BorderSizePixel = 0,
+                            AnchorPoint = Vector2.new(1, 0.5),
+                            Position = UDim2.new(1, 0, 0.5, 0),
+                            Size = UDim2.fromOffset(itemControlWidth, 30),
+                            Font = Enum.Font.GothamMedium,
+                            Text = "",
+                            TextSize = 10,
+                            TextColor3 = theme.Text,
+                            TextXAlignment = Enum.TextXAlignment.Left,
+                            TextTruncate = Enum.TextTruncate.AtEnd,
+                            AutoButtonColor = false,
+                            ZIndex = 19,
+                        }, line)
+                        corner(button, 7)
+                        padding(button, 8, 8, 0, 0)
+                        itemButtons[key] = button
+
+                        window:_connect(button.MouseButton1Click, function()
+                            openPopup(button, valueForKey(key), function(value)
+                                state.Values[key] = normalizeValue(value, state.Shared)
+                                render()
+                                emit(false)
+                            end)
+                        end)
+                    end
+
+                    render()
+                end
+
+                function object:SetLocked(locked, silent)
+                    state.Locked = locked == true
+                    render()
+                    emit(silent)
+                    return self
+                end
+
+                function object:IsLocked()
+                    return state.Locked
+                end
+
+                function object:SetSharedValue(value, silent)
+                    state.Shared = normalizeValue(value, state.Shared)
+                    render()
+                    emit(silent)
+                    return self
+                end
+
+                function object:SetItemValue(key, value, silent)
+                    key = tostring(key or "")
+                    if key == "" then
+                        return self
+                    end
+                    state.Values[key] = normalizeValue(value, state.Shared)
+                    render()
+                    emit(silent)
+                    return self
+                end
+
+                function object:GetItemValue(key)
+                    key = tostring(key or "")
+                    if state.Locked then
+                        return copyValue(state.Shared)
+                    end
+                    return copyValue(valueForKey(key))
+                end
+
+                function object:SetItems(items, silent)
+                    state.Items = copyItems(items)
+                    rebuildList()
+                    render()
+                    emit(silent)
+                    return self
+                end
+
+                function object:Refresh()
+                    return self:SetItems(readItems())
+                end
+
+                function object:SetValues(values, silent)
+                    state.Values = copyMap(values, state.Shared)
+                    render()
+                    emit(silent)
+                    return self
+                end
+
+                function object:GetValues()
+                    return copyMap(state.Values, state.Shared)
+                end
+
+                function object:SetValue(value, silent)
+                    if type(value) == "table" then
+                        if value.Locked ~= nil then
+                            state.Locked = value.Locked == true
+                        end
+                        if value.Shared ~= nil then
+                            state.Shared = normalizeValue(value.Shared, state.Shared)
+                        elseif value.Default ~= nil then
+                            state.Shared = normalizeValue(value.Default, state.Shared)
+                        end
+                        if value.Values ~= nil then
+                            state.Values = copyMap(value.Values, state.Shared)
+                        elseif value.ItemValues ~= nil then
+                            state.Values = copyMap(value.ItemValues, state.Shared)
+                        end
+                        if value.Items ~= nil then
+                            state.Items = copyItems(value.Items)
+                            rebuildList()
+                        end
+                    else
+                        state.Shared = normalizeValue(value, state.Shared)
+                    end
+                    render()
+                    emit(silent)
+                    return self
+                end
+
+                window:_connect(sharedButton.MouseButton1Click, function()
+                    openPopup(sharedButton, state.Shared, function(value)
+                        state.Shared = normalizeValue(value, state.Shared)
+                        render()
+                        emit(false)
+                    end)
+                end)
+
+                window:_connect(lockButton.MouseButton1Click, function()
+                    object:SetLocked(not state.Locked)
+                end)
+
+                window:_connect(listLayout:GetPropertyChangedSignal("AbsoluteContentSize"), syncRowHeight)
+
+                rebuildList()
+                render()
+                object.Instance = row
+                object.Label = label
+                object.SharedButton = sharedButton
+                object.LockButton = lockButton
+                object.List = list
+                return window:_maybeRegisterConfig(object, options)
+            end
+
+            function section:AddMultiSelectMap(options)
+                options = options or {}
+                options.Multi = true
+                return self:AddSelectMap(options)
+            end
+
+            section.AddChoiceMap = section.AddSelectMap
+            section.AddDropdownMap = section.AddSelectMap
+
             function section:AddDropdown(options)
                 options = options or {}
                 local default = tostring(options.Default or "")
