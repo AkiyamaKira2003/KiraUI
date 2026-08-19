@@ -1313,7 +1313,7 @@ function KiraUI:CreateWindow(config)
         BorderSizePixel = 0,
         AnchorPoint = Vector2.new(1, 1),
         Position = UDim2.new(1, -16, 1, -16),
-        Size = UDim2.fromOffset(320, 360),
+        Size = UDim2.fromOffset(304, 340),
         ZIndex = 200,
     }, gui)
     window.Notifications = notificationContainer
@@ -1354,43 +1354,58 @@ function KiraUI:CreateWindow(config)
             tostring(options.Text or options.Message or "")
         local duration =
             math.max(0.8, tonumber(options.Duration) or 3)
+        local toastWidth =
+            tonumber(options.Width) or 304
         local height =
             tonumber(options.Height)
-            or (#messageValue > 90 and 96)
-            or (#messageValue > 45 and 82)
-            or 68
+            or (#messageValue > 92 and 84)
+            or (#messageValue > 48 and 72)
+            or 60
+        local accentColor = toneAccent(options.Tone)
 
         local card = new("Frame", {
             Name = "Toast",
-            BackgroundColor3 = theme.Surface2,
+            BackgroundColor3 = theme.Surface,
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
             LayoutOrder = notificationSerial,
-            Size = UDim2.fromOffset(320, 0),
+            Size = UDim2.fromOffset(toastWidth, 0),
             ClipsDescendants = true,
             ZIndex = 201,
         }, notificationContainer)
-        corner(card, 12)
-        stroke(card, toneAccent(options.Tone), 0.45, 1)
+        corner(card, 10)
+        stroke(card, theme.Border, 0.28, 1)
 
         local accent = new("Frame", {
             Name = "Accent",
-            BackgroundColor3 = toneAccent(options.Tone),
+            BackgroundColor3 = accentColor,
             BorderSizePixel = 0,
             Position = UDim2.fromOffset(0, 0),
-            Size = UDim2.new(0, 4, 1, 0),
+            Size = UDim2.new(0, 3, 1, 0),
             BackgroundTransparency = 1,
             ZIndex = 202,
         }, card)
+        corner(accent, 10)
+
+        local dot = new("Frame", {
+            Name = "ToneDot",
+            BackgroundColor3 = accentColor,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Position = UDim2.fromOffset(14, 14),
+            Size = UDim2.fromOffset(7, 7),
+            ZIndex = 203,
+        }, card)
+        corner(dot, 12)
 
         local toastTitle = new("TextLabel", {
             Name = "Title",
             BackgroundTransparency = 1,
-            Position = UDim2.fromOffset(16, 10),
-            Size = UDim2.new(1, -30, 0, 20),
+            Position = UDim2.fromOffset(28, 8),
+            Size = UDim2.new(1, -42, 0, 20),
             Font = Enum.Font.GothamBold,
             Text = titleValue,
-            TextSize = 13,
+            TextSize = 12,
             TextColor3 = theme.Text,
             TextTransparency = 1,
             TextXAlignment = Enum.TextXAlignment.Left,
@@ -1401,11 +1416,11 @@ function KiraUI:CreateWindow(config)
         local toastText = new("TextLabel", {
             Name = "Text",
             BackgroundTransparency = 1,
-            Position = UDim2.fromOffset(16, 32),
-            Size = UDim2.new(1, -30, 1, -40),
+            Position = UDim2.fromOffset(28, 29),
+            Size = UDim2.new(1, -42, 1, -36),
             Font = Enum.Font.Gotham,
             Text = messageValue,
-            TextSize = 11,
+            TextSize = 10,
             TextColor3 = theme.MutedText,
             TextTransparency = 1,
             TextWrapped = true,
@@ -1425,10 +1440,13 @@ function KiraUI:CreateWindow(config)
             closed = true
 
             TweenService:Create(card, TweenInfo.new(0.16, Enum.EasingStyle.Quad), {
-                Size = UDim2.fromOffset(320, 0),
+                Size = UDim2.fromOffset(toastWidth, 0),
                 BackgroundTransparency = 1,
             }):Play()
             TweenService:Create(accent, TweenInfo.new(0.12), {
+                BackgroundTransparency = 1,
+            }):Play()
+            TweenService:Create(dot, TweenInfo.new(0.12), {
                 BackgroundTransparency = 1,
             }):Play()
             TweenService:Create(toastTitle, TweenInfo.new(0.12), {
@@ -1446,10 +1464,13 @@ function KiraUI:CreateWindow(config)
         end
 
         TweenService:Create(card, TweenInfo.new(0.16, Enum.EasingStyle.Quad), {
-            Size = UDim2.fromOffset(320, height),
-            BackgroundTransparency = 0.04,
+            Size = UDim2.fromOffset(toastWidth, height),
+            BackgroundTransparency = 0.02,
         }):Play()
         TweenService:Create(accent, TweenInfo.new(0.12), {
+            BackgroundTransparency = 0,
+        }):Play()
+        TweenService:Create(dot, TweenInfo.new(0.12), {
             BackgroundTransparency = 0,
         }):Play()
         TweenService:Create(toastTitle, TweenInfo.new(0.12), {
