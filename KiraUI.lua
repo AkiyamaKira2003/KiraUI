@@ -2544,6 +2544,10 @@ function KiraUI:CreateWindow(config)
                 local emptyText = tostring(options.EmptyText or options.Placeholder or "Select...")
                 local itemControlWidth = tonumber(options.ItemControlWidth) or (multi and 156 or 126)
                 local maxLabels = tonumber(options.MaxLabels) or 1
+                local showLockButton =
+                    options.ShowLockButton ~= false
+                    and options.LockButton ~= false
+                    and options.LockControl ~= false
 
                 local function copyArray(values)
                     local out = {}
@@ -2725,7 +2729,9 @@ function KiraUI:CreateWindow(config)
                     BackgroundColor3 = theme.Surface3,
                     BorderSizePixel = 0,
                     Position = UDim2.fromOffset(0, 22),
-                    Size = UDim2.new(1, -98, 0, 36),
+                    Size = showLockButton
+                        and UDim2.new(1, -98, 0, 36)
+                        or UDim2.new(1, 0, 0, 36),
                     Font = Enum.Font.GothamMedium,
                     Text = "",
                     TextSize = 11,
@@ -2741,7 +2747,12 @@ function KiraUI:CreateWindow(config)
                 local sharedArrow = new("TextLabel", {
                     BackgroundTransparency = 1,
                     AnchorPoint = Vector2.new(1, 0),
-                    Position = UDim2.new(1, -106, 0, 22),
+                    Position = UDim2.new(
+                        1,
+                        showLockButton and -106 or -8,
+                        0,
+                        22
+                    ),
                     Size = UDim2.fromOffset(20, 36),
                     Font = Enum.Font.GothamBold,
                     Text = "v",
@@ -2761,6 +2772,7 @@ function KiraUI:CreateWindow(config)
                     TextSize = 10,
                     TextColor3 = theme.Text,
                     AutoButtonColor = false,
+                    Visible = showLockButton,
                     ZIndex = 17,
                 }, row)
                 corner(lockButton, 8)
@@ -3053,6 +3065,7 @@ function KiraUI:CreateWindow(config)
 
                 local function render()
                     renderButton(sharedButton, state.Shared)
+                    lockButton.Visible = showLockButton
                     lockButton.Text = state.Locked and "LOCKED" or "CUSTOM"
                     lockButton.BackgroundColor3 = state.Locked and theme.AccentSoft or theme.Surface3
                     lockButton.TextColor3 = state.Locked and theme.Text or theme.Warning
@@ -3232,9 +3245,11 @@ function KiraUI:CreateWindow(config)
                     end)
                 end)
 
-                window:_connect(lockButton.MouseButton1Click, function()
-                    object:SetLocked(not state.Locked)
-                end)
+                if showLockButton then
+                    window:_connect(lockButton.MouseButton1Click, function()
+                        object:SetLocked(not state.Locked)
+                    end)
+                end
 
                 window:_connect(listLayout:GetPropertyChangedSignal("AbsoluteContentSize"), syncRowHeight)
 
@@ -3249,9 +3264,14 @@ function KiraUI:CreateWindow(config)
             end
 
             function section:AddMultiSelectMap(options)
-                options = options or {}
-                options.Multi = true
-                return self:AddSelectMap(options)
+                local nextOptions = {}
+
+                for key, value in pairs(options or {}) do
+                    nextOptions[key] = value
+                end
+
+                nextOptions.Multi = true
+                return self:AddSelectMap(nextOptions)
             end
 
             section.AddChoiceMap = section.AddSelectMap
