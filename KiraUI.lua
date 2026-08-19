@@ -36,7 +36,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.3.1"
+KiraUI.Version = "0.3.2"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -3164,6 +3164,7 @@ function KiraUI:CreateWindow(config)
                     TextXAlignment = Enum.TextXAlignment.Left,
                     TextYAlignment = Enum.TextYAlignment.Top,
                     TextWrapped = options.Wrap == true,
+                    RichText = options.RichText == true,
                     ZIndex = 17,
                 }, row)
 
@@ -3176,6 +3177,11 @@ function KiraUI:CreateWindow(config)
                 function object:SetText(text)
                     self.Value = tostring(text or "")
                     label.Text = self.Value
+                    return self
+                end
+
+                function object:SetRichText(enabled)
+                    label.RichText = enabled == true
                     return self
                 end
 
