@@ -12,6 +12,7 @@
       - Named config profiles with save / overwrite / load / list UI
       - Rounded border / opt-in soft image shadow
       - Status + Phase pill
+      - Toast notifications
       - RightShift (configurable) show/hide
       - Runtime keybind picker
       - Floating restore launcher when hidden
@@ -36,7 +37,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.3.2"
+KiraUI.Version = "0.3.3"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -1305,6 +1306,165 @@ function KiraUI:CreateWindow(config)
     window.TitleText = title
     window.SubtitleText = subtitle
     window.StatusDot = statusDot
+
+    local notificationContainer = new("Frame", {
+        Name = "Notifications",
+        BackgroundTransparency = 1,
+        BorderSizePixel = 0,
+        AnchorPoint = Vector2.new(1, 1),
+        Position = UDim2.new(1, -16, 1, -16),
+        Size = UDim2.fromOffset(320, 360),
+        ZIndex = 200,
+    }, gui)
+    window.Notifications = notificationContainer
+
+    new("UIListLayout", {
+        Padding = UDim.new(0, 8),
+        FillDirection = Enum.FillDirection.Vertical,
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        VerticalAlignment = Enum.VerticalAlignment.Bottom,
+    }, notificationContainer)
+
+    local notificationSerial = 0
+
+    local function toneAccent(tone)
+        if tone == "danger" or tone == "error" then
+            return theme.Danger
+        elseif tone == "warning" then
+            return theme.Warning
+        elseif tone == "success" then
+            return theme.Success
+        end
+
+        return theme.Accent
+    end
+
+    function window:Notify(options)
+        if type(options) ~= "table" then
+            options = {
+                Text = tostring(options or ""),
+            }
+        end
+
+        notificationSerial += 1
+
+        local titleValue =
+            tostring(options.Title or options.Name or "Kira Hub")
+        local messageValue =
+            tostring(options.Text or options.Message or "")
+        local duration =
+            math.max(0.8, tonumber(options.Duration) or 3)
+        local height =
+            tonumber(options.Height)
+            or (#messageValue > 90 and 96)
+            or (#messageValue > 45 and 82)
+            or 68
+
+        local card = new("Frame", {
+            Name = "Toast",
+            BackgroundColor3 = theme.Surface2,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            LayoutOrder = notificationSerial,
+            Size = UDim2.fromOffset(320, 0),
+            ClipsDescendants = true,
+            ZIndex = 201,
+        }, notificationContainer)
+        corner(card, 12)
+        stroke(card, toneAccent(options.Tone), 0.45, 1)
+
+        local accent = new("Frame", {
+            Name = "Accent",
+            BackgroundColor3 = toneAccent(options.Tone),
+            BorderSizePixel = 0,
+            Position = UDim2.fromOffset(0, 0),
+            Size = UDim2.new(0, 4, 1, 0),
+            BackgroundTransparency = 1,
+            ZIndex = 202,
+        }, card)
+
+        local toastTitle = new("TextLabel", {
+            Name = "Title",
+            BackgroundTransparency = 1,
+            Position = UDim2.fromOffset(16, 10),
+            Size = UDim2.new(1, -30, 0, 20),
+            Font = Enum.Font.GothamBold,
+            Text = titleValue,
+            TextSize = 13,
+            TextColor3 = theme.Text,
+            TextTransparency = 1,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            TextTruncate = Enum.TextTruncate.AtEnd,
+            ZIndex = 203,
+        }, card)
+
+        local toastText = new("TextLabel", {
+            Name = "Text",
+            BackgroundTransparency = 1,
+            Position = UDim2.fromOffset(16, 32),
+            Size = UDim2.new(1, -30, 1, -40),
+            Font = Enum.Font.Gotham,
+            Text = messageValue,
+            TextSize = 11,
+            TextColor3 = theme.MutedText,
+            TextTransparency = 1,
+            TextWrapped = true,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            TextYAlignment = Enum.TextYAlignment.Top,
+            ZIndex = 203,
+        }, card)
+
+        local closed = false
+        local toast = {}
+
+        function toast:Close()
+            if closed then
+                return
+            end
+
+            closed = true
+
+            TweenService:Create(card, TweenInfo.new(0.16, Enum.EasingStyle.Quad), {
+                Size = UDim2.fromOffset(320, 0),
+                BackgroundTransparency = 1,
+            }):Play()
+            TweenService:Create(accent, TweenInfo.new(0.12), {
+                BackgroundTransparency = 1,
+            }):Play()
+            TweenService:Create(toastTitle, TweenInfo.new(0.12), {
+                TextTransparency = 1,
+            }):Play()
+            TweenService:Create(toastText, TweenInfo.new(0.12), {
+                TextTransparency = 1,
+            }):Play()
+
+            task.delay(0.18, function()
+                if card then
+                    card:Destroy()
+                end
+            end)
+        end
+
+        TweenService:Create(card, TweenInfo.new(0.16, Enum.EasingStyle.Quad), {
+            Size = UDim2.fromOffset(320, height),
+            BackgroundTransparency = 0.04,
+        }):Play()
+        TweenService:Create(accent, TweenInfo.new(0.12), {
+            BackgroundTransparency = 0,
+        }):Play()
+        TweenService:Create(toastTitle, TweenInfo.new(0.12), {
+            TextTransparency = 0,
+        }):Play()
+        TweenService:Create(toastText, TweenInfo.new(0.12), {
+            TextTransparency = 0,
+        }):Play()
+
+        task.delay(duration, function()
+            toast:Close()
+        end)
+
+        return toast
+    end
 
     function window:SetStatus(text, tone)
         statusText.Text = tostring(text or "")
