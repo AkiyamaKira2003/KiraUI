@@ -1839,6 +1839,113 @@ function KiraUI:CreateWindow(config)
                 return window:_maybeRegisterConfig(object, options)
             end
 
+            function section:AddLockMode(options)
+                options = options or {}
+                local object = makeValueObject(options.Default ~= false, options.Callback)
+                local row = controlFrame(68)
+
+                local label = new("TextLabel", {
+                    BackgroundTransparency = 1,
+                    Position = UDim2.fromOffset(0, 0),
+                    Size = UDim2.new(1, 0, 0, 18),
+                    Font = Enum.Font.Gotham,
+                    Text = string.upper(tostring(options.Text or options.Name or "Mode")),
+                    TextSize = 10,
+                    TextColor3 = theme.MutedText,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    ZIndex = 17,
+                }, row)
+
+                local displayBox = new("TextLabel", {
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    Position = UDim2.fromOffset(0, 22),
+                    Size = UDim2.new(1, -142, 0, 36),
+                    Font = Enum.Font.GothamMedium,
+                    Text = "",
+                    TextSize = 11,
+                    TextColor3 = theme.Text,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    ZIndex = 17,
+                }, row)
+                corner(displayBox, 8)
+                stroke(displayBox, theme.Border, 0.5, 1)
+                padding(displayBox, 11, 11, 0, 0)
+
+                local modeButton = new("TextButton", {
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    AnchorPoint = Vector2.new(1, 0),
+                    Position = UDim2.new(1, 0, 0, 22),
+                    Size = UDim2.fromOffset(128, 36),
+                    Font = Enum.Font.GothamBold,
+                    Text = "",
+                    TextSize = 10,
+                    TextColor3 = theme.Text,
+                    AutoButtonColor = false,
+                    ZIndex = 17,
+                }, row)
+                corner(modeButton, 8)
+
+                local function render()
+                    local locked = object.Value == true
+                    displayBox.Text = locked
+                        and tostring(options.LockedText or "Same settings")
+                        or tostring(options.CustomText or "Custom settings")
+                    modeButton.Text = locked
+                        and tostring(options.LockedButtonText or "LOCKED")
+                        or tostring(options.CustomButtonText or "CUSTOM")
+                    modeButton.BackgroundColor3 = locked and theme.AccentSoft or theme.Surface3
+                    modeButton.TextColor3 = locked and theme.Text or theme.Warning
+                end
+
+                function object:SetValue(value, silent)
+                    value = value == true
+                    if self.Value == value then
+                        render()
+                        return self
+                    end
+                    self.Value = value
+                    render()
+                    if not silent then
+                        self:_emit(value)
+                    end
+                    return self
+                end
+
+                function object:SetLocked(value, silent)
+                    return self:SetValue(value, silent)
+                end
+
+                function object:IsLocked()
+                    return self.Value == true
+                end
+
+                window:_connect(modeButton.MouseButton1Click, function()
+                    object:SetValue(not object.Value)
+                end)
+
+                window:_connect(displayBox.InputBegan, function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1
+                        or input.UserInputType == Enum.UserInputType.Touch then
+                        object:SetValue(not object.Value)
+                    end
+                end)
+
+                render()
+                object.Instance = row
+                object.Label = label
+                object.DisplayBox = displayBox
+                object.ModeButton = modeButton
+                object.LockButton = modeButton
+                return window:_maybeRegisterConfig(object, options)
+            end
+
+            section.AddLockToggle = section.AddLockMode
+            section.AddModeSwitch = section.AddLockMode
+
             function section:AddSlider(options)
                 options = options or {}
                 local minValue = tonumber(options.Min) or 0
