@@ -1139,6 +1139,7 @@ function KiraUI:CreateWindow(config)
         TextSize = 19,
         TextColor3 = theme.Text,
         TextXAlignment = Enum.TextXAlignment.Left,
+        TextYAlignment = Enum.TextYAlignment.Center,
         TextTruncate = Enum.TextTruncate.AtEnd,
         ZIndex = 13,
     }, header)
@@ -1153,6 +1154,7 @@ function KiraUI:CreateWindow(config)
         TextSize = 11,
         TextColor3 = theme.MutedText,
         TextXAlignment = Enum.TextXAlignment.Left,
+        TextYAlignment = Enum.TextYAlignment.Center,
         TextTruncate = Enum.TextTruncate.AtEnd,
         ZIndex = 13,
     }, header)
@@ -1334,6 +1336,28 @@ function KiraUI:CreateWindow(config)
         title.Text = tostring(text or "")
     end
 
+    local function applyHeaderLayout()
+        local width = host.AbsoluteSize.X
+        local minimized = window._minimized == true
+        local titleRightPadding = showCloseButton and 292 or 248
+
+        if minimized then
+            title.Position = UDim2.fromOffset(22, 0)
+            title.Size = UDim2.new(1, -titleRightPadding, 1, 0)
+            title.TextSize = config.MinimizedTitleTextSize or 23
+            title.Font = Enum.Font.GothamBold
+            subtitle.Visible = false
+            phasePill.Visible = width >= 500
+        else
+            title.Position = UDim2.fromOffset(20, 8)
+            title.Size = UDim2.new(1, -300, 0, 25)
+            title.TextSize = config.TitleTextSize or 19
+            title.Font = Enum.Font.GothamBold
+            subtitle.Visible = width >= 680 and subtitleText ~= ""
+            phasePill.Visible = width >= 610
+        end
+    end
+
     -- Responsive system
     function window:_applyResponsive()
         if self._destroyed then
@@ -1348,8 +1372,7 @@ function KiraUI:CreateWindow(config)
         content.Position = UDim2.fromOffset(sidebarWidth, 0)
         content.Size = UDim2.new(1, -sidebarWidth, 1, 0)
 
-        subtitle.Visible = width >= 680
-        phasePill.Visible = width >= 610
+        applyHeaderLayout()
 
         for _, tab in ipairs(self.Tabs) do
             if tab.NavLabel then
@@ -3662,6 +3685,7 @@ function KiraUI:CreateWindow(config)
 
         self:_closeDropdown()
         self._minimized = value
+        applyHeaderLayout()
 
         if value then
             self._savedSize = Vector2.new(host.Size.X.Offset, host.Size.Y.Offset)
