@@ -29,6 +29,7 @@
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
+local TextService = game:GetService("TextService")
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
 
@@ -37,7 +38,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.4.7"
+KiraUI.Version = "0.4.8"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -1312,14 +1313,14 @@ function KiraUI:CreateWindow(config)
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
         AnchorPoint = Vector2.new(1, 1),
-        Position = UDim2.new(1, -16, 1, -16),
-        Size = UDim2.fromOffset(304, 340),
+        Position = UDim2.new(1, -18, 1, -18),
+        Size = UDim2.fromOffset(344, 420),
         ZIndex = 200,
     }, gui)
     window.Notifications = notificationContainer
 
     new("UIListLayout", {
-        Padding = UDim.new(0, 8),
+        Padding = UDim.new(0, 10),
         FillDirection = Enum.FillDirection.Vertical,
         SortOrder = Enum.SortOrder.LayoutOrder,
         VerticalAlignment = Enum.VerticalAlignment.Bottom,
@@ -1349,60 +1350,174 @@ function KiraUI:CreateWindow(config)
         notificationSerial += 1
 
         local titleValue =
-            tostring(options.Title or options.Name or "Kira Hub")
+            tostring(
+                options.Title
+                or options.Name
+                or "Kira Hub"
+            )
         local messageValue =
-            tostring(options.Text or options.Message or "")
+            tostring(
+                options.Text
+                or options.Message
+                or ""
+            )
         local duration =
-            math.max(0.8, tonumber(options.Duration) or 3)
+            math.max(
+                0.8,
+                tonumber(
+                    options.Duration
+                )
+                or 3
+            )
         local toastWidth =
-            tonumber(options.Width) or 304
+            math.max(
+                280,
+                tonumber(
+                    options.Width
+                )
+                or 336
+            )
+        local accentColor =
+            toneAccent(
+                options.Tone
+            )
+
+        -- Measure the actual wrapped message instead of guessing from
+        -- character count. This prevents Vietnamese/long notifications from
+        -- looking cramped or leaving odd unused space.
+        local contentWidth =
+            math.max(
+                160,
+                toastWidth - 82
+            )
+        local messageBounds =
+            TextService:GetTextSize(
+                messageValue,
+                11,
+                Enum.Font.Gotham,
+                Vector2.new(
+                    contentWidth,
+                    1000
+                )
+            )
+        local messageHeight =
+            messageValue ~= ""
+            and math.max(
+                16,
+                math.ceil(
+                    messageBounds.Y
+                )
+            )
+            or 0
+        local naturalHeight =
+            messageValue ~= ""
+            and math.max(
+                78,
+                49 + messageHeight
+            )
+            or 58
         local height =
-            tonumber(options.Height)
-            or (#messageValue > 92 and 84)
-            or (#messageValue > 48 and 72)
-            or 60
-        local accentColor = toneAccent(options.Tone)
+            math.max(
+                54,
+                tonumber(
+                    options.Height
+                )
+                or naturalHeight
+            )
 
         local card = new("Frame", {
             Name = "Toast",
-            BackgroundColor3 = theme.Surface,
+            BackgroundColor3 = theme.Surface2,
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
             LayoutOrder = notificationSerial,
-            Size = UDim2.fromOffset(toastWidth, 0),
+            Size = UDim2.fromOffset(
+                toastWidth,
+                0
+            ),
             ClipsDescendants = true,
             ZIndex = 201,
         }, notificationContainer)
-        corner(card, 10)
-        stroke(card, theme.Border, 0.28, 1)
 
+        corner(card, 12)
+        stroke(
+            card,
+            theme.Border,
+            0.42,
+            1
+        )
+
+        -- Thin semantic rail: enough color to communicate state without
+        -- turning the whole notification into a warning-colored block.
         local accent = new("Frame", {
             Name = "Accent",
             BackgroundColor3 = accentColor,
-            BorderSizePixel = 0,
-            Position = UDim2.fromOffset(0, 0),
-            Size = UDim2.new(0, 3, 1, 0),
             BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Position = UDim2.fromOffset(
+                0,
+                0
+            ),
+            Size = UDim2.new(
+                0,
+                3,
+                1,
+                0
+            ),
             ZIndex = 202,
         }, card)
-        corner(accent, 10)
+
+        local iconTile = new("Frame", {
+            Name = "ToneTile",
+            BackgroundColor3 = accentColor,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Position = UDim2.fromOffset(
+                14,
+                14
+            ),
+            Size = UDim2.fromOffset(
+                28,
+                28
+            ),
+            ZIndex = 202,
+        }, card)
+        corner(iconTile, 8)
 
         local dot = new("Frame", {
             Name = "ToneDot",
             BackgroundColor3 = accentColor,
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
-            Position = UDim2.fromOffset(14, 14),
-            Size = UDim2.fromOffset(7, 7),
+            AnchorPoint = Vector2.new(
+                0.5,
+                0.5
+            ),
+            Position = UDim2.fromScale(
+                0.5,
+                0.5
+            ),
+            Size = UDim2.fromOffset(
+                8,
+                8
+            ),
             ZIndex = 203,
-        }, card)
-        corner(dot, 12)
+        }, iconTile)
+        corner(dot, 20)
 
         local toastTitle = new("TextLabel", {
             Name = "Title",
             BackgroundTransparency = 1,
-            Position = UDim2.fromOffset(28, 8),
-            Size = UDim2.new(1, -42, 0, 20),
+            Position = UDim2.fromOffset(
+                52,
+                12
+            ),
+            Size = UDim2.new(
+                1,
+                -88,
+                0,
+                19
+            ),
             Font = Enum.Font.GothamBold,
             Text = titleValue,
             TextSize = 12,
@@ -1416,11 +1531,19 @@ function KiraUI:CreateWindow(config)
         local toastText = new("TextLabel", {
             Name = "Text",
             BackgroundTransparency = 1,
-            Position = UDim2.fromOffset(28, 29),
-            Size = UDim2.new(1, -42, 1, -36),
+            Position = UDim2.fromOffset(
+                52,
+                34
+            ),
+            Size = UDim2.new(
+                1,
+                -68,
+                0,
+                messageHeight
+            ),
             Font = Enum.Font.Gotham,
             Text = messageValue,
-            TextSize = 10,
+            TextSize = 11,
             TextColor3 = theme.MutedText,
             TextTransparency = 1,
             TextWrapped = true,
@@ -1428,6 +1551,67 @@ function KiraUI:CreateWindow(config)
             TextYAlignment = Enum.TextYAlignment.Top,
             ZIndex = 203,
         }, card)
+
+        local closeButton = new("TextButton", {
+            Name = "Close",
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Position = UDim2.new(
+                1,
+                -31,
+                0,
+                8
+            ),
+            Size = UDim2.fromOffset(
+                24,
+                24
+            ),
+            AutoButtonColor = false,
+            Font = Enum.Font.GothamMedium,
+            Text = "×",
+            TextSize = 16,
+            TextColor3 = theme.MutedText,
+            TextTransparency = 1,
+            ZIndex = 204,
+        }, card)
+
+        local progressTrack = new("Frame", {
+            Name = "ProgressTrack",
+            BackgroundColor3 = theme.Surface3,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            AnchorPoint = Vector2.new(
+                0,
+                1
+            ),
+            Position = UDim2.new(
+                0,
+                14,
+                1,
+                -8
+            ),
+            Size = UDim2.new(
+                1,
+                -28,
+                0,
+                2
+            ),
+            ZIndex = 202,
+        }, card)
+        corner(progressTrack, 2)
+
+        local progress = new("Frame", {
+            Name = "Progress",
+            BackgroundColor3 = accentColor,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Size = UDim2.fromScale(
+                1,
+                1
+            ),
+            ZIndex = 203,
+        }, progressTrack)
+        corner(progress, 2)
 
         local closed = false
         local toast = {}
@@ -1439,50 +1623,214 @@ function KiraUI:CreateWindow(config)
 
             closed = true
 
-            TweenService:Create(card, TweenInfo.new(0.16, Enum.EasingStyle.Quad), {
-                Size = UDim2.fromOffset(toastWidth, 0),
-                BackgroundTransparency = 1,
-            }):Play()
-            TweenService:Create(accent, TweenInfo.new(0.12), {
-                BackgroundTransparency = 1,
-            }):Play()
-            TweenService:Create(dot, TweenInfo.new(0.12), {
-                BackgroundTransparency = 1,
-            }):Play()
-            TweenService:Create(toastTitle, TweenInfo.new(0.12), {
-                TextTransparency = 1,
-            }):Play()
-            TweenService:Create(toastText, TweenInfo.new(0.12), {
-                TextTransparency = 1,
-            }):Play()
+            TweenService:Create(
+                card,
+                TweenInfo.new(
+                    0.16,
+                    Enum.EasingStyle.Quad,
+                    Enum.EasingDirection.In
+                ),
+                {
+                    Size = UDim2.fromOffset(
+                        toastWidth,
+                        0
+                    ),
+                    BackgroundTransparency = 1,
+                }
+            ):Play()
 
-            task.delay(0.18, function()
-                if card then
-                    card:Destroy()
+            for _, object in ipairs({
+                accent,
+                iconTile,
+                dot,
+                progressTrack,
+                progress,
+            }) do
+                TweenService:Create(
+                    object,
+                    TweenInfo.new(0.11),
+                    {
+                        BackgroundTransparency = 1,
+                    }
+                ):Play()
+            end
+
+            for _, object in ipairs({
+                toastTitle,
+                toastText,
+                closeButton,
+            }) do
+                TweenService:Create(
+                    object,
+                    TweenInfo.new(0.11),
+                    {
+                        TextTransparency = 1,
+                    }
+                ):Play()
+            end
+
+            task.delay(
+                0.18,
+                function()
+                    if card
+                        and card.Parent then
+
+                        card:Destroy()
+                    end
                 end
-            end)
+            )
         end
 
-        TweenService:Create(card, TweenInfo.new(0.16, Enum.EasingStyle.Quad), {
-            Size = UDim2.fromOffset(toastWidth, height),
-            BackgroundTransparency = 0.02,
-        }):Play()
-        TweenService:Create(accent, TweenInfo.new(0.12), {
-            BackgroundTransparency = 0,
-        }):Play()
-        TweenService:Create(dot, TweenInfo.new(0.12), {
-            BackgroundTransparency = 0,
-        }):Play()
-        TweenService:Create(toastTitle, TweenInfo.new(0.12), {
-            TextTransparency = 0,
-        }):Play()
-        TweenService:Create(toastText, TweenInfo.new(0.12), {
-            TextTransparency = 0,
-        }):Play()
+        window:_connect(
+            closeButton.MouseButton1Click,
+            function()
+                toast:Close()
+            end
+        )
 
-        task.delay(duration, function()
-            toast:Close()
-        end)
+        window:_connect(
+            closeButton.MouseEnter,
+            function()
+                TweenService:Create(
+                    closeButton,
+                    TweenInfo.new(0.10),
+                    {
+                        TextColor3 = theme.Text,
+                    }
+                ):Play()
+            end
+        )
+
+        window:_connect(
+            closeButton.MouseLeave,
+            function()
+                TweenService:Create(
+                    closeButton,
+                    TweenInfo.new(0.10),
+                    {
+                        TextColor3 =
+                            theme.MutedText,
+                    }
+                ):Play()
+            end
+        )
+
+        TweenService:Create(
+            card,
+            TweenInfo.new(
+                0.18,
+                Enum.EasingStyle.Quart,
+                Enum.EasingDirection.Out
+            ),
+            {
+                Size = UDim2.fromOffset(
+                    toastWidth,
+                    height
+                ),
+                BackgroundTransparency = 0.015,
+            }
+        ):Play()
+
+        TweenService:Create(
+            accent,
+            TweenInfo.new(0.14),
+            {
+                BackgroundTransparency = 0,
+            }
+        ):Play()
+
+        TweenService:Create(
+            iconTile,
+            TweenInfo.new(0.14),
+            {
+                BackgroundTransparency = 0.86,
+            }
+        ):Play()
+
+        TweenService:Create(
+            dot,
+            TweenInfo.new(0.14),
+            {
+                BackgroundTransparency = 0,
+            }
+        ):Play()
+
+        TweenService:Create(
+            toastTitle,
+            TweenInfo.new(0.14),
+            {
+                TextTransparency = 0,
+            }
+        ):Play()
+
+        TweenService:Create(
+            toastText,
+            TweenInfo.new(0.14),
+            {
+                TextTransparency = 0,
+            }
+        ):Play()
+
+        TweenService:Create(
+            closeButton,
+            TweenInfo.new(0.14),
+            {
+                TextTransparency = 0.08,
+            }
+        ):Play()
+
+        TweenService:Create(
+            progressTrack,
+            TweenInfo.new(0.14),
+            {
+                BackgroundTransparency = 0.34,
+            }
+        ):Play()
+
+        TweenService:Create(
+            progress,
+            TweenInfo.new(0.14),
+            {
+                BackgroundTransparency = 0.08,
+            }
+        ):Play()
+
+        task.delay(
+            0.18,
+            function()
+                if closed
+                    or not progress.Parent then
+
+                    return
+                end
+
+                TweenService:Create(
+                    progress,
+                    TweenInfo.new(
+                        math.max(
+                            0.1,
+                            duration - 0.18
+                        ),
+                        Enum.EasingStyle.Linear
+                    ),
+                    {
+                        Size = UDim2.new(
+                            0,
+                            0,
+                            1,
+                            0
+                        ),
+                    }
+                ):Play()
+            end
+        )
+
+        task.delay(
+            duration,
+            function()
+                toast:Close()
+            end
+        )
 
         return toast
     end
