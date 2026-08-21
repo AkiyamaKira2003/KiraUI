@@ -38,7 +38,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.4.8"
+KiraUI.Version = "0.4.9"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -1313,8 +1313,8 @@ function KiraUI:CreateWindow(config)
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
         AnchorPoint = Vector2.new(1, 1),
-        Position = UDim2.new(1, -18, 1, -18),
-        Size = UDim2.fromOffset(344, 420),
+        Position = UDim2.new(1, -20, 1, -20),
+        Size = UDim2.fromOffset(348, 440),
         ZIndex = 200,
     }, gui)
     window.Notifications = notificationContainer
@@ -1371,24 +1371,25 @@ function KiraUI:CreateWindow(config)
             )
         local toastWidth =
             math.max(
-                280,
+                286,
                 tonumber(
                     options.Width
                 )
-                or 336
+                or 338
             )
         local accentColor =
             toneAccent(
                 options.Tone
             )
 
-        -- Measure the actual wrapped message instead of guessing from
-        -- character count. This prevents Vietnamese/long notifications from
-        -- looking cramped or leaving odd unused space.
+        local textLeft = 60
+        local textRight = 42
         local contentWidth =
             math.max(
                 160,
-                toastWidth - 82
+                toastWidth
+                - textLeft
+                - textRight
             )
         local messageBounds =
             TextService:GetTextSize(
@@ -1412,13 +1413,13 @@ function KiraUI:CreateWindow(config)
         local naturalHeight =
             messageValue ~= ""
             and math.max(
-                78,
-                49 + messageHeight
+                82,
+                52 + messageHeight
             )
-            or 58
+            or 62
         local height =
             math.max(
-                54,
+                58,
                 tonumber(
                     options.Height
                 )
@@ -1443,29 +1444,32 @@ function KiraUI:CreateWindow(config)
         stroke(
             card,
             theme.Border,
-            0.42,
+            0.34,
             1
         )
 
-        -- Thin semantic rail: enough color to communicate state without
-        -- turning the whole notification into a warning-colored block.
+        -- Important: this rail is intentionally inset.
+        -- Roblox UICorner does not geometrically clip children, so a full-height
+        -- edge rail visually cuts through the rounded border. Keeping it inside
+        -- the card produces a much cleaner professional toast.
         local accent = new("Frame", {
             Name = "Accent",
             BackgroundColor3 = accentColor,
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
             Position = UDim2.fromOffset(
-                0,
-                0
+                8,
+                11
             ),
             Size = UDim2.new(
                 0,
                 3,
                 1,
-                0
+                -22
             ),
             ZIndex = 202,
         }, card)
+        corner(accent, 4)
 
         local iconTile = new("Frame", {
             Name = "ToneTile",
@@ -1473,16 +1477,16 @@ function KiraUI:CreateWindow(config)
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
             Position = UDim2.fromOffset(
-                14,
+                20,
                 14
             ),
             Size = UDim2.fromOffset(
-                28,
-                28
+                30,
+                30
             ),
             ZIndex = 202,
         }, card)
-        corner(iconTile, 8)
+        corner(iconTile, 9)
 
         local dot = new("Frame", {
             Name = "ToneDot",
@@ -1509,16 +1513,17 @@ function KiraUI:CreateWindow(config)
             Name = "Title",
             BackgroundTransparency = 1,
             Position = UDim2.fromOffset(
-                52,
+                textLeft,
                 12
             ),
             Size = UDim2.new(
                 1,
-                -88,
+                -textLeft
+                    - 34,
                 0,
                 19
             ),
-            Font = Enum.Font.GothamBold,
+            Font = Enum.Font.GothamSemibold,
             Text = titleValue,
             TextSize = 12,
             TextColor3 = theme.Text,
@@ -1532,12 +1537,13 @@ function KiraUI:CreateWindow(config)
             Name = "Text",
             BackgroundTransparency = 1,
             Position = UDim2.fromOffset(
-                52,
-                34
+                textLeft,
+                35
             ),
             Size = UDim2.new(
                 1,
-                -68,
+                -textLeft
+                    - 18,
                 0,
                 messageHeight
             ),
@@ -1560,7 +1566,7 @@ function KiraUI:CreateWindow(config)
                 1,
                 -31,
                 0,
-                8
+                7
             ),
             Size = UDim2.fromOffset(
                 24,
@@ -1569,12 +1575,14 @@ function KiraUI:CreateWindow(config)
             AutoButtonColor = false,
             Font = Enum.Font.GothamMedium,
             Text = "×",
-            TextSize = 16,
+            TextSize = 15,
             TextColor3 = theme.MutedText,
             TextTransparency = 1,
             ZIndex = 204,
         }, card)
 
+        -- The timer lives under the text column instead of spanning beneath the
+        -- icon/rail. It reads more like subtle status feedback than decoration.
         local progressTrack = new("Frame", {
             Name = "ProgressTrack",
             BackgroundColor3 = theme.Surface3,
@@ -1586,19 +1594,20 @@ function KiraUI:CreateWindow(config)
             ),
             Position = UDim2.new(
                 0,
-                14,
+                textLeft,
                 1,
-                -8
+                -9
             ),
             Size = UDim2.new(
                 1,
-                -28,
+                -textLeft
+                    - 16,
                 0,
                 2
             ),
             ZIndex = 202,
         }, card)
-        corner(progressTrack, 2)
+        corner(progressTrack, 3)
 
         local progress = new("Frame", {
             Name = "Progress",
@@ -1611,7 +1620,7 @@ function KiraUI:CreateWindow(config)
             ),
             ZIndex = 203,
         }, progressTrack)
-        corner(progress, 2)
+        corner(progress, 3)
 
         local closed = false
         local toast = {}
@@ -1626,7 +1635,7 @@ function KiraUI:CreateWindow(config)
             TweenService:Create(
                 card,
                 TweenInfo.new(
-                    0.16,
+                    0.15,
                     Enum.EasingStyle.Quad,
                     Enum.EasingDirection.In
                 ),
@@ -1648,7 +1657,7 @@ function KiraUI:CreateWindow(config)
             }) do
                 TweenService:Create(
                     object,
-                    TweenInfo.new(0.11),
+                    TweenInfo.new(0.10),
                     {
                         BackgroundTransparency = 1,
                     }
@@ -1662,7 +1671,7 @@ function KiraUI:CreateWindow(config)
             }) do
                 TweenService:Create(
                     object,
-                    TweenInfo.new(0.11),
+                    TweenInfo.new(0.10),
                     {
                         TextTransparency = 1,
                     }
@@ -1670,7 +1679,7 @@ function KiraUI:CreateWindow(config)
             end
 
             task.delay(
-                0.18,
+                0.17,
                 function()
                     if card
                         and card.Parent then
@@ -1693,7 +1702,7 @@ function KiraUI:CreateWindow(config)
             function()
                 TweenService:Create(
                     closeButton,
-                    TweenInfo.new(0.10),
+                    TweenInfo.new(0.09),
                     {
                         TextColor3 = theme.Text,
                     }
@@ -1706,10 +1715,9 @@ function KiraUI:CreateWindow(config)
             function()
                 TweenService:Create(
                     closeButton,
-                    TweenInfo.new(0.10),
+                    TweenInfo.new(0.09),
                     {
-                        TextColor3 =
-                            theme.MutedText,
+                        TextColor3 = theme.MutedText,
                     }
                 ):Play()
             end
@@ -1727,29 +1735,29 @@ function KiraUI:CreateWindow(config)
                     toastWidth,
                     height
                 ),
-                BackgroundTransparency = 0.015,
+                BackgroundTransparency = 0.005,
             }
         ):Play()
 
         TweenService:Create(
             accent,
-            TweenInfo.new(0.14),
+            TweenInfo.new(0.13),
             {
-                BackgroundTransparency = 0,
+                BackgroundTransparency = 0.04,
             }
         ):Play()
 
         TweenService:Create(
             iconTile,
-            TweenInfo.new(0.14),
+            TweenInfo.new(0.13),
             {
-                BackgroundTransparency = 0.86,
+                BackgroundTransparency = 0.89,
             }
         ):Play()
 
         TweenService:Create(
             dot,
-            TweenInfo.new(0.14),
+            TweenInfo.new(0.13),
             {
                 BackgroundTransparency = 0,
             }
@@ -1757,7 +1765,7 @@ function KiraUI:CreateWindow(config)
 
         TweenService:Create(
             toastTitle,
-            TweenInfo.new(0.14),
+            TweenInfo.new(0.13),
             {
                 TextTransparency = 0,
             }
@@ -1765,7 +1773,7 @@ function KiraUI:CreateWindow(config)
 
         TweenService:Create(
             toastText,
-            TweenInfo.new(0.14),
+            TweenInfo.new(0.13),
             {
                 TextTransparency = 0,
             }
@@ -1773,25 +1781,25 @@ function KiraUI:CreateWindow(config)
 
         TweenService:Create(
             closeButton,
-            TweenInfo.new(0.14),
+            TweenInfo.new(0.13),
             {
-                TextTransparency = 0.08,
+                TextTransparency = 0.16,
             }
         ):Play()
 
         TweenService:Create(
             progressTrack,
-            TweenInfo.new(0.14),
+            TweenInfo.new(0.13),
             {
-                BackgroundTransparency = 0.34,
+                BackgroundTransparency = 0.58,
             }
         ):Play()
 
         TweenService:Create(
             progress,
-            TweenInfo.new(0.14),
+            TweenInfo.new(0.13),
             {
-                BackgroundTransparency = 0.08,
+                BackgroundTransparency = 0.12,
             }
         ):Play()
 
