@@ -7,7 +7,7 @@
       - Windows-like resizing from 4 edges + 4 corners
       - Responsive sidebar and 1/2-column masonry sections
       - Portal-based dropdowns (no clipping / ZIndex overlap bugs)
-      - Slider, Toggle, Dropdown, MultiSelect, Input, NumberMap, Button, Label
+      - Slider, Toggle, Dropdown, MultiSelect, Segmented, PlotPicker, Input, NumberMap, Button, Label
       - Decoupled :OnChanged() state API
       - Named config profiles with save / overwrite / load / list UI
       - Rounded border / opt-in soft image shadow
@@ -37,7 +37,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.3.3"
+KiraUI.Version = "0.4.0"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -1760,6 +1760,32 @@ function KiraUI:CreateWindow(config)
                 }, controls)
             end
 
+            local function attachVisibility(object, row, height)
+                object.Visible = true
+
+                function object:SetVisible(visible)
+                    visible = visible ~= false
+
+                    if self.Visible == visible then
+                        return self
+                    end
+
+                    self.Visible = visible
+                    row.Visible = visible
+                    row.Size = UDim2.new(
+                        1,
+                        0,
+                        0,
+                        visible and height or 0
+                    )
+
+                    task.defer(updateSectionHeight)
+                    return self
+                end
+
+                return object
+            end
+
             function section:AddToggle(options)
                 options = options or {}
                 local object = makeValueObject(options.Default == true, options.Callback)
@@ -2092,6 +2118,7 @@ function KiraUI:CreateWindow(config)
                 render()
                 object.Instance = row
                 object.Label = label
+                attachVisibility(object, row, 68)
                 return window:_maybeRegisterConfig(object, options)
             end
 
@@ -4141,6 +4168,1233 @@ function KiraUI:CreateWindow(config)
                 object.Button = captureButton
                 object.Label = label
                 return window:_maybeRegisterConfig(object, options)
+            end
+
+
+            function section:AddSegmented(options)
+                options = options or {}
+
+                local function readValues()
+                    local source
+
+                    if type(options.Values) == "function" then
+                        local ok, result =
+                            pcall(options.Values)
+
+                        source =
+                            ok and result or {}
+                    else
+                        source =
+                            options.Values
+                            or options.Options
+                            or {}
+                    end
+
+                    local out = {}
+
+                    for _, value in ipairs(source) do
+                        out[#out + 1] =
+                            tostring(value)
+                    end
+
+                    return out
+                end
+
+                local values =
+                    readValues()
+                local default =
+                    tostring(
+                        options.Default
+                        or values[1]
+                        or ""
+                    )
+                local object =
+                    makeValueObject(
+                        default,
+                        options.Callback
+                    )
+                local height =
+                    tonumber(options.Height)
+                    or 72
+                local row =
+                    controlFrame(height)
+
+                local label = new("TextLabel", {
+                    BackgroundTransparency = 1,
+                    Position = UDim2.fromOffset(0, 0),
+                    Size = UDim2.new(1, 0, 0, 18),
+                    Font = Enum.Font.Gotham,
+                    Text = string.upper(
+                        tostring(
+                            options.Text
+                            or options.Name
+                            or "Mode"
+                        )
+                    ),
+                    TextSize = 10,
+                    TextColor3 = theme.MutedText,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    TextTruncate = Enum.TextTruncate.AtEnd,
+                    ZIndex = 17,
+                }, row)
+
+                local holder = new("Frame", {
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    Position = UDim2.fromOffset(0, 24),
+                    Size = UDim2.new(
+                        1,
+                        0,
+                        0,
+                        math.max(36, height - 28)
+                    ),
+                    ZIndex = 17,
+                }, row)
+
+                corner(holder, 9)
+                stroke(
+                    holder,
+                    theme.Border,
+                    0.45,
+                    1
+                )
+                padding(holder, 4, 4, 4, 4)
+
+                local layout = new(
+                    "UIListLayout",
+                    {
+                        FillDirection =
+                            Enum.FillDirection.Horizontal,
+                        HorizontalAlignment =
+                            Enum.HorizontalAlignment.Left,
+                        VerticalAlignment =
+                            Enum.VerticalAlignment.Center,
+                        SortOrder =
+                            Enum.SortOrder.LayoutOrder,
+                        Padding =
+                            UDim.new(0, 4),
+                    },
+                    holder
+                )
+
+                local buttons = {}
+
+                local function containsValue(value)
+                    for _, candidate in ipairs(values) do
+                        if candidate == value then
+                            return true
+                        end
+                    end
+
+                    return false
+                end
+
+                local function render()
+                    for value, button in pairs(
+                        buttons
+                    ) do
+                        local active =
+                            value == object.Value
+
+                        button.BackgroundColor3 =
+                            active
+                            and theme.AccentSoft
+                            or theme.Surface2
+
+                        button.TextColor3 =
+                            active
+                            and theme.Text
+                            or theme.MutedText
+                    end
+                end
+
+                local function rebuild()
+                    for _, child in ipairs(
+                        holder:GetChildren()
+                    ) do
+                        if child:IsA(
+                            "TextButton"
+                        ) then
+                            child:Destroy()
+                        end
+                    end
+
+                    buttons = {}
+                    values =
+                        readValues()
+
+                    if #values == 0 then
+                        object.Value = ""
+                        return
+                    end
+
+                    if not containsValue(
+                        object.Value
+                    ) then
+                        object.Value =
+                            values[1]
+                    end
+
+                    local count =
+                        #values
+                    local gap =
+                        math.max(0, count - 1) * 4
+                    local offset =
+                        -math.floor(
+                            gap / count
+                        )
+
+                    for index, value in ipairs(
+                        values
+                    ) do
+                        local button = new(
+                            "TextButton",
+                            {
+                                BackgroundColor3 =
+                                    theme.Surface2,
+                                BorderSizePixel = 0,
+                                Size =
+                                    UDim2.new(
+                                        1 / count,
+                                        offset,
+                                        1,
+                                        -8
+                                    ),
+                                Font =
+                                    Enum.Font.GothamMedium,
+                                Text =
+                                    tostring(value),
+                                TextSize =
+                                    options.TextSize
+                                    or 10,
+                                TextColor3 =
+                                    theme.MutedText,
+                                AutoButtonColor =
+                                    false,
+                                LayoutOrder =
+                                    index,
+                                ZIndex = 18,
+                            },
+                            holder
+                        )
+
+                        corner(button, 7)
+
+                        buttons[value] =
+                            button
+
+                        window:_connect(
+                            button.MouseButton1Click,
+                            function()
+                                object:SetValue(
+                                    value
+                                )
+                            end
+                        )
+                    end
+
+                    render()
+                end
+
+                function object:SetValue(
+                    value,
+                    silent
+                )
+                    value =
+                        tostring(value or "")
+
+                    if not containsValue(
+                        value
+                    ) then
+                        return self
+                    end
+
+                    if self.Value == value then
+                        render()
+                        return self
+                    end
+
+                    self.Value = value
+                    render()
+
+                    if not silent then
+                        self:_emit(value)
+                    end
+
+                    return self
+                end
+
+                function object:SetValues(
+                    nextValues,
+                    silent
+                )
+                    options.Values =
+                        nextValues or {}
+                    options.Provider = nil
+
+                    local oldValue =
+                        self.Value
+
+                    rebuild()
+
+                    if oldValue ~= self.Value
+                        and not silent then
+
+                        self:_emit(
+                            self.Value
+                        )
+                    end
+
+                    return self
+                end
+
+                function object:Refresh()
+                    rebuild()
+                    return self
+                end
+
+                rebuild()
+
+                object.Instance = row
+                object.Label = label
+                object.Holder = holder
+                object.Buttons = buttons
+
+                attachVisibility(
+                    object,
+                    row,
+                    height
+                )
+
+                return window
+                    :_maybeRegisterConfig(
+                        object,
+                        options
+                    )
+            end
+
+            function section:AddPlotPicker(options)
+                options = options or {}
+
+                local function normalizePoint(
+                    value
+                )
+                    local x = 0.5
+                    local y = 0.5
+
+                    if type(value)
+                        == "table" then
+
+                        x =
+                            tonumber(
+                                value.X
+                                or value.U
+                                or value[1]
+                            )
+                            or x
+
+                        y =
+                            tonumber(
+                                value.Y
+                                or value.V
+                                or value[2]
+                            )
+                            or y
+                    end
+
+                    return {
+                        X = clamp(x, 0, 1),
+                        Y = clamp(y, 0, 1),
+                    }
+                end
+
+                local object =
+                    makeValueObject(
+                        normalizePoint(
+                            options.Default
+                        ),
+                        options.Callback
+                    )
+                local height =
+                    tonumber(options.Height)
+                    or 300
+                local row =
+                    controlFrame(height)
+                local aspect =
+                    math.max(
+                        0.1,
+                        tonumber(
+                            options.AspectRatio
+                        )
+                        or 1
+                    )
+                local available =
+                    options.Available
+                    ~= false
+                local unavailableText =
+                    tostring(
+                        options.UnavailableText
+                        or "Plot Dirt unavailable"
+                    )
+                local markers =
+                    {}
+                local dragging =
+                    false
+
+                local label = new(
+                    "TextLabel",
+                    {
+                        BackgroundTransparency =
+                            1,
+                        Position =
+                            UDim2.fromOffset(
+                                0,
+                                0
+                            ),
+                        Size =
+                            UDim2.new(
+                                1,
+                                -126,
+                                0,
+                                20
+                            ),
+                        Font =
+                            Enum.Font.GothamMedium,
+                        Text =
+                            tostring(
+                                options.Text
+                                or options.Name
+                                or "Plot position"
+                            ),
+                        TextSize = 11,
+                        TextColor3 =
+                            theme.Text,
+                        TextXAlignment =
+                            Enum.TextXAlignment.Left,
+                        TextTruncate =
+                            Enum.TextTruncate.AtEnd,
+                        ZIndex = 17,
+                    },
+                    row
+                )
+
+                local coordinateLabel = new(
+                    "TextLabel",
+                    {
+                        BackgroundColor3 =
+                            theme.Surface3,
+                        BorderSizePixel = 0,
+                        AnchorPoint =
+                            Vector2.new(
+                                1,
+                                0
+                            ),
+                        Position =
+                            UDim2.new(
+                                1,
+                                0,
+                                0,
+                                0
+                            ),
+                        Size =
+                            UDim2.fromOffset(
+                                118,
+                                22
+                            ),
+                        Font =
+                            Enum.Font.GothamMedium,
+                        Text = "",
+                        TextSize = 9,
+                        TextColor3 =
+                            theme.MutedText,
+                        ZIndex = 17,
+                    },
+                    row
+                )
+
+                corner(
+                    coordinateLabel,
+                    7
+                )
+
+                local holder = new(
+                    "Frame",
+                    {
+                        BackgroundTransparency =
+                            1,
+                        BorderSizePixel = 0,
+                        Position =
+                            UDim2.fromOffset(
+                                0,
+                                28
+                            ),
+                        Size =
+                            UDim2.new(
+                                1,
+                                0,
+                                1,
+                                -28
+                            ),
+                        ZIndex = 17,
+                    },
+                    row
+                )
+
+                local plot = new(
+                    "Frame",
+                    {
+                        Name =
+                            "PlotPickerArea",
+                        BackgroundColor3 =
+                            theme.Surface3,
+                        BorderSizePixel = 0,
+                        Active = true,
+                        ClipsDescendants =
+                            true,
+                        ZIndex = 18,
+                    },
+                    holder
+                )
+
+                corner(plot, 10)
+                stroke(
+                    plot,
+                    theme.Border,
+                    0.18,
+                    1
+                )
+
+                local gridLayer = new(
+                    "Frame",
+                    {
+                        BackgroundTransparency =
+                            1,
+                        Size =
+                            UDim2.fromScale(
+                                1,
+                                1
+                            ),
+                        ZIndex = 18,
+                    },
+                    plot
+                )
+
+                for index = 1, 4 do
+                    new(
+                        "Frame",
+                        {
+                            BackgroundColor3 =
+                                theme.Border,
+                            BackgroundTransparency =
+                                0.72,
+                            BorderSizePixel = 0,
+                            Position =
+                                UDim2.new(
+                                    index / 5,
+                                    0,
+                                    0,
+                                    0
+                                ),
+                            Size =
+                                UDim2.new(
+                                    0,
+                                    1,
+                                    1,
+                                    0
+                                ),
+                            ZIndex = 18,
+                        },
+                        gridLayer
+                    )
+
+                    new(
+                        "Frame",
+                        {
+                            BackgroundColor3 =
+                                theme.Border,
+                            BackgroundTransparency =
+                                0.72,
+                            BorderSizePixel = 0,
+                            Position =
+                                UDim2.new(
+                                    0,
+                                    0,
+                                    index / 5,
+                                    0
+                                ),
+                            Size =
+                                UDim2.new(
+                                    1,
+                                    0,
+                                    0,
+                                    1
+                                ),
+                            ZIndex = 18,
+                        },
+                        gridLayer
+                    )
+                end
+
+                local markerLayer = new(
+                    "Frame",
+                    {
+                        BackgroundTransparency =
+                            1,
+                        Size =
+                            UDim2.fromScale(
+                                1,
+                                1
+                            ),
+                        ZIndex = 19,
+                    },
+                    plot
+                )
+
+                local bottomLeftLabel = new(
+                    "TextLabel",
+                    {
+                        BackgroundTransparency =
+                            1,
+                        AnchorPoint =
+                            Vector2.new(
+                                0,
+                                1
+                            ),
+                        Position =
+                            UDim2.new(
+                                0,
+                                7,
+                                1,
+                                -5
+                            ),
+                        Size =
+                            UDim2.fromOffset(
+                                98,
+                                18
+                            ),
+                        Font =
+                            Enum.Font.GothamBold,
+                        Text =
+                            tostring(
+                                options.BottomLeftText
+                                or "BOTTOM LEFT"
+                            ),
+                        TextSize = 8,
+                        TextColor3 =
+                            theme.MutedText,
+                        TextXAlignment =
+                            Enum.TextXAlignment.Left,
+                        ZIndex = 21,
+                    },
+                    plot
+                )
+
+                local topRightLabel = new(
+                    "TextLabel",
+                    {
+                        BackgroundTransparency =
+                            1,
+                        AnchorPoint =
+                            Vector2.new(
+                                1,
+                                0
+                            ),
+                        Position =
+                            UDim2.new(
+                                1,
+                                -7,
+                                0,
+                                5
+                            ),
+                        Size =
+                            UDim2.fromOffset(
+                                98,
+                                18
+                            ),
+                        Font =
+                            Enum.Font.GothamBold,
+                        Text =
+                            tostring(
+                                options.TopRightText
+                                or "TOP RIGHT"
+                            ),
+                        TextSize = 8,
+                        TextColor3 =
+                            theme.MutedText,
+                        TextXAlignment =
+                            Enum.TextXAlignment.Right,
+                        ZIndex = 21,
+                    },
+                    plot
+                )
+
+                local point = new(
+                    "Frame",
+                    {
+                        Name =
+                            "SelectedPoint",
+                        BackgroundColor3 =
+                            theme.Accent,
+                        BorderSizePixel = 0,
+                        AnchorPoint =
+                            Vector2.new(
+                                0.5,
+                                0.5
+                            ),
+                        Size =
+                            UDim2.fromOffset(
+                                16,
+                                16
+                            ),
+                        ZIndex = 24,
+                    },
+                    plot
+                )
+
+                corner(point, 20)
+                stroke(
+                    point,
+                    theme.Text,
+                    0.08,
+                    2
+                )
+
+                local center = new(
+                    "Frame",
+                    {
+                        BackgroundColor3 =
+                            theme.Text,
+                        BorderSizePixel = 0,
+                        AnchorPoint =
+                            Vector2.new(
+                                0.5,
+                                0.5
+                            ),
+                        Position =
+                            UDim2.fromScale(
+                                0.5,
+                                0.5
+                            ),
+                        Size =
+                            UDim2.fromOffset(
+                                4,
+                                4
+                            ),
+                        ZIndex = 25,
+                    },
+                    point
+                )
+
+                corner(center, 8)
+
+                local unavailable = new(
+                    "TextLabel",
+                    {
+                        BackgroundColor3 =
+                            theme.Surface2,
+                        BackgroundTransparency =
+                            0.10,
+                        BorderSizePixel = 0,
+                        Size =
+                            UDim2.fromScale(
+                                1,
+                                1
+                            ),
+                        Font =
+                            Enum.Font.GothamMedium,
+                        Text =
+                            unavailableText,
+                        TextWrapped = true,
+                        TextSize = 10,
+                        TextColor3 =
+                            theme.Warning,
+                        Visible =
+                            not available,
+                        ZIndex = 30,
+                    },
+                    plot
+                )
+
+                local function renderPoint()
+                    local value =
+                        object.Value
+
+                    point.Position =
+                        UDim2.new(
+                            value.X,
+                            0,
+                            1 - value.Y,
+                            0
+                        )
+
+                    coordinateLabel.Text =
+                        string.format(
+                            "X %.3f  Y %.3f",
+                            value.X,
+                            value.Y
+                        )
+                end
+
+                local function markerColor(
+                    marker
+                )
+                    local tone =
+                        string.lower(
+                            tostring(
+                                marker.Tone
+                                or ""
+                            )
+                        )
+
+                    if tone == "danger"
+                        or tone == "dead" then
+
+                        return theme.Danger
+                    elseif tone
+                        == "warning" then
+
+                        return theme.Warning
+                    elseif tone
+                        == "success" then
+
+                        return theme.Success
+                    end
+
+                    if typeof(
+                        marker.Color
+                    ) == "Color3" then
+
+                        return marker.Color
+                    end
+
+                    return theme.MutedText
+                end
+
+                local function renderMarkers()
+                    for _, child in ipairs(
+                        markerLayer
+                            :GetChildren()
+                    ) do
+                        child:Destroy()
+                    end
+
+                    for index, marker in ipairs(
+                        markers
+                    ) do
+                        local x =
+                            clamp(
+                                tonumber(
+                                    marker.X
+                                    or marker.U
+                                    or marker[1]
+                                )
+                                or 0.5,
+                                0,
+                                1
+                            )
+                        local y =
+                            clamp(
+                                tonumber(
+                                    marker.Y
+                                    or marker.V
+                                    or marker[2]
+                                )
+                                or 0.5,
+                                0,
+                                1
+                            )
+                        local dot = new(
+                            "Frame",
+                            {
+                                Name =
+                                    "Marker_"
+                                    .. tostring(
+                                        index
+                                    ),
+                                BackgroundColor3 =
+                                    markerColor(
+                                        marker
+                                    ),
+                                BorderSizePixel =
+                                    0,
+                                AnchorPoint =
+                                    Vector2.new(
+                                        0.5,
+                                        0.5
+                                    ),
+                                Position =
+                                    UDim2.new(
+                                        x,
+                                        0,
+                                        1 - y,
+                                        0
+                                    ),
+                                Size =
+                                    UDim2.fromOffset(
+                                        tonumber(
+                                            marker.Size
+                                        )
+                                        or 7,
+                                        tonumber(
+                                            marker.Size
+                                        )
+                                        or 7
+                                    ),
+                                ZIndex = 20,
+                            },
+                            markerLayer
+                        )
+
+                        corner(dot, 12)
+
+                        if marker.Text
+                            and tostring(
+                                marker.Text
+                            ) ~= "" then
+
+                            local tag = new(
+                                "TextLabel",
+                                {
+                                    BackgroundColor3 =
+                                        theme.Surface2,
+                                    BackgroundTransparency =
+                                        0.12,
+                                    BorderSizePixel =
+                                        0,
+                                    AnchorPoint =
+                                        Vector2.new(
+                                            0.5,
+                                            1
+                                        ),
+                                    Position =
+                                        UDim2.new(
+                                            0.5,
+                                            0,
+                                            0,
+                                            -3
+                                        ),
+                                    Size =
+                                        UDim2.fromOffset(
+                                            54,
+                                            15
+                                        ),
+                                    Font =
+                                        Enum.Font.GothamMedium,
+                                    Text =
+                                        tostring(
+                                            marker.Text
+                                        ),
+                                    TextSize = 7,
+                                    TextColor3 =
+                                        theme.Text,
+                                    TextTruncate =
+                                        Enum.TextTruncate.AtEnd,
+                                    ZIndex = 21,
+                                },
+                                dot
+                            )
+
+                            corner(tag, 5)
+                        end
+                    end
+                end
+
+                local function updateGeometry()
+                    local size =
+                        holder.AbsoluteSize
+
+                    if size.X <= 1
+                        or size.Y <= 1 then
+
+                        return
+                    end
+
+                    local availableWidth =
+                        math.max(
+                            20,
+                            size.X - 4
+                        )
+                    local availableHeight =
+                        math.max(
+                            20,
+                            size.Y - 4
+                        )
+                    local width
+                    local plotHeight
+
+                    if availableWidth
+                        / availableHeight
+                        > aspect then
+
+                        plotHeight =
+                            availableHeight
+                        width =
+                            plotHeight
+                            * aspect
+                    else
+                        width =
+                            availableWidth
+                        plotHeight =
+                            width / aspect
+                    end
+
+                    plot.Size =
+                        UDim2.fromOffset(
+                            math.floor(width),
+                            math.floor(
+                                plotHeight
+                            )
+                        )
+
+                    plot.Position =
+                        UDim2.fromOffset(
+                            math.floor(
+                                (
+                                    size.X
+                                    - width
+                                ) / 2
+                            ),
+                            math.floor(
+                                (
+                                    size.Y
+                                    - plotHeight
+                                ) / 2
+                            )
+                        )
+
+                    renderPoint()
+                    renderMarkers()
+                end
+
+                local function setFromScreen(
+                    screenPosition
+                )
+                    if not available then
+                        return
+                    end
+
+                    local absolute =
+                        plot.AbsolutePosition
+                    local size =
+                        plot.AbsoluteSize
+
+                    if size.X <= 0
+                        or size.Y <= 0 then
+
+                        return
+                    end
+
+                    object:SetValue({
+                        X =
+                            (
+                                screenPosition.X
+                                - absolute.X
+                            ) / size.X,
+                        Y =
+                            1
+                            - (
+                                (
+                                    screenPosition.Y
+                                    - absolute.Y
+                                ) / size.Y
+                            ),
+                    })
+                end
+
+                function object:SetValue(
+                    value,
+                    silent
+                )
+                    local nextValue =
+                        normalizePoint(value)
+                    local current =
+                        self.Value
+
+                    if current
+                        and math.abs(
+                            current.X
+                            - nextValue.X
+                        ) < 0.000001
+                        and math.abs(
+                            current.Y
+                            - nextValue.Y
+                        ) < 0.000001 then
+
+                        renderPoint()
+                        return self
+                    end
+
+                    self.Value =
+                        nextValue
+                    renderPoint()
+
+                    if not silent then
+                        self:_emit({
+                            X =
+                                nextValue.X,
+                            Y =
+                                nextValue.Y,
+                        })
+                    end
+
+                    return self
+                end
+
+                function object:GetValue()
+                    return {
+                        X =
+                            self.Value.X,
+                        Y =
+                            self.Value.Y,
+                    }
+                end
+
+                function object:SetAspectRatio(
+                    value
+                )
+                    aspect =
+                        math.max(
+                            0.1,
+                            tonumber(value)
+                            or 1
+                        )
+
+                    updateGeometry()
+                    return self
+                end
+
+                function object:SetMarkers(
+                    value
+                )
+                    markers =
+                        type(value)
+                        == "table"
+                        and value
+                        or {}
+
+                    renderMarkers()
+                    return self
+                end
+
+                function object:SetCornerText(
+                    bottomLeft,
+                    topRight
+                )
+                    bottomLeftLabel.Text =
+                        tostring(
+                            bottomLeft
+                            or "BOTTOM LEFT"
+                        )
+                    topRightLabel.Text =
+                        tostring(
+                            topRight
+                            or "TOP RIGHT"
+                        )
+
+                    return self
+                end
+
+                function object:SetAvailable(
+                    value,
+                    message
+                )
+                    available =
+                        value == true
+
+                    if message ~= nil then
+                        unavailableText =
+                            tostring(message)
+                    end
+
+                    unavailable.Text =
+                        unavailableText
+                    unavailable.Visible =
+                        not available
+                    point.Visible =
+                        available
+
+                    return self
+                end
+
+                window:_connect(
+                    plot.InputBegan,
+                    function(input)
+                        if input.UserInputType
+                                == Enum.UserInputType.MouseButton1
+                            or input.UserInputType
+                                == Enum.UserInputType.Touch then
+
+                            dragging = true
+                            setFromScreen(
+                                input.Position
+                            )
+                        end
+                    end
+                )
+
+                window:_connect(
+                    UserInputService.InputChanged,
+                    function(input)
+                        if not dragging then
+                            return
+                        end
+
+                        if input.UserInputType
+                                == Enum.UserInputType.MouseMovement
+                            or input.UserInputType
+                                == Enum.UserInputType.Touch then
+
+                            setFromScreen(
+                                input.Position
+                            )
+                        end
+                    end
+                )
+
+                window:_connect(
+                    UserInputService.InputEnded,
+                    function(input)
+                        if input.UserInputType
+                                == Enum.UserInputType.MouseButton1
+                            or input.UserInputType
+                                == Enum.UserInputType.Touch then
+
+                            dragging = false
+                        end
+                    end
+                )
+
+                window:_connect(
+                    holder:GetPropertyChangedSignal(
+                        "AbsoluteSize"
+                    ),
+                    updateGeometry
+                )
+
+                renderPoint()
+                renderMarkers()
+                task.defer(
+                    updateGeometry
+                )
+
+                object.Instance = row
+                object.Label = label
+                object.Plot = plot
+                object.Point = point
+                object.CoordinateLabel =
+                    coordinateLabel
+
+                attachVisibility(
+                    object,
+                    row,
+                    height
+                )
+
+                return window
+                    :_maybeRegisterConfig(
+                        object,
+                        options
+                    )
             end
 
             function section:AddButton(options)
