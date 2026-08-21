@@ -37,7 +37,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.4.5"
+KiraUI.Version = "0.4.6"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -4659,7 +4659,9 @@ function KiraUI:CreateWindow(config)
                     holder
                 )
 
-                corner(plot, 10)
+                -- PlotPicker represents the real rectangular Dirt footprint.
+                -- Keep its four corners square so the selection point does not
+                -- visually collide with a rounded corner.
                 stroke(
                     plot,
                     theme.Border,
@@ -4926,12 +4928,46 @@ function KiraUI:CreateWindow(config)
                     local value =
                         object.Value
 
+                    -- Value remains exact 0..1. Only the visual center gets
+                    -- an inward pixel offset at the outer edges so the 16px
+                    -- circular point is not clipped into a half/quarter circle.
+                    local screenX =
+                        clamp(
+                            tonumber(value.X)
+                                or 0.5,
+                            0,
+                            1
+                        )
+                    local screenY =
+                        clamp(
+                            1
+                                - (
+                                    tonumber(value.Y)
+                                    or 0.5
+                                ),
+                            0,
+                            1
+                        )
+                    local radius = 8
+                    local offsetX =
+                        radius
+                        * (
+                            1
+                            - 2 * screenX
+                        )
+                    local offsetY =
+                        radius
+                        * (
+                            1
+                            - 2 * screenY
+                        )
+
                     point.Position =
                         UDim2.new(
-                            value.X,
-                            0,
-                            1 - value.Y,
-                            0
+                            screenX,
+                            offsetX,
+                            screenY,
+                            offsetY
                         )
 
                     coordinateLabel.Text =
