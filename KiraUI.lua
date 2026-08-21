@@ -37,7 +37,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.4.0"
+KiraUI.Version = "0.4.1"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -4531,6 +4531,9 @@ function KiraUI:CreateWindow(config)
                 local available =
                     options.Available
                     ~= false
+                local cornerLabelsVisible =
+                    options.ShowCornerLabels
+                    ~= false
                 local unavailableText =
                     tostring(
                         options.UnavailableText
@@ -4784,6 +4787,8 @@ function KiraUI:CreateWindow(config)
                             theme.MutedText,
                         TextXAlignment =
                             Enum.TextXAlignment.Left,
+                        Visible =
+                            cornerLabelsVisible,
                         ZIndex = 21,
                     },
                     plot
@@ -4823,6 +4828,8 @@ function KiraUI:CreateWindow(config)
                             theme.MutedText,
                         TextXAlignment =
                             Enum.TextXAlignment.Right,
+                        Visible =
+                            cornerLabelsVisible,
                         ZIndex = 21,
                     },
                     plot
@@ -5290,6 +5297,20 @@ function KiraUI:CreateWindow(config)
                             topRight
                             or "TOP RIGHT"
                         )
+
+                    return self
+                end
+
+                function object:SetCornerLabelsVisible(
+                    value
+                )
+                    cornerLabelsVisible =
+                        value == true
+
+                    bottomLeftLabel.Visible =
+                        cornerLabelsVisible
+                    topRightLabel.Visible =
+                        cornerLabelsVisible
 
                     return self
                 end
