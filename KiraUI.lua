@@ -37,7 +37,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.4.6"
+KiraUI.Version = "0.4.7"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -4928,46 +4928,15 @@ function KiraUI:CreateWindow(config)
                     local value =
                         object.Value
 
-                    -- Value remains exact 0..1. Only the visual center gets
-                    -- an inward pixel offset at the outer edges so the 16px
-                    -- circular point is not clipped into a half/quarter circle.
-                    local screenX =
-                        clamp(
-                            tonumber(value.X)
-                                or 0.5,
-                            0,
-                            1
-                        )
-                    local screenY =
-                        clamp(
-                            1
-                                - (
-                                    tonumber(value.Y)
-                                    or 0.5
-                                ),
-                            0,
-                            1
-                        )
-                    local radius = 8
-                    local offsetX =
-                        radius
-                        * (
-                            1
-                            - 2 * screenX
-                        )
-                    local offsetY =
-                        radius
-                        * (
-                            1
-                            - 2 * screenY
-                        )
-
+                    -- Keep the point center exactly under the selected
+                    -- normalized coordinate. No visual inset is applied,
+                    -- so mouse position and point position stay 1:1.
                     point.Position =
                         UDim2.new(
-                            screenX,
-                            offsetX,
-                            screenY,
-                            offsetY
+                            value.X,
+                            0,
+                            1 - value.Y,
+                            0
                         )
 
                     coordinateLabel.Text =
