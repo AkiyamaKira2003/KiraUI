@@ -38,7 +38,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.4.9"
+KiraUI.Version = "0.5.0"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -1624,6 +1624,37 @@ function KiraUI:CreateWindow(config)
 
         local closed = false
         local toast = {}
+        local toastConnections = {}
+
+        local function connectToast(
+            signal,
+            callback
+        )
+            local connection =
+                signal:Connect(
+                    callback
+                )
+
+            toastConnections[
+                #toastConnections + 1
+            ] = connection
+
+            return connection
+        end
+
+        local function disconnectToastConnections()
+            for index = #toastConnections, 1, -1 do
+                local connection =
+                    toastConnections[index]
+
+                toastConnections[index] =
+                    nil
+
+                pcall(function()
+                    connection:Disconnect()
+                end)
+            end
+        end
 
         function toast:Close()
             if closed then
@@ -1631,6 +1662,7 @@ function KiraUI:CreateWindow(config)
             end
 
             closed = true
+            disconnectToastConnections()
 
             TweenService:Create(
                 card,
@@ -1690,14 +1722,14 @@ function KiraUI:CreateWindow(config)
             )
         end
 
-        window:_connect(
+        connectToast(
             closeButton.MouseButton1Click,
             function()
                 toast:Close()
             end
         )
 
-        window:_connect(
+        connectToast(
             closeButton.MouseEnter,
             function()
                 TweenService:Create(
@@ -1710,7 +1742,7 @@ function KiraUI:CreateWindow(config)
             end
         )
 
-        window:_connect(
+        connectToast(
             closeButton.MouseLeave,
             function()
                 TweenService:Create(
