@@ -37,7 +37,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.4.1"
+KiraUI.Version = "0.4.2"
 
 local DEFAULT_SHADOW_IMAGE = "rbxassetid://1316045217"
 local DEFAULT_SHADOW_SLICE = Rect.new(10, 10, 118, 118)
@@ -5416,6 +5416,550 @@ function KiraUI:CreateWindow(config)
                         object,
                         options
                     )
+            end
+
+
+            function section:AddActionList(options)
+                options = options or {}
+
+                local height =
+                    math.max(
+                        120,
+                        tonumber(options.Height)
+                        or 320
+                    )
+                local rowHeight =
+                    math.max(
+                        46,
+                        tonumber(
+                            options.RowHeight
+                        )
+                        or 58
+                    )
+                local row =
+                    controlFrame(height)
+                local title =
+                    new(
+                        "TextLabel",
+                        {
+                            BackgroundTransparency =
+                                1,
+                            Size =
+                                UDim2.new(
+                                    1,
+                                    0,
+                                    0,
+                                    20
+                                ),
+                            Font =
+                                Enum.Font.GothamMedium,
+                            Text =
+                                tostring(
+                                    options.Text
+                                    or options.Name
+                                    or "Items"
+                                ),
+                            TextSize = 11,
+                            TextColor3 =
+                                theme.Text,
+                            TextXAlignment =
+                                Enum.TextXAlignment.Left,
+                            TextTruncate =
+                                Enum.TextTruncate.AtEnd,
+                            ZIndex = 17,
+                        },
+                        row
+                    )
+                local holder =
+                    new(
+                        "ScrollingFrame",
+                        {
+                            BackgroundColor3 =
+                                theme.Surface,
+                            BorderSizePixel = 0,
+                            Position =
+                                UDim2.fromOffset(
+                                    0,
+                                    26
+                                ),
+                            Size =
+                                UDim2.new(
+                                    1,
+                                    0,
+                                    1,
+                                    -26
+                                ),
+                            CanvasSize =
+                                UDim2.new(
+                                    0,
+                                    0,
+                                    0,
+                                    0
+                                ),
+                            AutomaticCanvasSize =
+                                Enum.AutomaticSize.None,
+                            ScrollBarThickness = 4,
+                            ScrollingDirection =
+                                Enum.ScrollingDirection.Y,
+                            VerticalScrollBarInset =
+                                Enum.ScrollBarInset.ScrollBar,
+                            ZIndex = 17,
+                        },
+                        row
+                    )
+
+                corner(holder, 9)
+                stroke(
+                    holder,
+                    theme.Border,
+                    0.55,
+                    1
+                )
+
+                local padding =
+                    new(
+                        "UIPadding",
+                        {
+                            PaddingTop =
+                                UDim.new(0, 6),
+                            PaddingBottom =
+                                UDim.new(0, 6),
+                            PaddingLeft =
+                                UDim.new(0, 6),
+                            PaddingRight =
+                                UDim.new(0, 6),
+                        },
+                        holder
+                    )
+                local layout =
+                    new(
+                        "UIListLayout",
+                        {
+                            Padding =
+                                UDim.new(0, 6),
+                            SortOrder =
+                                Enum.SortOrder.LayoutOrder,
+                        },
+                        holder
+                    )
+
+                local object = {
+                    Instance = row,
+                    Holder = holder,
+                    Title = title,
+                    Items = {},
+                    Value = {},
+                    Visible = true,
+                    _signature = nil,
+                    _rowConnections = {},
+                }
+
+                local function disconnectRows()
+                    for _, connection in ipairs(
+                        object._rowConnections
+                    ) do
+                        pcall(function()
+                            connection:Disconnect()
+                        end)
+                    end
+
+                    object._rowConnections = {}
+                end
+
+                local function clearRows()
+                    disconnectRows()
+
+                    for _, child in ipairs(
+                        holder:GetChildren()
+                    ) do
+                        if child:IsA("Frame")
+                            and child.Name
+                                == "ActionListRow" then
+
+                            child:Destroy()
+                        end
+                    end
+                end
+
+                local function toneColor(tone)
+                    tone =
+                        string.lower(
+                            tostring(
+                                tone or ""
+                            )
+                        )
+
+                    if tone == "danger"
+                        or tone == "dead" then
+
+                        return theme.Danger
+                    elseif tone == "warning" then
+                        return theme.Warning
+                    elseif tone == "success"
+                        or tone == "alive" then
+
+                        return theme.Success
+                    end
+
+                    return theme.Accent
+                end
+
+                local function itemSignature(
+                    items
+                )
+                    local parts = {}
+
+                    for index, item in ipairs(
+                        items
+                    ) do
+                        parts[#parts + 1] =
+                            table.concat({
+                                tostring(index),
+                                tostring(
+                                    item.Key
+                                    or item.Id
+                                    or ""
+                                ),
+                                tostring(
+                                    item.Text
+                                    or item.Name
+                                    or ""
+                                ),
+                                tostring(
+                                    item.Subtext
+                                    or item.Description
+                                    or ""
+                                ),
+                                tostring(
+                                    item.ButtonText
+                                    or options.ButtonText
+                                    or "Action"
+                                ),
+                                tostring(
+                                    item.Disabled
+                                    == true
+                                ),
+                                tostring(
+                                    item.Tone
+                                    or ""
+                                ),
+                            }, "\31")
+                    end
+
+                    return table.concat(
+                        parts,
+                        "\30"
+                    )
+                end
+
+                local function render()
+                    local items =
+                        object.Items
+                    local signature =
+                        itemSignature(items)
+
+                    if object._signature
+                        == signature then
+
+                        return
+                    end
+
+                    object._signature =
+                        signature
+
+                    clearRows()
+
+                    for index, item in ipairs(
+                        items
+                    ) do
+                        local disabled =
+                            item.Disabled
+                            == true
+                        local entry =
+                            new(
+                                "Frame",
+                                {
+                                    Name =
+                                        "ActionListRow",
+                                    BackgroundColor3 =
+                                        theme.Surface2,
+                                    BorderSizePixel =
+                                        0,
+                                    Size =
+                                        UDim2.new(
+                                            1,
+                                            -2,
+                                            0,
+                                            rowHeight
+                                        ),
+                                    LayoutOrder =
+                                        index,
+                                    ZIndex = 18,
+                                },
+                                holder
+                            )
+
+                        corner(entry, 8)
+                        stroke(
+                            entry,
+                            theme.Border,
+                            0.62,
+                            1
+                        )
+
+                        local actionWidth =
+                            math.max(
+                                84,
+                                tonumber(
+                                    options.ActionWidth
+                                )
+                                or 104
+                            )
+                        local main =
+                            new(
+                                "TextLabel",
+                                {
+                                    BackgroundTransparency =
+                                        1,
+                                    Position =
+                                        UDim2.fromOffset(
+                                            10,
+                                            7
+                                        ),
+                                    Size =
+                                        UDim2.new(
+                                            1,
+                                            -actionWidth
+                                                - 24,
+                                            0,
+                                            18
+                                        ),
+                                    Font =
+                                        Enum.Font.GothamMedium,
+                                    Text =
+                                        tostring(
+                                            item.Text
+                                            or item.Name
+                                            or (
+                                                "Item "
+                                                .. tostring(
+                                                    index
+                                                )
+                                            )
+                                        ),
+                                    TextSize = 10,
+                                    TextColor3 =
+                                        theme.Text,
+                                    TextXAlignment =
+                                        Enum.TextXAlignment.Left,
+                                    TextTruncate =
+                                        Enum.TextTruncate.AtEnd,
+                                    ZIndex = 19,
+                                },
+                                entry
+                            )
+                        local sub =
+                            new(
+                                "TextLabel",
+                                {
+                                    BackgroundTransparency =
+                                        1,
+                                    Position =
+                                        UDim2.fromOffset(
+                                            10,
+                                            27
+                                        ),
+                                    Size =
+                                        UDim2.new(
+                                            1,
+                                            -actionWidth
+                                                - 24,
+                                            0,
+                                            math.max(
+                                                14,
+                                                rowHeight
+                                                - 33
+                                            )
+                                        ),
+                                    Font =
+                                        Enum.Font.Gotham,
+                                    Text =
+                                        tostring(
+                                            item.Subtext
+                                            or item.Description
+                                            or ""
+                                        ),
+                                    TextSize = 9,
+                                    TextColor3 =
+                                        theme.MutedText,
+                                    TextXAlignment =
+                                        Enum.TextXAlignment.Left,
+                                    TextYAlignment =
+                                        Enum.TextYAlignment.Top,
+                                    TextWrapped = true,
+                                    TextTruncate =
+                                        Enum.TextTruncate.AtEnd,
+                                    ZIndex = 19,
+                                },
+                                entry
+                            )
+                        local action =
+                            new(
+                                "TextButton",
+                                {
+                                    BackgroundColor3 =
+                                        disabled
+                                        and theme.Surface3
+                                        or toneColor(
+                                            item.Tone
+                                        ),
+                                    BorderSizePixel =
+                                        0,
+                                    AnchorPoint =
+                                        Vector2.new(
+                                            1,
+                                            0.5
+                                        ),
+                                    Position =
+                                        UDim2.new(
+                                            1,
+                                            -8,
+                                            0.5,
+                                            0
+                                        ),
+                                    Size =
+                                        UDim2.fromOffset(
+                                            actionWidth,
+                                            32
+                                        ),
+                                    Font =
+                                        Enum.Font.GothamMedium,
+                                    Text =
+                                        tostring(
+                                            item.ButtonText
+                                            or options.ButtonText
+                                            or "Action"
+                                        ),
+                                    TextSize = 9,
+                                    TextColor3 =
+                                        disabled
+                                        and theme.MutedText
+                                        or theme.Text,
+                                    AutoButtonColor =
+                                        false,
+                                    Active =
+                                        not disabled,
+                                    ZIndex = 19,
+                                },
+                                entry
+                            )
+
+                        corner(action, 7)
+
+                        if not disabled then
+                            local connection =
+                                action
+                                    .MouseButton1Click
+                                    :Connect(function()
+                                        safeCall(
+                                            options.OnAction
+                                            or options.Callback,
+                                            item,
+                                            index,
+                                            object
+                                        )
+                                    end)
+
+                            table.insert(
+                                object._rowConnections,
+                                connection
+                            )
+                        end
+                    end
+
+                    holder.CanvasSize =
+                        UDim2.new(
+                            0,
+                            0,
+                            0,
+                            layout.AbsoluteContentSize.Y
+                                + 12
+                        )
+                end
+
+                function object:SetItems(
+                    items
+                )
+                    local nextItems = {}
+
+                    if type(items)
+                        == "table" then
+
+                        for index, item in ipairs(
+                            items
+                        ) do
+                            if type(item)
+                                == "table" then
+
+                                nextItems[index] =
+                                    item
+                            else
+                                nextItems[index] = {
+                                    Text =
+                                        tostring(
+                                            item
+                                        ),
+                                }
+                            end
+                        end
+                    end
+
+                    self.Items =
+                        nextItems
+                    self.Value =
+                        nextItems
+
+                    render()
+
+                    return self
+                end
+
+                function object:GetItems()
+                    return self.Items
+                end
+
+                function object:Clear()
+                    self.Items = {}
+                    self.Value = {}
+                    self._signature = nil
+                    clearRows()
+                    holder.CanvasSize =
+                        UDim2.new()
+                    return self
+                end
+
+                function object:SetText(
+                    value
+                )
+                    title.Text =
+                        tostring(
+                            value or ""
+                        )
+                    return self
+                end
+
+                attachVisibility(
+                    object,
+                    row,
+                    height
+                )
+
+                object:SetItems(
+                    options.Items
+                    or {}
+                )
+
+                return object
             end
 
             function section:AddButton(options)
