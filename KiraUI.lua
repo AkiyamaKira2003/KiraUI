@@ -29,6 +29,7 @@
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
+local TextService = game:GetService("TextService")
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
 
@@ -37,7 +38,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.4.4"
+KiraUI.Version = "0.5.0"
 
 -- Dynamic dropdown provider: KiraUI.other_player_names(Players, LocalPlayer).
 function KiraUI.other_player_names(players, localPlayer)
@@ -1323,14 +1324,14 @@ function KiraUI:CreateWindow(config)
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
         AnchorPoint = Vector2.new(1, 1),
-        Position = UDim2.new(1, -16, 1, -16),
-        Size = UDim2.fromOffset(304, 340),
+        Position = UDim2.new(1, -20, 1, -20),
+        Size = UDim2.fromOffset(348, 440),
         ZIndex = 200,
     }, gui)
     window.Notifications = notificationContainer
 
     new("UIListLayout", {
-        Padding = UDim.new(0, 8),
+        Padding = UDim.new(0, 10),
         FillDirection = Enum.FillDirection.Vertical,
         SortOrder = Enum.SortOrder.LayoutOrder,
         VerticalAlignment = Enum.VerticalAlignment.Bottom,
@@ -1360,61 +1361,180 @@ function KiraUI:CreateWindow(config)
         notificationSerial += 1
 
         local titleValue =
-            tostring(options.Title or options.Name or "Kira Hub")
+            tostring(
+                options.Title
+                or options.Name
+                or "Kira Hub"
+            )
         local messageValue =
-            tostring(options.Text or options.Message or "")
+            tostring(
+                options.Text
+                or options.Message
+                or ""
+            )
         local duration =
-            math.max(0.8, tonumber(options.Duration) or 3)
+            math.max(
+                0.8,
+                tonumber(
+                    options.Duration
+                )
+                or 3
+            )
         local toastWidth =
-            tonumber(options.Width) or 304
+            math.max(
+                286,
+                tonumber(
+                    options.Width
+                )
+                or 338
+            )
+        local accentColor =
+            toneAccent(
+                options.Tone
+            )
+
+        local textLeft = 60
+        local textRight = 42
+        local contentWidth =
+            math.max(
+                160,
+                toastWidth
+                - textLeft
+                - textRight
+            )
+        local messageBounds =
+            TextService:GetTextSize(
+                messageValue,
+                11,
+                Enum.Font.Gotham,
+                Vector2.new(
+                    contentWidth,
+                    1000
+                )
+            )
+        local messageHeight =
+            messageValue ~= ""
+            and math.max(
+                16,
+                math.ceil(
+                    messageBounds.Y
+                )
+            )
+            or 0
+        local naturalHeight =
+            messageValue ~= ""
+            and math.max(
+                82,
+                52 + messageHeight
+            )
+            or 62
         local height =
-            tonumber(options.Height)
-            or (#messageValue > 92 and 84)
-            or (#messageValue > 48 and 72)
-            or 60
-        local accentColor = toneAccent(options.Tone)
+            math.max(
+                58,
+                tonumber(
+                    options.Height
+                )
+                or naturalHeight
+            )
 
         local card = new("Frame", {
             Name = "Toast",
-            BackgroundColor3 = theme.Surface,
+            BackgroundColor3 = theme.Surface2,
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
             LayoutOrder = notificationSerial,
-            Size = UDim2.fromOffset(toastWidth, 0),
+            Size = UDim2.fromOffset(
+                toastWidth,
+                0
+            ),
             ClipsDescendants = true,
             ZIndex = 201,
         }, notificationContainer)
-        corner(card, 10)
-        stroke(card, theme.Border, 0.28, 1)
 
+        corner(card, 12)
+        stroke(
+            card,
+            theme.Border,
+            0.34,
+            1
+        )
+
+        -- Important: this rail is intentionally inset.
+        -- Roblox UICorner does not geometrically clip children, so a full-height
+        -- edge rail visually cuts through the rounded border. Keeping it inside
+        -- the card produces a much cleaner professional toast.
         local accent = new("Frame", {
             Name = "Accent",
             BackgroundColor3 = accentColor,
-            BorderSizePixel = 0,
-            Position = UDim2.fromOffset(0, 0),
-            Size = UDim2.new(0, 3, 1, 0),
             BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Position = UDim2.fromOffset(
+                8,
+                11
+            ),
+            Size = UDim2.new(
+                0,
+                3,
+                1,
+                -22
+            ),
             ZIndex = 202,
         }, card)
-        corner(accent, 10)
+        corner(accent, 4)
+
+        local iconTile = new("Frame", {
+            Name = "ToneTile",
+            BackgroundColor3 = accentColor,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Position = UDim2.fromOffset(
+                20,
+                14
+            ),
+            Size = UDim2.fromOffset(
+                30,
+                30
+            ),
+            ZIndex = 202,
+        }, card)
+        corner(iconTile, 9)
 
         local dot = new("Frame", {
             Name = "ToneDot",
             BackgroundColor3 = accentColor,
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
-            Position = UDim2.fromOffset(14, 14),
-            Size = UDim2.fromOffset(7, 7),
+            AnchorPoint = Vector2.new(
+                0.5,
+                0.5
+            ),
+            Position = UDim2.fromScale(
+                0.5,
+                0.5
+            ),
+            Size = UDim2.fromOffset(
+                8,
+                8
+            ),
             ZIndex = 203,
-        }, card)
-        corner(dot, 12)
+        }, iconTile)
+        corner(dot, 20)
 
         local toastTitle = new("TextLabel", {
             Name = "Title",
             BackgroundTransparency = 1,
-            Position = UDim2.fromOffset(28, 8),
-            Size = UDim2.new(1, -42, 0, 20),
-            Font = Enum.Font.GothamBold,
+            Position = UDim2.fromOffset(
+                textLeft,
+                12
+            ),
+            Size = UDim2.new(
+                1,
+                -textLeft
+                    - 34,
+                0,
+                19
+            ),
+            Font = Enum.Font.GothamSemibold,
             Text = titleValue,
             TextSize = 12,
             TextColor3 = theme.Text,
@@ -1427,11 +1547,20 @@ function KiraUI:CreateWindow(config)
         local toastText = new("TextLabel", {
             Name = "Text",
             BackgroundTransparency = 1,
-            Position = UDim2.fromOffset(28, 29),
-            Size = UDim2.new(1, -42, 1, -36),
+            Position = UDim2.fromOffset(
+                textLeft,
+                35
+            ),
+            Size = UDim2.new(
+                1,
+                -textLeft
+                    - 18,
+                0,
+                messageHeight
+            ),
             Font = Enum.Font.Gotham,
             Text = messageValue,
-            TextSize = 10,
+            TextSize = 11,
             TextColor3 = theme.MutedText,
             TextTransparency = 1,
             TextWrapped = true,
@@ -1440,8 +1569,103 @@ function KiraUI:CreateWindow(config)
             ZIndex = 203,
         }, card)
 
+        local closeButton = new("TextButton", {
+            Name = "Close",
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Position = UDim2.new(
+                1,
+                -31,
+                0,
+                7
+            ),
+            Size = UDim2.fromOffset(
+                24,
+                24
+            ),
+            AutoButtonColor = false,
+            Font = Enum.Font.GothamMedium,
+            Text = "×",
+            TextSize = 15,
+            TextColor3 = theme.MutedText,
+            TextTransparency = 1,
+            ZIndex = 204,
+        }, card)
+
+        -- The timer lives under the text column instead of spanning beneath the
+        -- icon/rail. It reads more like subtle status feedback than decoration.
+        local progressTrack = new("Frame", {
+            Name = "ProgressTrack",
+            BackgroundColor3 = theme.Surface3,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            AnchorPoint = Vector2.new(
+                0,
+                1
+            ),
+            Position = UDim2.new(
+                0,
+                textLeft,
+                1,
+                -9
+            ),
+            Size = UDim2.new(
+                1,
+                -textLeft
+                    - 16,
+                0,
+                2
+            ),
+            ZIndex = 202,
+        }, card)
+        corner(progressTrack, 3)
+
+        local progress = new("Frame", {
+            Name = "Progress",
+            BackgroundColor3 = accentColor,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Size = UDim2.fromScale(
+                1,
+                1
+            ),
+            ZIndex = 203,
+        }, progressTrack)
+        corner(progress, 3)
+
         local closed = false
         local toast = {}
+        local toastConnections = {}
+
+        local function connectToast(
+            signal,
+            callback
+        )
+            local connection =
+                signal:Connect(
+                    callback
+                )
+
+            toastConnections[
+                #toastConnections + 1
+            ] = connection
+
+            return connection
+        end
+
+        local function disconnectToastConnections()
+            for index = #toastConnections, 1, -1 do
+                local connection =
+                    toastConnections[index]
+
+                toastConnections[index] =
+                    nil
+
+                pcall(function()
+                    connection:Disconnect()
+                end)
+            end
+        end
 
         function toast:Close()
             if closed then
@@ -1449,51 +1673,215 @@ function KiraUI:CreateWindow(config)
             end
 
             closed = true
+            disconnectToastConnections()
 
-            TweenService:Create(card, TweenInfo.new(0.16, Enum.EasingStyle.Quad), {
-                Size = UDim2.fromOffset(toastWidth, 0),
-                BackgroundTransparency = 1,
-            }):Play()
-            TweenService:Create(accent, TweenInfo.new(0.12), {
-                BackgroundTransparency = 1,
-            }):Play()
-            TweenService:Create(dot, TweenInfo.new(0.12), {
-                BackgroundTransparency = 1,
-            }):Play()
-            TweenService:Create(toastTitle, TweenInfo.new(0.12), {
-                TextTransparency = 1,
-            }):Play()
-            TweenService:Create(toastText, TweenInfo.new(0.12), {
-                TextTransparency = 1,
-            }):Play()
+            TweenService:Create(
+                card,
+                TweenInfo.new(
+                    0.15,
+                    Enum.EasingStyle.Quad,
+                    Enum.EasingDirection.In
+                ),
+                {
+                    Size = UDim2.fromOffset(
+                        toastWidth,
+                        0
+                    ),
+                    BackgroundTransparency = 1,
+                }
+            ):Play()
 
-            task.delay(0.18, function()
-                if card then
-                    card:Destroy()
+            for _, object in ipairs({
+                accent,
+                iconTile,
+                dot,
+                progressTrack,
+                progress,
+            }) do
+                TweenService:Create(
+                    object,
+                    TweenInfo.new(0.10),
+                    {
+                        BackgroundTransparency = 1,
+                    }
+                ):Play()
+            end
+
+            for _, object in ipairs({
+                toastTitle,
+                toastText,
+                closeButton,
+            }) do
+                TweenService:Create(
+                    object,
+                    TweenInfo.new(0.10),
+                    {
+                        TextTransparency = 1,
+                    }
+                ):Play()
+            end
+
+            task.delay(
+                0.17,
+                function()
+                    if card
+                        and card.Parent then
+
+                        card:Destroy()
+                    end
                 end
-            end)
+            )
         end
 
-        TweenService:Create(card, TweenInfo.new(0.16, Enum.EasingStyle.Quad), {
-            Size = UDim2.fromOffset(toastWidth, height),
-            BackgroundTransparency = 0.02,
-        }):Play()
-        TweenService:Create(accent, TweenInfo.new(0.12), {
-            BackgroundTransparency = 0,
-        }):Play()
-        TweenService:Create(dot, TweenInfo.new(0.12), {
-            BackgroundTransparency = 0,
-        }):Play()
-        TweenService:Create(toastTitle, TweenInfo.new(0.12), {
-            TextTransparency = 0,
-        }):Play()
-        TweenService:Create(toastText, TweenInfo.new(0.12), {
-            TextTransparency = 0,
-        }):Play()
+        connectToast(
+            closeButton.MouseButton1Click,
+            function()
+                toast:Close()
+            end
+        )
 
-        task.delay(duration, function()
-            toast:Close()
-        end)
+        connectToast(
+            closeButton.MouseEnter,
+            function()
+                TweenService:Create(
+                    closeButton,
+                    TweenInfo.new(0.09),
+                    {
+                        TextColor3 = theme.Text,
+                    }
+                ):Play()
+            end
+        )
+
+        connectToast(
+            closeButton.MouseLeave,
+            function()
+                TweenService:Create(
+                    closeButton,
+                    TweenInfo.new(0.09),
+                    {
+                        TextColor3 = theme.MutedText,
+                    }
+                ):Play()
+            end
+        )
+
+        TweenService:Create(
+            card,
+            TweenInfo.new(
+                0.18,
+                Enum.EasingStyle.Quart,
+                Enum.EasingDirection.Out
+            ),
+            {
+                Size = UDim2.fromOffset(
+                    toastWidth,
+                    height
+                ),
+                BackgroundTransparency = 0.005,
+            }
+        ):Play()
+
+        TweenService:Create(
+            accent,
+            TweenInfo.new(0.13),
+            {
+                BackgroundTransparency = 0.04,
+            }
+        ):Play()
+
+        TweenService:Create(
+            iconTile,
+            TweenInfo.new(0.13),
+            {
+                BackgroundTransparency = 0.89,
+            }
+        ):Play()
+
+        TweenService:Create(
+            dot,
+            TweenInfo.new(0.13),
+            {
+                BackgroundTransparency = 0,
+            }
+        ):Play()
+
+        TweenService:Create(
+            toastTitle,
+            TweenInfo.new(0.13),
+            {
+                TextTransparency = 0,
+            }
+        ):Play()
+
+        TweenService:Create(
+            toastText,
+            TweenInfo.new(0.13),
+            {
+                TextTransparency = 0,
+            }
+        ):Play()
+
+        TweenService:Create(
+            closeButton,
+            TweenInfo.new(0.13),
+            {
+                TextTransparency = 0.16,
+            }
+        ):Play()
+
+        TweenService:Create(
+            progressTrack,
+            TweenInfo.new(0.13),
+            {
+                BackgroundTransparency = 0.58,
+            }
+        ):Play()
+
+        TweenService:Create(
+            progress,
+            TweenInfo.new(0.13),
+            {
+                BackgroundTransparency = 0.12,
+            }
+        ):Play()
+
+        task.delay(
+            0.18,
+            function()
+                if closed
+                    or not progress.Parent then
+
+                    return
+                end
+
+                TweenService:Create(
+                    progress,
+                    TweenInfo.new(
+                        math.max(
+                            0.1,
+                            duration - 0.18
+                        ),
+                        Enum.EasingStyle.Linear
+                    ),
+                    {
+                        Size = UDim2.new(
+                            0,
+                            0,
+                            1,
+                            0
+                        ),
+                    }
+                ):Play()
+            end
+        )
+
+        task.delay(
+            duration,
+            function()
+                toast:Close()
+            end
+        )
 
         return toast
     end
@@ -4668,7 +5056,9 @@ function KiraUI:CreateWindow(config)
                     holder
                 )
 
-                corner(plot, 10)
+                -- PlotPicker represents the real rectangular Dirt footprint.
+                -- Keep its four corners square so the selection point does not
+                -- visually collide with a rounded corner.
                 stroke(
                     plot,
                     theme.Border,
@@ -4935,6 +5325,9 @@ function KiraUI:CreateWindow(config)
                     local value =
                         object.Value
 
+                    -- Keep the point center exactly under the selected
+                    -- normalized coordinate. No visual inset is applied,
+                    -- so mouse position and point position stay 1:1.
                     point.Position =
                         UDim2.new(
                             value.X,
@@ -5670,20 +6063,64 @@ function KiraUI:CreateWindow(config)
                     )
                 end
 
+                local function renderedRowCount()
+                    local count = 0
+
+                    for _, child in ipairs(
+                        holder:GetChildren()
+                    ) do
+                        if child.Name
+                            == "ActionListRow" then
+
+                            count += 1
+                        end
+                    end
+
+                    return count
+                end
+
                 local function render()
                     local items =
                         object.Items
                     local signature =
-                        itemSignature(items)
+                        itemSignature(
+                            items
+                        )
+                    local currentRows =
+                        renderedRowCount()
 
+                    -- Signature caching is valid ONLY when the UI rows actually
+                    -- exist. An earlier failed render must never poison future
+                    -- retries with the same data signature.
                     if object._signature
                         == signature then
 
-                        return true
+                        if #items == 0
+                            and currentRows == 0 then
+
+                            emptyLabel.Visible =
+                                true
+                            holder.CanvasSize =
+                                UDim2.fromOffset(
+                                    0,
+                                    82
+                                )
+
+                            return true
+                        elseif #items > 0
+                            and currentRows
+                                == #items then
+
+                            emptyLabel.Visible =
+                                false
+
+                            return true
+                        end
                     end
 
+                    -- Do not commit the signature until every row succeeds.
                     object._signature =
-                        signature
+                        nil
 
                     clearRows()
                     emptyLabel.Visible =
@@ -5695,6 +6132,8 @@ function KiraUI:CreateWindow(config)
                                 0,
                                 82
                             )
+                        object._signature =
+                            signature
 
                         return true
                     end
@@ -5704,223 +6143,235 @@ function KiraUI:CreateWindow(config)
                     for index, item in ipairs(
                         items
                     ) do
-                        local ok, renderError =
-                            pcall(function()
-                                local disabled =
-                                    item.Disabled
-                                    == true
-                                local y =
-                                    inset
-                                    + (
-                                        index - 1
-                                    )
-                                    * (
-                                        rowHeight
-                                        + gap
-                                    )
-                                local actionWidth =
-                                    math.max(
-                                        84,
-                                        tonumber(
-                                            options.ActionWidth
+                        local ok,
+                            renderError =
+                                pcall(function()
+                                    local disabled =
+                                        item.Disabled
+                                        == true
+                                    local y =
+                                        inset
+                                        + (
+                                            index - 1
                                         )
-                                        or 104
-                                    )
-                                local entry =
-                                    new(
-                                        "Frame",
-                                        {
-                                            Name =
-                                                "ActionListRow",
-                                            BackgroundColor3 =
-                                                theme.Surface2,
-                                            BorderSizePixel =
-                                                0,
-                                            Position =
-                                                UDim2.fromOffset(
-                                                    inset,
-                                                    y
-                                                ),
-                                            Size =
-                                                UDim2.new(
-                                                    1,
-                                                    -inset * 2
-                                                        - 4,
+                                        * (
+                                            rowHeight
+                                            + gap
+                                        )
+                                    local actionWidth =
+                                        math.max(
+                                            84,
+                                            tonumber(
+                                                options.ActionWidth
+                                            )
+                                            or 104
+                                        )
+                                    local entry =
+                                        new(
+                                            "Frame",
+                                            {
+                                                Name =
+                                                    "ActionListRow",
+                                                BackgroundColor3 =
+                                                    theme.Surface2,
+                                                BorderSizePixel =
                                                     0,
-                                                    rowHeight
-                                                ),
-                                            ZIndex = 18,
-                                        },
-                                        holder
+                                                Position =
+                                                    UDim2.fromOffset(
+                                                        inset,
+                                                        y
+                                                    ),
+                                                Size =
+                                                    UDim2.new(
+                                                        1,
+                                                        -inset * 2
+                                                            - 4,
+                                                        0,
+                                                        rowHeight
+                                                    ),
+                                                ZIndex = 18,
+                                            },
+                                            holder
+                                        )
+
+                                    corner(
+                                        entry,
+                                        8
+                                    )
+                                    stroke(
+                                        entry,
+                                        theme.Border,
+                                        0.62,
+                                        1
                                     )
 
-                                corner(entry, 8)
-                                stroke(
-                                    entry,
-                                    theme.Border,
-                                    0.62,
-                                    1
-                                )
-
-                                new(
-                                    "TextLabel",
-                                    {
-                                        BackgroundTransparency =
-                                            1,
-                                        Position =
-                                            UDim2.fromOffset(
-                                                10,
-                                                6
-                                            ),
-                                        Size =
-                                            UDim2.new(
-                                                1,
-                                                -actionWidth
-                                                    - 28,
-                                                0,
-                                                18
-                                            ),
-                                        Font =
-                                            Enum.Font.GothamMedium,
-                                        Text =
-                                            tostring(
-                                                item.Text
-                                                or item.Name
-                                                or (
-                                                    "Item "
-                                                    .. tostring(
-                                                        index
-                                                    )
-                                                )
-                                            ),
-                                        TextSize = 10,
-                                        TextColor3 =
-                                            theme.Text,
-                                        TextXAlignment =
-                                            Enum.TextXAlignment.Left,
-                                        ZIndex = 19,
-                                    },
-                                    entry
-                                )
-
-                                new(
-                                    "TextLabel",
-                                    {
-                                        BackgroundTransparency =
-                                            1,
-                                        Position =
-                                            UDim2.fromOffset(
-                                                10,
-                                                27
-                                            ),
-                                        Size =
-                                            UDim2.new(
-                                                1,
-                                                -actionWidth
-                                                    - 28,
-                                                0,
-                                                math.max(
-                                                    14,
-                                                    rowHeight
-                                                    - 33
-                                                )
-                                            ),
-                                        Font =
-                                            Enum.Font.Gotham,
-                                        Text =
-                                            tostring(
-                                                item.Subtext
-                                                or item.Description
-                                                or ""
-                                            ),
-                                        TextSize = 9,
-                                        TextColor3 =
-                                            theme.MutedText,
-                                        TextXAlignment =
-                                            Enum.TextXAlignment.Left,
-                                        TextYAlignment =
-                                            Enum.TextYAlignment.Top,
-                                        TextWrapped = true,
-                                        ZIndex = 19,
-                                    },
-                                    entry
-                                )
-
-                                local action =
                                     new(
-                                        "TextButton",
+                                        "TextLabel",
                                         {
-                                            BackgroundColor3 =
-                                                disabled
-                                                and theme.Surface3
-                                                or toneColor(
-                                                    item.Tone
-                                                ),
-                                            BorderSizePixel =
-                                                0,
-                                            AnchorPoint =
-                                                Vector2.new(
-                                                    1,
-                                                    0.5
-                                                ),
+                                            BackgroundTransparency =
+                                                1,
                                             Position =
-                                                UDim2.new(
-                                                    1,
-                                                    -8,
-                                                    0.5,
-                                                    0
+                                                UDim2.fromOffset(
+                                                    10,
+                                                    6
                                                 ),
                                             Size =
-                                                UDim2.fromOffset(
-                                                    actionWidth,
-                                                    32
+                                                UDim2.new(
+                                                    1,
+                                                    -actionWidth
+                                                        - 28,
+                                                    0,
+                                                    18
                                                 ),
                                             Font =
                                                 Enum.Font.GothamMedium,
                                             Text =
                                                 tostring(
-                                                    item.ButtonText
-                                                    or options.ButtonText
-                                                    or "Action"
+                                                    item.Text
+                                                    or item.Name
+                                                    or (
+                                                        "Item "
+                                                        .. tostring(
+                                                            index
+                                                        )
+                                                    )
                                                 ),
-                                            TextSize = 9,
+                                            TextSize = 10,
                                             TextColor3 =
-                                                disabled
-                                                and theme.MutedText
-                                                or theme.Text,
-                                            AutoButtonColor =
-                                                not disabled,
-                                            ZIndex = 20,
+                                                theme.Text,
+                                            TextXAlignment =
+                                                Enum.TextXAlignment.Left,
+                                            ZIndex = 19,
                                         },
                                         entry
                                     )
 
-                                corner(action, 7)
-
-                                if not disabled then
-                                    local connection =
-                                        action
-                                            .MouseButton1Click
-                                            :Connect(function()
-                                                safeCall(
-                                                    options.OnAction
-                                                    or options.Callback,
-                                                    item,
-                                                    index,
-                                                    object
-                                                )
-                                            end)
-
-                                    table.insert(
-                                        object._rowConnections,
-                                        connection
+                                    new(
+                                        "TextLabel",
+                                        {
+                                            BackgroundTransparency =
+                                                1,
+                                            Position =
+                                                UDim2.fromOffset(
+                                                    10,
+                                                    27
+                                                ),
+                                            Size =
+                                                UDim2.new(
+                                                    1,
+                                                    -actionWidth
+                                                        - 28,
+                                                    0,
+                                                    math.max(
+                                                        14,
+                                                        rowHeight
+                                                        - 33
+                                                    )
+                                                ),
+                                            Font =
+                                                Enum.Font.Gotham,
+                                            Text =
+                                                tostring(
+                                                    item.Subtext
+                                                    or item.Description
+                                                    or ""
+                                                ),
+                                            TextSize = 9,
+                                            TextColor3 =
+                                                theme.MutedText,
+                                            TextXAlignment =
+                                                Enum.TextXAlignment.Left,
+                                            TextYAlignment =
+                                                Enum.TextYAlignment.Top,
+                                            TextWrapped = true,
+                                            ZIndex = 19,
+                                        },
+                                        entry
                                     )
-                                end
 
-                                built += 1
-                            end)
+                                    local action =
+                                        new(
+                                            "TextButton",
+                                            {
+                                                BackgroundColor3 =
+                                                    disabled
+                                                    and theme.Surface3
+                                                    or toneColor(
+                                                        item.Tone
+                                                    ),
+                                                BorderSizePixel =
+                                                    0,
+                                                AnchorPoint =
+                                                    Vector2.new(
+                                                        1,
+                                                        0.5
+                                                    ),
+                                                Position =
+                                                    UDim2.new(
+                                                        1,
+                                                        -8,
+                                                        0.5,
+                                                        0
+                                                    ),
+                                                Size =
+                                                    UDim2.fromOffset(
+                                                        actionWidth,
+                                                        32
+                                                    ),
+                                                Font =
+                                                    Enum.Font.GothamMedium,
+                                                Text =
+                                                    tostring(
+                                                        item.ButtonText
+                                                        or options.ButtonText
+                                                        or "Action"
+                                                    ),
+                                                TextSize = 9,
+                                                TextColor3 =
+                                                    disabled
+                                                    and theme.MutedText
+                                                    or theme.Text,
+                                                AutoButtonColor =
+                                                    not disabled,
+                                                ZIndex = 20,
+                                            },
+                                            entry
+                                        )
+
+                                    corner(
+                                        action,
+                                        7
+                                    )
+
+                                    if not disabled then
+                                        local connection =
+                                            action
+                                                .MouseButton1Click
+                                                :Connect(function()
+                                                    safeCall(
+                                                        options.OnAction
+                                                        or options.Callback,
+                                                        item,
+                                                        index,
+                                                        object
+                                                    )
+                                                end)
+
+                                        table.insert(
+                                            object._rowConnections,
+                                            connection
+                                        )
+                                    end
+
+                                    built += 1
+                                end)
 
                         if not ok then
+                            -- IMPORTANT: signature remains nil, so the next
+                            -- refresh retries instead of being cached forever.
+                            object._signature =
+                                nil
+
                             warn(
                                 "[Kira UI ActionList row]",
                                 renderError
@@ -5937,7 +6388,7 @@ function KiraUI:CreateWindow(config)
                             holder.CanvasSize =
                                 UDim2.fromOffset(
                                     0,
-                                    100
+                                    110
                                 )
 
                             return false,
@@ -5959,6 +6410,26 @@ function KiraUI:CreateWindow(config)
                                 built - 1
                             ) * gap
                         )
+
+                    if built ~= #items then
+                        object._signature =
+                            nil
+
+                        return false,
+                            "Rendered "
+                            .. tostring(
+                                built
+                            )
+                            .. "/"
+                            .. tostring(
+                                #items
+                            )
+                            .. " rows"
+                    end
+
+                    -- Commit cache only after successful complete render.
+                    object._signature =
+                        signature
 
                     return true
                 end
@@ -5995,6 +6466,36 @@ function KiraUI:CreateWindow(config)
                         nextItems
                     self.Value =
                         nextItems
+
+                    return render()
+                end
+
+                function object:GetRenderedRowCount()
+                    local count = 0
+
+                    for _, child in ipairs(
+                        holder:GetChildren()
+                    ) do
+                        if child.Name
+                            == "ActionListRow" then
+
+                            count += 1
+                        end
+                    end
+
+                    return count
+                end
+
+                function object:Invalidate()
+                    self._signature =
+                        nil
+
+                    return self
+                end
+
+                function object:Retry()
+                    self._signature =
+                        nil
 
                     return render()
                 end
