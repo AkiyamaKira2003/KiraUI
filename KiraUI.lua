@@ -38,7 +38,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.5.0"
+KiraUI.Version = "0.5.1"
 
 -- Dynamic dropdown provider: KiraUI.other_player_names(Players, LocalPlayer).
 function KiraUI.other_player_names(players, localPlayer)
@@ -2453,6 +2453,51 @@ function KiraUI:CreateWindow(config)
 
                 local suffix = tostring(options.Suffix or "")
                 local draggingSlider = false
+                local dragInput
+                local focusView
+
+                -- RangeFocus only switches this window's ScreenGui. Original
+                -- descendants, layout, config and transparency stay untouched.
+                local function beginRangeFocus()
+                    if not options.RangeFocus or focusView then return end
+                    local overlay = new("ScreenGui", {
+                        Name = "KiraRangeFocus",
+                        ResetOnSpawn = false,
+                        IgnoreGuiInset = true,
+                        DisplayOrder = gui.DisplayOrder + 1,
+                        ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+                    }, gui.Parent)
+                    local bar = track:Clone()
+                    for _, child in ipairs(bar:GetChildren()) do
+                        if child:IsA("GuiObject") then child:Destroy() end
+                    end
+                    bar.AnchorPoint = Vector2.zero
+                    bar.Position = UDim2.fromOffset(track.AbsolutePosition.X, track.AbsolutePosition.Y)
+                    bar.Size = UDim2.fromOffset(track.AbsoluteSize.X, track.AbsoluteSize.Y)
+                    bar.Parent = overlay
+                    local focusedFill = fill:Clone()
+                    focusedFill.Parent = bar
+                    local focusedKnob = knob:Clone()
+                    focusedKnob.Parent = bar
+                    local number = valueLabel:Clone()
+                    number.BackgroundTransparency = 1
+                    number.AnchorPoint = Vector2.new(0.5, 0)
+                    number.Position = UDim2.fromOffset(
+                        track.AbsolutePosition.X + track.AbsoluteSize.X / 2,
+                        track.AbsolutePosition.Y + track.AbsoluteSize.Y + 10)
+                    number.Parent = overlay
+                    focusView = {Gui = overlay, Fill = focusedFill, Knob = focusedKnob,
+                        Number = number, Enabled = gui.Enabled}
+                    gui.Enabled = false
+                end
+
+                local function endRangeFocus()
+                    if not focusView then return end
+                    local saved = focusView
+                    focusView = nil
+                    gui.Enabled = saved.Enabled
+                    saved.Gui:Destroy()
+                end
 
                 local function ratioForValue(value)
                     if maxValue == minValue then
@@ -2466,6 +2511,11 @@ function KiraUI:CreateWindow(config)
                     fill.Size = UDim2.new(ratio, 0, 1, 0)
                     knob.Position = UDim2.new(ratio, 0, 0.5, 0)
                     valueLabel.Text = formatNumber(object.Value, step) .. suffix
+                    if focusView then
+                        focusView.Fill.Size = fill.Size
+                        focusView.Knob.Position = knob.Position
+                        focusView.Number.Text = valueLabel.Text
+                    end
                 end
 
                 function object:SetValue(value, silent)
@@ -2489,30 +2539,50 @@ function KiraUI:CreateWindow(config)
                     object:SetValue(minValue + (maxValue - minValue) * ratio)
                 end
 
+                local function stopDrag()
+                    if not draggingSlider then return end
+                    draggingSlider = false
+                    dragInput = nil
+                    endRangeFocus()
+                    if window._endSliderDrag == stopDrag then
+                        window._endSliderDrag = nil
+                    end
+                    if options.OnDragEnded then safeCall(options.OnDragEnded, object.Value) end
+                end
+
                 window:_connect(trackHitbox.InputBegan, function(input)
+                    if draggingSlider then return end
                     if input.UserInputType == Enum.UserInputType.MouseButton1
                         or input.UserInputType == Enum.UserInputType.Touch then
+                        if window._endSliderDrag then window._endSliderDrag() end
                         draggingSlider = true
+                        dragInput = input
+                        window._endSliderDrag = stopDrag
+                        beginRangeFocus()
+                        if options.OnDragStarted then safeCall(options.OnDragStarted, object.Value) end
                         setFromX(input.Position.X)
                     end
                 end)
 
                 window:_connect(UserInputService.InputChanged, function(input)
-                    if not draggingSlider then
-                        return
-                    end
-                    if input.UserInputType == Enum.UserInputType.MouseMovement
-                        or input.UserInputType == Enum.UserInputType.Touch then
+                    if not draggingSlider then return end
+                    if (dragInput.UserInputType == Enum.UserInputType.MouseButton1
+                        and input.UserInputType == Enum.UserInputType.MouseMovement)
+                        or input == dragInput then
                         setFromX(input.Position.X)
                     end
                 end)
 
                 window:_connect(UserInputService.InputEnded, function(input)
-                    if input.UserInputType == Enum.UserInputType.MouseButton1
-                        or input.UserInputType == Enum.UserInputType.Touch then
-                        draggingSlider = false
+                    if input == dragInput or (dragInput
+                        and dragInput.UserInputType == Enum.UserInputType.MouseButton1
+                        and input.UserInputType == Enum.UserInputType.MouseButton1) then
+                        stopDrag()
                     end
                 end)
+                window:_connect(UserInputService.WindowFocusReleased, stopDrag)
+                window:_connect(row.Destroying, stopDrag)
+                window:_connect(gui.Destroying, stopDrag)
 
                 render()
                 object.Instance = row
@@ -7220,6 +7290,7 @@ function KiraUI:CreateWindow(config)
             return
         end
         self._destroyed = true
+        if self._endSliderDrag then self._endSliderDrag() end
         self:_closeDropdown()
         for _, connection in ipairs(self._connections) do
             pcall(function()
