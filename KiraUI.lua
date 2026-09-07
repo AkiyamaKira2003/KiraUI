@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.2"
+KiraUI.Version = "0.6.4"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -744,6 +744,140 @@ function KiraUI:CreateWindow(config)
         return values
     end
 
+    function window:GetWindowLayout()
+        local targetHost = self.Host
+
+        if not targetHost then
+            return nil
+        end
+
+        local normalSize =
+            self._minimized
+            and self._savedSize
+            or Vector2.new(
+                targetHost.Size.X.Offset,
+                targetHost.Size.Y.Offset
+            )
+
+        if not normalSize then
+            normalSize = self._savedSize
+                or Vector2.new(
+                    targetHost.AbsoluteSize.X,
+                    targetHost.AbsoluteSize.Y
+                )
+        end
+
+        return {
+            X = targetHost.Position.X.Offset,
+            Y = targetHost.Position.Y.Offset,
+            Width = normalSize.X,
+            Height = normalSize.Y,
+        }
+    end
+
+    function window:ApplyWindowLayout(layout)
+        if type(layout) ~= "table"
+            or not self.Host
+        then
+            return false
+        end
+
+        local targetHost = self.Host
+        local vp = getViewport()
+        local margin = 8
+
+        local width =
+            tonumber(layout.Width)
+            or tonumber(layout.W)
+            or targetHost.Size.X.Offset
+
+        local height =
+            tonumber(layout.Height)
+            or tonumber(layout.H)
+            or targetHost.Size.Y.Offset
+
+        local minWidth =
+            math.min(
+                self._minSize.X,
+                math.max(240, vp.X - margin * 2)
+            )
+
+        local minHeight =
+            math.min(
+                self._minSize.Y,
+                math.max(180, vp.Y - margin * 2)
+            )
+
+        local maxWidth =
+            math.min(
+                self._maxSize.X,
+                math.max(minWidth, vp.X - margin * 2)
+            )
+
+        local maxHeight =
+            math.min(
+                self._maxSize.Y,
+                math.max(minHeight, vp.Y - margin * 2)
+            )
+
+        width = clamp(width, minWidth, maxWidth)
+        height = clamp(height, minHeight, maxHeight)
+
+        local x =
+            tonumber(layout.X)
+            or targetHost.Position.X.Offset
+
+        local y =
+            tonumber(layout.Y)
+            or targetHost.Position.Y.Offset
+
+        x = clamp(
+            x,
+            margin,
+            math.max(
+                margin,
+                vp.X - width - margin
+            )
+        )
+
+        y = clamp(
+            y,
+            margin,
+            math.max(
+                margin,
+                vp.Y - height - margin
+            )
+        )
+
+        -- A config always remembers the NORMAL window size.
+        -- If the UI is minimized while loading, update _savedSize and keep
+        -- the 60px header compact; unminimizing restores the loaded size.
+        self._savedSize =
+            Vector2.new(width, height)
+
+        targetHost.Position =
+            UDim2.fromOffset(
+                math.floor(x),
+                math.floor(y)
+            )
+
+        if not self._minimized then
+            targetHost.Size =
+                UDim2.fromOffset(
+                    math.floor(width),
+                    math.floor(height)
+                )
+        end
+
+        task.defer(function()
+            if not self._destroyed then
+                self:_applyResponsive()
+            end
+        end)
+
+        return true
+    end
+
     function window:ApplyConfig(values, options)
         if type(values) ~= "table" then
             return false, "Config data is invalid."
@@ -822,6 +956,10 @@ function KiraUI:CreateWindow(config)
             Name = safeName,
             SavedAt = os.time(),
             Values = self:GetConfigValues(),
+
+            -- Persist UI geometry with each named profile.
+            -- Size always means the normal/unminimized window size.
+            WindowLayout = self:GetWindowLayout(),
         }
 
         local okJson, json = pcall(function()
@@ -881,9 +1019,20 @@ function KiraUI:CreateWindow(config)
             return false, values
         end
 
-        local okApply, appliedOrError = self:ApplyConfig(values, options)
+        local okApply, appliedOrError =
+            self:ApplyConfig(values, options)
+
         if not okApply then
             return false, appliedOrError
+        end
+
+        -- Backward compatible: old profiles simply have no WindowLayout.
+        if type(payload) == "table"
+            and type(payload.WindowLayout) == "table"
+        then
+            self:ApplyWindowLayout(
+                payload.WindowLayout
+            )
         end
 
         return true, appliedOrError, payload
@@ -6968,6 +7117,9 @@ function KiraUI:CreateWindow(config)
                         or theme.AccentSoft
                     )
 
+                local hoverTween = nil
+                local hovering = false
+
                 local button = new("TextButton", {
                     BackgroundColor3 = baseColor,
                     BorderSizePixel = 0,
@@ -7038,31 +7190,50 @@ function KiraUI:CreateWindow(config)
                     )
                 end
 
-                window:_connect(
-                    button.MouseEnter,
-                    function()
-                        TweenService:Create(
+                local function applyButtonColor(
+                    color,
+                    animated
+                )
+                    if hoverTween then
+                        pcall(function()
+                            hoverTween:Cancel()
+                        end)
+                        hoverTween = nil
+                    end
+
+                    if animated then
+                        hoverTween = TweenService:Create(
                             button,
                             TweenInfo.new(0.12),
                             {
-                                BackgroundColor3 =
-                                    hoverColor,
+                                BackgroundColor3 = color,
                             }
-                        ):Play()
+                        )
+                        hoverTween:Play()
+                    else
+                        button.BackgroundColor3 = color
+                    end
+                end
+
+                window:_connect(
+                    button.MouseEnter,
+                    function()
+                        hovering = true
+                        applyButtonColor(
+                            hoverColor,
+                            true
+                        )
                     end
                 )
 
                 window:_connect(
                     button.MouseLeave,
                     function()
-                        TweenService:Create(
-                            button,
-                            TweenInfo.new(0.12),
-                            {
-                                BackgroundColor3 =
-                                    baseColor,
-                            }
-                        ):Play()
+                        hovering = false
+                        applyButtonColor(
+                            baseColor,
+                            true
+                        )
                     end
                 )
 
@@ -7131,12 +7302,21 @@ function KiraUI:CreateWindow(config)
                 )
                     if typeof(color) == "Color3" then
                         baseColor = color
-                        button.BackgroundColor3 = baseColor
                     end
 
                     if typeof(nextHoverColor) == "Color3" then
                         hoverColor = nextHoverColor
                     end
+
+                    -- Any old MouseEnter/MouseLeave tween is cancelled first.
+                    -- Otherwise a tween created before the accordion state
+                    -- changed can finish later and restore the obsolete color.
+                    applyButtonColor(
+                        hovering
+                            and hoverColor
+                            or baseColor,
+                        false
+                    )
 
                     return self
                 end
@@ -7144,9 +7324,20 @@ function KiraUI:CreateWindow(config)
                 function object:SetHoverColor(color)
                     if typeof(color) == "Color3" then
                         hoverColor = color
+
+                        if hovering then
+                            applyButtonColor(
+                                hoverColor,
+                                false
+                            )
+                        end
                     end
 
                     return self
+                end
+
+                function object:GetBackgroundColors()
+                    return baseColor, hoverColor
                 end
 
                 function object:SetTextColor(color)
@@ -7266,7 +7457,7 @@ function KiraUI:CreateWindow(config)
 
         local status = section:AddLabel({
             Text = fileApiAvailable()
-                and "Configs are saved on this device."
+                and "Configs save settings + UI size/position on this device."
                 or "Config saving is not available in this executor.",
             Wrap = true,
             Muted = true,
@@ -7359,7 +7550,8 @@ function KiraUI:CreateWindow(config)
                     nameInput:SetValue(result, true)
                     savedDropdown:SetValue(result, true)
                     setConfigStatus(
-                        "Saved config: " .. tostring(result),
+                        "Saved config + UI layout: "
+                            .. tostring(result),
                         "success"
                     )
                     safeCall(options.OnSaved, result)
@@ -7383,7 +7575,7 @@ function KiraUI:CreateWindow(config)
                     nameInput:SetValue(name, true)
                     savedDropdown:SetValue(name, true)
                     setConfigStatus(
-                        "Loaded config: "
+                        "Loaded config + UI layout: "
                             .. tostring(name)
                             .. " ("
                             .. tostring(result)
