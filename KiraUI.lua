@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.0"
+KiraUI.Version = "0.6.1"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -6945,18 +6945,24 @@ function KiraUI:CreateWindow(config)
                 end
 
                 local row = controlFrame(options.Height or 38)
+                local hasIcon =
+                    KiraUI.ResolveIcon(options.Icon) ~= nil
+                local buttonText =
+                    tostring(options.Text or "Button")
+
                 local button = new("TextButton", {
-                    BackgroundColor3 = options.Danger and theme.Danger or theme.Surface3,
+                    BackgroundColor3 =
+                        options.Danger
+                        and theme.Danger
+                        or theme.Surface3,
                     BorderSizePixel = 0,
                     Size = UDim2.fromScale(1, 1),
                     Font = Enum.Font.GothamMedium,
-                    Text = tostring(options.Text or "Button"),
+                    Text = hasIcon and "" or buttonText,
                     TextSize = 11,
                     TextColor3 = theme.Text,
                     TextXAlignment =
-                        options.Icon
-                        and Enum.TextXAlignment.Left
-                        or Enum.TextXAlignment.Center,
+                        Enum.TextXAlignment.Center,
                     AutoButtonColor = false,
                     ZIndex = 17,
                 }, row)
@@ -6966,8 +6972,10 @@ function KiraUI:CreateWindow(config)
                     button,
                     options.Icon,
                     {
-                        AnchorPoint = Vector2.new(0, 0.5),
-                        Position = UDim2.new(0, 12, 0.5, 0),
+                        AnchorPoint =
+                            Vector2.new(0, 0.5),
+                        Position =
+                            UDim2.new(0, 12, 0.5, 0),
                         Size = UDim2.fromOffset(
                             tonumber(options.IconSize) or 16,
                             tonumber(options.IconSize) or 16
@@ -6979,36 +6987,113 @@ function KiraUI:CreateWindow(config)
                     }
                 )
 
+                -- IMPORTANT:
+                -- Do not parent UIPadding to an icon button.
+                -- UIPadding also offsets child GuiObjects, which used to push
+                -- the ImageLabel into the button text (the overlap bug).
+                local buttonTextLabel = nil
+
                 if buttonIcon then
-                    padding(button, 36, 12, 0, 0)
+                    buttonTextLabel = new(
+                        "TextLabel",
+                        {
+                            Name = "ButtonText",
+                            BackgroundTransparency = 1,
+                            BorderSizePixel = 0,
+                            Position =
+                                UDim2.fromOffset(40, 0),
+                            Size =
+                                UDim2.new(1, -52, 1, 0),
+                            Font = Enum.Font.GothamMedium,
+                            Text = buttonText,
+                            TextSize =
+                                tonumber(options.TextSize)
+                                or 11,
+                            TextColor3 = theme.Text,
+                            TextXAlignment =
+                                options.TextXAlignment
+                                or Enum.TextXAlignment.Left,
+                            TextYAlignment =
+                                Enum.TextYAlignment.Center,
+                            TextTruncate =
+                                Enum.TextTruncate.AtEnd,
+                            ZIndex = 18,
+                        },
+                        button
+                    )
                 end
 
-                window:_connect(button.MouseEnter, function()
-                    if not options.Danger then
-                        TweenService:Create(button, TweenInfo.new(0.12), {
-                            BackgroundColor3 = theme.AccentSoft,
-                        }):Play()
+                window:_connect(
+                    button.MouseEnter,
+                    function()
+                        if not options.Danger then
+                            TweenService:Create(
+                                button,
+                                TweenInfo.new(0.12),
+                                {
+                                    BackgroundColor3 =
+                                        theme.AccentSoft,
+                                }
+                            ):Play()
+                        end
                     end
-                end)
-                window:_connect(button.MouseLeave, function()
-                    if not options.Danger then
-                        TweenService:Create(button, TweenInfo.new(0.12), {
-                            BackgroundColor3 = theme.Surface3,
-                        }):Play()
+                )
+
+                window:_connect(
+                    button.MouseLeave,
+                    function()
+                        if not options.Danger then
+                            TweenService:Create(
+                                button,
+                                TweenInfo.new(0.12),
+                                {
+                                    BackgroundColor3 =
+                                        theme.Surface3,
+                                }
+                            ):Play()
+                        end
                     end
-                end)
-                window:_connect(button.MouseButton1Click, function()
-                    safeCall(options.Callback)
-                end)
+                )
+
+                window:_connect(
+                    button.MouseButton1Click,
+                    function()
+                        safeCall(options.Callback)
+                    end
+                )
 
                 local object = {
                     Instance = row,
                     Button = button,
                     Icon = buttonIcon,
+                    Label = buttonTextLabel,
                 }
 
                 function object:SetText(text)
-                    button.Text = tostring(text or "")
+                    text = tostring(text or "")
+
+                    if self.Label then
+                        self.Label.Text = text
+                    else
+                        button.Text = text
+                    end
+
+                    return self
+                end
+
+                function object:SetTextSize(size)
+                    size = tonumber(size)
+
+                    if not size then
+                        return self
+                    end
+
+                    if self.Label then
+                        self.Label.TextSize = size
+                    else
+                        button.TextSize = size
+                    end
+
                     return self
                 end
 
@@ -7016,6 +7101,7 @@ function KiraUI:CreateWindow(config)
                     if self.Icon then
                         setImageIcon(self.Icon, icon)
                     end
+
                     return self
                 end
 
@@ -7024,6 +7110,7 @@ function KiraUI:CreateWindow(config)
                         self.Icon.Rotation =
                             tonumber(rotation) or 0
                     end
+
                     return self
                 end
 
