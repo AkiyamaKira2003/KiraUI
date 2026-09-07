@@ -32,13 +32,81 @@ local TweenService = game:GetService("TweenService")
 local TextService = game:GetService("TextService")
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
+local ContentProvider = game:GetService("ContentProvider")
 
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.5.1"
+KiraUI.Version = "0.6.0"
+
+-- Lucide image icons hosted as Roblox image assets.
+-- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
+-- Therefore a Roblox font cannot replace them with square "missing glyph" boxes.
+--
+-- You may pass:
+--   "settings"                    -> named icon below
+--   "rbxassetid://7734053495"    -> direct image
+--   {Image="...", RectOffset=..., RectSize=...} -> sprite sheet icon
+KiraUI.Icons = {
+    ["layout-dashboard"] = "rbxassetid://7733970318",
+    ["home"] = "rbxassetid://7733960981",
+    ["package"] = "rbxassetid://7734021469",
+    ["box"] = "rbxassetid://7733917120",
+    ["sprout"] = "rbxassetid://7743872071",
+    ["carrot"] = "rbxassetid://8997382987",
+    ["drumstick"] = "rbxassetid://8997385789",
+    ["coffee"] = "rbxassetid://7733752630",
+    ["electricity"] = "rbxassetid://7733771628",
+    ["navigation"] = "rbxassetid://7734020989",
+    ["navigation-2"] = "rbxassetid://7734020942",
+    ["settings"] = "rbxassetid://7734053495",
+    ["settings-2"] = "rbxassetid://8997386997",
+    ["tent"] = "rbxassetid://7734078943",
+    ["axe"] = "rbxassetid://7733674079",
+    ["flame"] = "rbxassetid://7733798747",
+    ["gem"] = "rbxassetid://7733942651",
+    ["coins"] = "rbxassetid://7743866529",
+
+    ["chevron-down"] = "rbxassetid://7733717447",
+    ["chevron-up"] = "rbxassetid://7733919605",
+    ["chevron-left"] = "rbxassetid://7733717651",
+    ["chevron-right"] = "rbxassetid://7733717755",
+
+    ["x"] = "rbxassetid://7743878857",
+    ["x-circle"] = "rbxassetid://7743878496",
+    ["minus"] = "rbxassetid://7734000129",
+    ["maximize-2"] = "rbxassetid://7733992901",
+    ["minimize-2"] = "rbxassetid://7733997870",
+
+    ["save"] = "rbxassetid://7734052335",
+    ["folder-open"] = "rbxassetid://8997386062",
+    ["play"] = "rbxassetid://7743871480",
+    ["refresh-cw"] = "rbxassetid://7734051052",
+    ["trash-2"] = "rbxassetid://7743873772",
+    ["download"] = "rbxassetid://7733770755",
+    ["upload"] = "rbxassetid://7743875428",
+
+    ["check"] = "rbxassetid://7733715400",
+    ["check-square"] = "rbxassetid://7733919526",
+    ["square"] = "rbxassetid://7743872181",
+    ["circle"] = "rbxassetid://7733919881",
+    ["info"] = "rbxassetid://7733964719",
+    ["alert-triangle"] = "rbxassetid://7733658504",
+    ["lock"] = "rbxassetid://7733992528",
+    ["unlock"] = "rbxassetid://7743875263",
+    ["sliders"] = "rbxassetid://7734058803",
+    ["shopping-bag"] = "rbxassetid://7734056747",
+    ["wrench"] = "rbxassetid://7743878358",
+}
+
+KiraUI.Icons.overview = KiraUI.Icons["layout-dashboard"]
+KiraUI.Icons.materials = KiraUI.Icons["package"]
+KiraUI.Icons.tree = KiraUI.Icons["sprout"]
+KiraUI.Icons.food = KiraUI.Icons["carrot"]
+KiraUI.Icons.functions = KiraUI.Icons["electricity"]
+KiraUI.Icons.teleport = KiraUI.Icons["navigation"]
 
 -- Dynamic dropdown provider: KiraUI.other_player_names(Players, LocalPlayer).
 function KiraUI.other_player_names(players, localPlayer)
@@ -98,6 +166,151 @@ local function new(className, props, parent)
     end
     instance.Parent = parent
     return instance
+end
+
+local function normalizeIconKey(value)
+    return tostring(value or "")
+        :lower()
+        :gsub("_", "-")
+        :gsub("%s+", "-")
+end
+
+function KiraUI.ResolveIcon(icon)
+    if icon == nil or icon == false then
+        return nil
+    end
+
+    if type(icon) == "string" then
+        local raw = tostring(icon)
+
+        if raw:match("^rbxassetid://")
+            or raw:match("^rbxasset://")
+            or raw:match("^https?://")
+        then
+            return { Image = raw }
+        end
+
+        local named = KiraUI.Icons[normalizeIconKey(raw)]
+        return named and { Image = named } or nil
+    end
+
+    if type(icon) == "table" then
+        local image =
+            icon.Image
+            or icon.Asset
+            or icon.Id
+            or icon[1]
+
+        if type(image) == "string" then
+            image =
+                KiraUI.Icons[normalizeIconKey(image)]
+                or image
+        end
+
+        if type(image) ~= "string" or image == "" then
+            return nil
+        end
+
+        return {
+            Image = image,
+            RectOffset =
+                icon.ImageRectOffset
+                or icon.RectOffset
+                or icon.Offset
+                or icon[2],
+            RectSize =
+                icon.ImageRectSize
+                or icon.RectSize
+                or icon[3],
+            Rotation = tonumber(icon.Rotation) or 0,
+        }
+    end
+
+    return nil
+end
+
+local function setImageIcon(imageObject, icon)
+    if not imageObject then
+        return false
+    end
+
+    local spec = KiraUI.ResolveIcon(icon)
+    if not spec then
+        imageObject.Image = ""
+        imageObject.ImageRectOffset = Vector2.zero
+        imageObject.ImageRectSize = Vector2.zero
+        imageObject.Rotation = 0
+        return false
+    end
+
+    imageObject.Image = spec.Image
+    imageObject.ImageRectOffset =
+        typeof(spec.RectOffset) == "Vector2"
+        and spec.RectOffset
+        or Vector2.zero
+    imageObject.ImageRectSize =
+        typeof(spec.RectSize) == "Vector2"
+        and spec.RectSize
+        or Vector2.zero
+    imageObject.Rotation = spec.Rotation or 0
+
+    return true
+end
+
+local function createImageIcon(parent, icon, props)
+    local spec = KiraUI.ResolveIcon(icon)
+    if not spec then
+        return nil
+    end
+
+    local finalProps = {
+        Name = "Icon",
+        BackgroundTransparency = 1,
+        BorderSizePixel = 0,
+        Image = spec.Image,
+        ImageRectOffset =
+            typeof(spec.RectOffset) == "Vector2"
+            and spec.RectOffset
+            or Vector2.zero,
+        ImageRectSize =
+            typeof(spec.RectSize) == "Vector2"
+            and spec.RectSize
+            or Vector2.zero,
+        ImageColor3 = Color3.new(1, 1, 1),
+        ScaleType = Enum.ScaleType.Fit,
+        Rotation = spec.Rotation or 0,
+    }
+
+    for key, value in pairs(props or {}) do
+        finalProps[key] = value
+    end
+
+    return new("ImageLabel", finalProps, parent)
+end
+
+function KiraUI:PreloadIcons(iconList)
+    local temporary = {}
+
+    for _, icon in ipairs(iconList or {}) do
+        local spec = self.ResolveIcon(icon)
+
+        if spec then
+            local image = Instance.new("ImageLabel")
+            image.BackgroundTransparency = 1
+            image.Image = spec.Image
+            temporary[#temporary + 1] = image
+        end
+    end
+
+    if #temporary > 0 then
+        pcall(function()
+            ContentProvider:PreloadAsync(temporary)
+        end)
+    end
+
+    for _, object in ipairs(temporary) do
+        object:Destroy()
+    end
 end
 
 local function corner(parent, radius)
@@ -375,6 +588,7 @@ function KiraUI:CreateWindow(config)
     local showCloseButton = config.ShowCloseButton ~= false
     local launcherEnabled = config.ShowLauncher ~= false
     local launcherText = tostring(config.LauncherText or "K")
+    local launcherIcon = config.LauncherIcon
     local launcherPosition = config.LauncherPosition or UDim2.new(0, 18, 0.5, 0)
     local launcherAnchorPoint = config.LauncherAnchorPoint or Vector2.new(0, 0.5)
     local launcherSize = config.LauncherSize or UDim2.fromOffset(46, 46)
@@ -904,7 +1118,7 @@ function KiraUI:CreateWindow(config)
         Size = launcherSize,
         AutoButtonColor = false,
         Font = Enum.Font.GothamBlack,
-        Text = launcherText,
+        Text = launcherIcon and "" or launcherText,
         TextSize = config.LauncherTextSize or 24,
         TextColor3 = theme.Text,
         TextTruncate = Enum.TextTruncate.AtEnd,
@@ -914,6 +1128,19 @@ function KiraUI:CreateWindow(config)
     }, gui)
     corner(launcherButton, launcherRadius)
     stroke(launcherButton, theme.Text, 0.78, 1)
+
+    local launcherIconLabel = createImageIcon(
+        launcherButton,
+        launcherIcon,
+        {
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            Position = UDim2.fromScale(0.5, 0.5),
+            Size = UDim2.fromScale(0.52, 0.52),
+            ImageColor3 = theme.Text,
+            ZIndex = 951,
+        }
+    )
+    window.LauncherIcon = launcherIconLabel
     new("UIGradient", {
         Color = ColorSequence.new({
             ColorSequenceKeypoint.new(0, launcherColorA),
@@ -1196,7 +1423,7 @@ function KiraUI:CreateWindow(config)
         Size = UDim2.fromOffset(34, 31),
         AutoButtonColor = false,
         Font = Enum.Font.GothamBold,
-        Text = "—",
+        Text = "",
         TextSize = 16,
         TextColor3 = theme.Text,
         ZIndex = 14,
@@ -1212,7 +1439,7 @@ function KiraUI:CreateWindow(config)
         Size = UDim2.fromOffset(30, 31),
         AutoButtonColor = false,
         Font = Enum.Font.GothamBold,
-        Text = "×",
+        Text = "",
         TextSize = 16,
         TextColor3 = theme.MutedText,
         Visible = showCloseButton,
@@ -1220,6 +1447,33 @@ function KiraUI:CreateWindow(config)
         ZIndex = 14,
     }, header)
     corner(closeButton, controlRadius)
+
+    local minimizeIcon = createImageIcon(
+        minimizeButton,
+        "minus",
+        {
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            Position = UDim2.fromScale(0.5, 0.5),
+            Size = UDim2.fromOffset(17, 17),
+            ImageColor3 = theme.Text,
+            ZIndex = 15,
+        }
+    )
+
+    local closeIcon = createImageIcon(
+        closeButton,
+        "x",
+        {
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            Position = UDim2.fromScale(0.5, 0.5),
+            Size = UDim2.fromOffset(16, 16),
+            ImageColor3 = theme.MutedText,
+            ZIndex = 15,
+        }
+    )
+
+    window.MinimizeIcon = minimizeIcon
+    window.CloseIcon = closeIcon
 
     if not showCloseButton then
         minimizeButton.Position = UDim2.new(1, -12, 0, 15)
@@ -1585,12 +1839,25 @@ function KiraUI:CreateWindow(config)
             ),
             AutoButtonColor = false,
             Font = Enum.Font.GothamMedium,
-            Text = "×",
+            Text = "",
             TextSize = 15,
             TextColor3 = theme.MutedText,
             TextTransparency = 1,
             ZIndex = 204,
         }, card)
+
+        local toastCloseIcon = createImageIcon(
+            closeButton,
+            "x",
+            {
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                Position = UDim2.fromScale(0.5, 0.5),
+                Size = UDim2.fromOffset(14, 14),
+                ImageColor3 = theme.MutedText,
+                ImageTransparency = 0.16,
+                ZIndex = 205,
+            }
+        )
 
         -- The timer lives under the text column instead of spanning beneath the
         -- icon/rail. It reads more like subtle status feedback than decoration.
@@ -1959,9 +2226,27 @@ function KiraUI:CreateWindow(config)
                 tab.NavLabel.Visible = not compact
             end
             if tab.NavIcon then
-                tab.NavIcon.Size = compact and UDim2.fromScale(1, 1) or UDim2.fromOffset(34, 40)
-                tab.NavIcon.Position = UDim2.fromOffset(0, 0)
-                tab.NavIcon.TextXAlignment = compact and Enum.TextXAlignment.Center or Enum.TextXAlignment.Center
+                if tab.NavIcon:IsA("ImageLabel") then
+                    tab.NavIcon.AnchorPoint =
+                        Vector2.new(0.5, 0.5)
+                    tab.NavIcon.Position =
+                        compact
+                        and UDim2.fromScale(0.5, 0.5)
+                        or UDim2.new(0, 17, 0.5, 0)
+                    tab.NavIcon.Size =
+                        compact
+                        and UDim2.fromOffset(21, 21)
+                        or UDim2.fromOffset(19, 19)
+                else
+                    tab.NavIcon.Size =
+                        compact
+                        and UDim2.fromScale(1, 1)
+                        or UDim2.fromOffset(34, 40)
+                    tab.NavIcon.Position =
+                        UDim2.fromOffset(0, 0)
+                    tab.NavIcon.TextXAlignment =
+                        Enum.TextXAlignment.Center
+                end
             end
             if tab._relayout then
                 task.defer(tab._relayout)
@@ -1972,7 +2257,11 @@ function KiraUI:CreateWindow(config)
     -- Tabs
     function window:AddTab(name, icon)
         name = tostring(name or "Tab")
-        icon = tostring(icon or "•")
+        local iconSpec = KiraUI.ResolveIcon(icon)
+        local fallbackIconText =
+            not iconSpec
+            and tostring(icon or "")
+            or ""
 
         local tab = {
             Name = name,
@@ -1991,17 +2280,34 @@ function KiraUI:CreateWindow(config)
         }, nav)
         corner(button, 10)
 
-        local iconLabel = new("TextLabel", {
-            Name = "Icon",
-            BackgroundTransparency = 1,
-            Position = UDim2.fromOffset(0, 0),
-            Size = UDim2.fromOffset(34, 42),
-            Font = Enum.Font.GothamBold,
-            Text = icon,
-            TextSize = 14,
-            TextColor3 = theme.MutedText,
-            ZIndex = 15,
-        }, button)
+        local iconLabel
+
+        if iconSpec then
+            iconLabel = createImageIcon(
+                button,
+                icon,
+                {
+                    Name = "Icon",
+                    AnchorPoint = Vector2.new(0.5, 0.5),
+                    Position = UDim2.new(0, 17, 0.5, 0),
+                    Size = UDim2.fromOffset(19, 19),
+                    ImageColor3 = theme.MutedText,
+                    ZIndex = 15,
+                }
+            )
+        else
+            iconLabel = new("TextLabel", {
+                Name = "Icon",
+                BackgroundTransparency = 1,
+                Position = UDim2.fromOffset(0, 0),
+                Size = UDim2.fromOffset(34, 42),
+                Font = Enum.Font.GothamBold,
+                Text = fallbackIconText,
+                TextSize = 14,
+                TextColor3 = theme.MutedText,
+                ZIndex = 15,
+            }, button)
+        end
 
         local nameLabel = new("TextLabel", {
             Name = "Name",
@@ -3345,22 +3651,26 @@ function KiraUI:CreateWindow(config)
                 corner(sharedButton, 8)
                 padding(sharedButton, 11, 28, 0, 0)
 
-                local sharedArrow = new("TextLabel", {
-                    BackgroundTransparency = 1,
-                    AnchorPoint = Vector2.new(1, 0),
-                    Position = UDim2.new(
-                        1,
-                        showLockButton and -106 or -8,
-                        0,
-                        22
+                local sharedArrow = createImageIcon(
+                    row,
+                    (
+                        KiraUI.ResolveIcon(options.ArrowIcon)
+                        and options.ArrowIcon
+                        or "chevron-down"
                     ),
-                    Size = UDim2.fromOffset(20, 36),
-                    Font = Enum.Font.GothamBold,
-                    Text = "v",
-                    TextSize = 13,
-                    TextColor3 = theme.MutedText,
-                    ZIndex = 18,
-                }, row)
+                    {
+                        AnchorPoint = Vector2.new(1, 0.5),
+                        Position = UDim2.new(
+                            1,
+                            showLockButton and -110 or -10,
+                            0,
+                            40
+                        ),
+                        Size = UDim2.fromOffset(16, 16),
+                        ImageColor3 = theme.MutedText,
+                        ZIndex = 18,
+                    }
+                )
 
                 local lockButton = new("TextButton", {
                     BackgroundColor3 = theme.Surface3,
@@ -3445,7 +3755,7 @@ function KiraUI:CreateWindow(config)
                         popup = nil
                     end
                     dismissLayer.Visible = false
-                    sharedArrow.Text = "v"
+                    sharedArrow.Rotation = 0
                     if window._openDropdown == selectApi then
                         window._openDropdown = nil
                     end
@@ -3458,7 +3768,7 @@ function KiraUI:CreateWindow(config)
                 local function openPopup(trigger, currentValue, applyValue)
                     window:_closeDropdown()
                     dismissLayer.Visible = true
-                    sharedArrow.Text = trigger == sharedButton and "^" or "v"
+                    sharedArrow.Rotation = trigger == sharedButton and 180 or 0
 
                     local choices = readChoices()
                     local itemHeight = 34
@@ -3913,17 +4223,21 @@ function KiraUI:CreateWindow(config)
                 corner(trigger, 8)
                 padding(trigger, 11, 36, 0, 0)
 
-                local arrow = new("TextLabel", {
-                    BackgroundTransparency = 1,
-                    AnchorPoint = Vector2.new(1, 0),
-                    Position = UDim2.new(1, -9, 0, 22),
-                    Size = UDim2.fromOffset(20, 36),
-                    Font = Enum.Font.GothamBold,
-                    Text = "v",
-                    TextSize = 13,
-                    TextColor3 = theme.MutedText,
-                    ZIndex = 18,
-                }, row)
+                local arrow = createImageIcon(
+                    row,
+                    (
+                        KiraUI.ResolveIcon(options.ArrowIcon)
+                        and options.ArrowIcon
+                        or "chevron-down"
+                    ),
+                    {
+                        AnchorPoint = Vector2.new(1, 0.5),
+                        Position = UDim2.new(1, -11, 0, 40),
+                        Size = UDim2.fromOffset(16, 16),
+                        ImageColor3 = theme.MutedText,
+                        ZIndex = 18,
+                    }
+                )
 
                 local dropdownApi = {}
                 local popup
@@ -3958,7 +4272,7 @@ function KiraUI:CreateWindow(config)
                         popup = nil
                     end
                     dismissLayer.Visible = false
-                    arrow.Text = "v"
+                    arrow.Rotation = 0
                     if window._openDropdown == dropdownApi then
                         window._openDropdown = nil
                     end
@@ -3996,7 +4310,7 @@ function KiraUI:CreateWindow(config)
                 local function open()
                     window:_closeDropdown()
                     dismissLayer.Visible = true
-                    arrow.Text = "^"
+                    arrow.Rotation = 180
 
                     local values = getOptions()
                     local itemHeight = 34
@@ -4159,17 +4473,21 @@ function KiraUI:CreateWindow(config)
                 corner(trigger, 8)
                 padding(trigger, 11, 36, 0, 0)
 
-                local arrow = new("TextLabel", {
-                    BackgroundTransparency = 1,
-                    AnchorPoint = Vector2.new(1, 0),
-                    Position = UDim2.new(1, -9, 0, 22),
-                    Size = UDim2.fromOffset(20, 36),
-                    Font = Enum.Font.GothamBold,
-                    Text = "v",
-                    TextSize = 13,
-                    TextColor3 = theme.MutedText,
-                    ZIndex = 18,
-                }, row)
+                local arrow = createImageIcon(
+                    row,
+                    (
+                        KiraUI.ResolveIcon(options.ArrowIcon)
+                        and options.ArrowIcon
+                        or "chevron-down"
+                    ),
+                    {
+                        AnchorPoint = Vector2.new(1, 0.5),
+                        Position = UDim2.new(1, -11, 0, 40),
+                        Size = UDim2.fromOffset(16, 16),
+                        ImageColor3 = theme.MutedText,
+                        ZIndex = 18,
+                    }
+                )
 
                 local multiApi = {}
                 local popup
@@ -4249,7 +4567,7 @@ function KiraUI:CreateWindow(config)
                     end
                     itemButtons = {}
                     dismissLayer.Visible = false
-                    arrow.Text = "v"
+                    arrow.Rotation = 0
                     if window._openDropdown == multiApi then
                         window._openDropdown = nil
                     end
@@ -4331,7 +4649,7 @@ function KiraUI:CreateWindow(config)
                 local function open()
                     window:_closeDropdown()
                     dismissLayer.Visible = true
-                    arrow.Text = "^"
+                    arrow.Rotation = 180
 
                     local values = getOptions()
                     local itemHeight = 34
@@ -6635,10 +6953,35 @@ function KiraUI:CreateWindow(config)
                     Text = tostring(options.Text or "Button"),
                     TextSize = 11,
                     TextColor3 = theme.Text,
+                    TextXAlignment =
+                        options.Icon
+                        and Enum.TextXAlignment.Left
+                        or Enum.TextXAlignment.Center,
                     AutoButtonColor = false,
                     ZIndex = 17,
                 }, row)
                 corner(button, 8)
+
+                local buttonIcon = createImageIcon(
+                    button,
+                    options.Icon,
+                    {
+                        AnchorPoint = Vector2.new(0, 0.5),
+                        Position = UDim2.new(0, 12, 0.5, 0),
+                        Size = UDim2.fromOffset(
+                            tonumber(options.IconSize) or 16,
+                            tonumber(options.IconSize) or 16
+                        ),
+                        ImageColor3 =
+                            options.IconColor
+                            or theme.Text,
+                        ZIndex = 18,
+                    }
+                )
+
+                if buttonIcon then
+                    padding(button, 36, 12, 0, 0)
+                end
 
                 window:_connect(button.MouseEnter, function()
                     if not options.Danger then
@@ -6661,10 +7004,26 @@ function KiraUI:CreateWindow(config)
                 local object = {
                     Instance = row,
                     Button = button,
+                    Icon = buttonIcon,
                 }
 
                 function object:SetText(text)
                     button.Text = tostring(text or "")
+                    return self
+                end
+
+                function object:SetIcon(icon)
+                    if self.Icon then
+                        setImageIcon(self.Icon, icon)
+                    end
+                    return self
+                end
+
+                function object:SetIconRotation(rotation)
+                    if self.Icon then
+                        self.Icon.Rotation =
+                            tonumber(rotation) or 0
+                    end
                     return self
                 end
 
@@ -6842,6 +7201,7 @@ function KiraUI:CreateWindow(config)
 
         section:AddButton({
             Text = options.SaveText or "Save Config",
+            Icon = options.SaveIcon or "save",
             Callback = function()
                 local ok, result =
                     self:SaveConfig(selectedName(), {
@@ -6865,6 +7225,7 @@ function KiraUI:CreateWindow(config)
 
         section:AddButton({
             Text = options.LoadText or "Load Config",
+            Icon = options.LoadIcon or "folder-open",
             Callback = function()
                 local name = selectedName()
                 local ok, result =
@@ -6892,6 +7253,7 @@ function KiraUI:CreateWindow(config)
 
         section:AddButton({
             Text = options.AutoLoadText or "Set as Autoload",
+            Icon = options.AutoLoadIcon or "play",
             Callback = function()
                 local ok, result =
                     self:SetAutoLoadConfig(selectedName())
@@ -6913,6 +7275,7 @@ function KiraUI:CreateWindow(config)
 
         section:AddButton({
             Text = options.ClearAutoLoadText or "Clear Autoload",
+            Icon = options.ClearAutoLoadIcon or "x-circle",
             Callback = function()
                 local ok, result = self:ClearAutoLoadConfig()
 
@@ -6928,6 +7291,7 @@ function KiraUI:CreateWindow(config)
 
         section:AddButton({
             Text = options.RefreshText or "Refresh List",
+            Icon = options.RefreshIcon or "refresh-cw",
             Callback = function()
                 refreshList()
                 setConfigStatus("Config list refreshed.")
@@ -6936,6 +7300,7 @@ function KiraUI:CreateWindow(config)
 
         section:AddButton({
             Text = options.DeleteText or "Delete Config",
+            Icon = options.DeleteIcon or "trash-2",
             Danger = true,
             Callback = function()
                 local name = selectedName()
@@ -6969,7 +7334,7 @@ function KiraUI:CreateWindow(config)
     end
 
     function window:AddConfigTab(name, icon, options)
-        local tab = self:AddTab(name or "Config", icon or "C")
+        local tab = self:AddTab(name or "Config", icon or "settings")
         self:AddConfigSection(tab, options or {})
         return tab
     end
@@ -6995,7 +7360,17 @@ function KiraUI:CreateWindow(config)
             local active = tab == selected
             tab.Page.Visible = active
             tab.NavButton.BackgroundColor3 = active and theme.Accent or theme.Surface2
-            tab.NavIcon.TextColor3 = active and theme.Text or theme.MutedText
+            if tab.NavIcon:IsA("ImageLabel") then
+                tab.NavIcon.ImageColor3 =
+                    active
+                    and theme.Text
+                    or theme.MutedText
+            else
+                tab.NavIcon.TextColor3 =
+                    active
+                    and theme.Text
+                    or theme.MutedText
+            end
             tab.NavLabel.TextColor3 = theme.Text
         end
 
@@ -7198,7 +7573,7 @@ function KiraUI:CreateWindow(config)
             for _, handle in ipairs(resizeHandles) do
                 handle.Active = false
             end
-            minimizeButton.Text = "+"
+            setImageIcon(minimizeIcon, "maximize-2")
             local vp = getViewport()
             local minimizedWidth = math.min(math.max(300, math.min(host.Size.X.Offset, 620)), math.max(280, vp.X - 16))
             -- Temporarily allow header-only height while minimized.
@@ -7213,7 +7588,7 @@ function KiraUI:CreateWindow(config)
             for _, handle in ipairs(resizeHandles) do
                 handle.Active = true
             end
-            minimizeButton.Text = "—"
+            setImageIcon(minimizeIcon, "minus")
             updateSizeConstraint()
             local restore = self._savedSize or startSize
             local viewportSize = getViewport()
@@ -7360,6 +7735,17 @@ function KiraUI:CreateWindow(config)
             window:_applyResponsive()
         end)
     end
+
+    task.spawn(function()
+        KiraUI:PreloadIcons({
+            "chevron-down",
+            "chevron-right",
+            "x",
+            "minus",
+            "maximize-2",
+            "settings",
+        })
+    end)
 
     window:_applyResponsive()
     return window
