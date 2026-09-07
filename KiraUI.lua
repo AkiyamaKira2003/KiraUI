@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.1"
+KiraUI.Version = "0.6.2"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -6950,11 +6950,26 @@ function KiraUI:CreateWindow(config)
                 local buttonText =
                     tostring(options.Text or "Button")
 
-                local button = new("TextButton", {
-                    BackgroundColor3 =
+                local baseColor =
+                    typeof(options.BackgroundColor) == "Color3"
+                    and options.BackgroundColor
+                    or (
                         options.Danger
                         and theme.Danger
-                        or theme.Surface3,
+                        or theme.Surface3
+                    )
+
+                local hoverColor =
+                    typeof(options.HoverColor) == "Color3"
+                    and options.HoverColor
+                    or (
+                        options.Danger
+                        and baseColor
+                        or theme.AccentSoft
+                    )
+
+                local button = new("TextButton", {
+                    BackgroundColor3 = baseColor,
                     BorderSizePixel = 0,
                     Size = UDim2.fromScale(1, 1),
                     Font = Enum.Font.GothamMedium,
@@ -7026,32 +7041,28 @@ function KiraUI:CreateWindow(config)
                 window:_connect(
                     button.MouseEnter,
                     function()
-                        if not options.Danger then
-                            TweenService:Create(
-                                button,
-                                TweenInfo.new(0.12),
-                                {
-                                    BackgroundColor3 =
-                                        theme.AccentSoft,
-                                }
-                            ):Play()
-                        end
+                        TweenService:Create(
+                            button,
+                            TweenInfo.new(0.12),
+                            {
+                                BackgroundColor3 =
+                                    hoverColor,
+                            }
+                        ):Play()
                     end
                 )
 
                 window:_connect(
                     button.MouseLeave,
                     function()
-                        if not options.Danger then
-                            TweenService:Create(
-                                button,
-                                TweenInfo.new(0.12),
-                                {
-                                    BackgroundColor3 =
-                                        theme.Surface3,
-                                }
-                            ):Play()
-                        end
+                        TweenService:Create(
+                            button,
+                            TweenInfo.new(0.12),
+                            {
+                                BackgroundColor3 =
+                                    baseColor,
+                            }
+                        ):Play()
                     end
                 )
 
@@ -7109,6 +7120,54 @@ function KiraUI:CreateWindow(config)
                     if self.Icon then
                         self.Icon.Rotation =
                             tonumber(rotation) or 0
+                    end
+
+                    return self
+                end
+
+                function object:SetBackgroundColor(
+                    color,
+                    nextHoverColor
+                )
+                    if typeof(color) == "Color3" then
+                        baseColor = color
+                        button.BackgroundColor3 = baseColor
+                    end
+
+                    if typeof(nextHoverColor) == "Color3" then
+                        hoverColor = nextHoverColor
+                    end
+
+                    return self
+                end
+
+                function object:SetHoverColor(color)
+                    if typeof(color) == "Color3" then
+                        hoverColor = color
+                    end
+
+                    return self
+                end
+
+                function object:SetTextColor(color)
+                    if typeof(color) ~= "Color3" then
+                        return self
+                    end
+
+                    if self.Label then
+                        self.Label.TextColor3 = color
+                    else
+                        button.TextColor3 = color
+                    end
+
+                    return self
+                end
+
+                function object:SetIconColor(color)
+                    if self.Icon
+                        and typeof(color) == "Color3"
+                    then
+                        self.Icon.ImageColor3 = color
                     end
 
                     return self
