@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.11"
+KiraUI.Version = "0.6.12"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -8128,49 +8128,41 @@ function KiraUI:CreateWindow(config)
                     clone.AnchorPoint =
                         Vector2.zero
 
-                    -- Leave a tiny inset so the native card cannot paint over
-                    -- Kira's outer rounded border / selected stroke.
+                    -- Fill the Kira tile. Root background is transparent,
+                    -- so it cannot cover the Kira border/corner.
                     clone.Position =
                         UDim2.fromOffset(
-                            2,
-                            2
+                            0,
+                            0
                         )
 
                     clone.Size =
-                        UDim2.new(
+                        UDim2.fromScale(
                             1,
-                            -4,
-                            1,
-                            -4
+                            1
                         )
 
                     clone.Visible = true
                     clone.LayoutOrder = 0
                     clone.ZIndex = 20
 
-                    -- Do NOT use the game's own root item UICorner.
-                    -- Remove only DIRECT child UICorner(s) from the recipe.
-                    -- Nested UICorners in Price / Infinity / SoldOut stay intact.
+                    -- The native recipe clone contributes CONTENT only.
+                    -- Do not use the CraftingTable item's own outer decoration.
+                    --
+                    -- Remove direct root UICorner/UIStroke from the cloned
+                    -- recipe and make its root background transparent.
+                    -- The Kira CraftTile is the ONLY outer background/corner.
                     for _, directChild in ipairs(
                         clone:GetChildren()
                     ) do
-                        if directChild:IsA("UICorner") then
+                        if directChild:IsA("UICorner")
+                            or directChild:IsA("UIStroke")
+                        then
                             directChild:Destroy()
                         end
                     end
 
-                    -- Outer ClipsDescendants clips to a rectangle, not the
-                    -- visible rounded UICorner. Give the cloned recipe ROOT a
-                    -- Kira-owned 0.15 corner too, so its own background is
-                    -- physically rounded and cannot show square corners.
-                    new("UICorner", {
-                        Name = "KiraCraftMaskCorner",
-                        CornerRadius =
-                            UDim.new(
-                                0.15,
-                                0
-                            ),
-                    }, clone)
+                    clone.BackgroundTransparency = 1
 
                     clone.Parent = holder
 
