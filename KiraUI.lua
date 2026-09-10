@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.10"
+KiraUI.Version = "0.6.11"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -8067,7 +8067,7 @@ function KiraUI:CreateWindow(config)
                                 obj.ImageTransparency =
                                     math.clamp(
                                         obj.ImageTransparency
-                                            + 0.48,
+                                            + 0.72,
                                         0,
                                         1
                                     )
@@ -8078,7 +8078,7 @@ function KiraUI:CreateWindow(config)
                                 obj.TextTransparency =
                                     math.clamp(
                                         obj.TextTransparency
-                                            + 0.42,
+                                            + 0.66,
                                         0,
                                         1
                                     )
@@ -8090,7 +8090,7 @@ function KiraUI:CreateWindow(config)
                                 obj.BackgroundTransparency =
                                     math.clamp(
                                         obj.BackgroundTransparency
-                                            + 0.28,
+                                            + 0.50,
                                         0,
                                         1
                                     )
@@ -8128,29 +8128,29 @@ function KiraUI:CreateWindow(config)
                     clone.AnchorPoint =
                         Vector2.zero
 
+                    -- Leave a tiny inset so the native card cannot paint over
+                    -- Kira's outer rounded border / selected stroke.
                     clone.Position =
                         UDim2.fromOffset(
-                            0,
-                            0
+                            2,
+                            2
                         )
 
                     clone.Size =
-                        UDim2.fromScale(
+                        UDim2.new(
                             1,
-                            1
+                            -4,
+                            1,
+                            -4
                         )
 
                     clone.Visible = true
                     clone.LayoutOrder = 0
                     clone.ZIndex = 20
 
-                    -- Không lấy UICorner của chính item gốc trong
-                    -- CraftingTable (ví dụ:
-                    -- Tier1["Crafting Bench 2"].UICorner).
-                    --
-                    -- Chỉ xóa UICorner là DIRECT CHILD của root recipe clone.
-                    -- UICorner nằm sâu trong Price / Infinity / SoldOut...
-                    -- vẫn được giữ nguyên.
+                    -- Do NOT use the game's own root item UICorner.
+                    -- Remove only DIRECT child UICorner(s) from the recipe.
+                    -- Nested UICorners in Price / Infinity / SoldOut stay intact.
                     for _, directChild in ipairs(
                         clone:GetChildren()
                     ) do
@@ -8158,6 +8158,19 @@ function KiraUI:CreateWindow(config)
                             directChild:Destroy()
                         end
                     end
+
+                    -- Outer ClipsDescendants clips to a rectangle, not the
+                    -- visible rounded UICorner. Give the cloned recipe ROOT a
+                    -- Kira-owned 0.15 corner too, so its own background is
+                    -- physically rounded and cannot show square corners.
+                    new("UICorner", {
+                        Name = "KiraCraftMaskCorner",
+                        CornerRadius =
+                            UDim.new(
+                                0.15,
+                                0
+                            ),
+                    }, clone)
 
                     clone.Parent = holder
 
@@ -8472,7 +8485,9 @@ function KiraUI:CreateWindow(config)
                                     BackgroundColor3 =
                                         theme.Surface2,
                                     BackgroundTransparency =
-                                        0,
+                                        soldOut
+                                        and 0.42
+                                        or 0,
                                     BorderSizePixel = 0,
                                     LayoutOrder = index,
                                     ClipsDescendants = true,
