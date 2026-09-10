@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.9"
+KiraUI.Version = "0.6.10"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -7616,30 +7616,43 @@ function KiraUI:CreateWindow(config)
                         or {}
                 end
 
-                local row = controlFrame(84)
+                local hideLabel =
+                    options.HideLabel == true
 
-                new("TextLabel", {
-                    BackgroundTransparency = 1,
-                    Position = UDim2.fromOffset(0, 0),
-                    Size = UDim2.new(1, 0, 0, 18),
-                    Font = Enum.Font.Gotham,
-                    Text =
-                        string.upper(
-                            tostring(
-                                options.Text
-                                or "Materials"
-                            )
-                        ),
-                    TextSize = 10,
-                    TextColor3 = theme.MutedText,
-                    TextXAlignment = Enum.TextXAlignment.Left,
-                    ZIndex = 17,
-                }, row)
+                local row =
+                    controlFrame(
+                        hideLabel
+                            and 62
+                            or 84
+                    )
+
+                if not hideLabel then
+                    new("TextLabel", {
+                        BackgroundTransparency = 1,
+                        Position = UDim2.fromOffset(0, 0),
+                        Size = UDim2.new(1, 0, 0, 18),
+                        Font = Enum.Font.Gotham,
+                        Text =
+                            string.upper(
+                                tostring(
+                                    options.Text
+                                    or "Materials"
+                                )
+                            ),
+                        TextSize = 10,
+                        TextColor3 = theme.MutedText,
+                        TextXAlignment = Enum.TextXAlignment.Left,
+                        ZIndex = 17,
+                    }, row)
+                end
 
                 local holder = new("Frame", {
                     BackgroundColor3 = theme.Surface3,
                     BorderSizePixel = 0,
-                    Position = UDim2.fromOffset(0, 22),
+                    Position =
+                        hideLabel
+                        and UDim2.fromOffset(0, 0)
+                        or UDim2.fromOffset(0, 22),
                     Size = UDim2.new(1, 0, 0, 58),
                     ZIndex = 17,
                 }, row)
