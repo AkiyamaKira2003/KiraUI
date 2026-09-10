@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.12"
+KiraUI.Version = "0.6.13"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -8110,77 +8110,97 @@ function KiraUI:CreateWindow(config)
                         return nil
                     end
 
-                    local ok, clone =
-                        pcall(function()
-                            return source:Clone()
-                        end)
-
-                    if not ok or not clone then
-                        return nil
-                    end
-
-                    clone.Name =
-                        "NativeCraft_"
-                        .. tostring(
-                            source.Name
-                        )
-
-                    clone.AnchorPoint =
-                        Vector2.zero
-
-                    -- Fill the Kira tile. Root background is transparent,
-                    -- so it cannot cover the Kira border/corner.
-                    clone.Position =
-                        UDim2.fromOffset(
-                            0,
-                            0
-                        )
-
-                    clone.Size =
-                        UDim2.fromScale(
-                            1,
-                            1
-                        )
-
-                    clone.Visible = true
-                    clone.LayoutOrder = 0
-                    clone.ZIndex = 20
-
-                    -- The native recipe clone contributes CONTENT only.
-                    -- Do not use the CraftingTable item's own outer decoration.
+                    -- IMPORTANT:
+                    -- Do NOT clone the recipe root itself.
                     --
-                    -- Remove direct root UICorner/UIStroke from the cloned
-                    -- recipe and make its root background transparent.
-                    -- The Kira CraftTile is the ONLY outer background/corner.
-                    for _, directChild in ipairs(
-                        clone:GetChildren()
+                    -- Example game hierarchy:
+                    -- Tier1["Crafting Bench 2"]
+                    -- ├─ UICorner
+                    -- ├─ UIStroke
+                    -- ├─ ImageLabel
+                    -- ├─ Price
+                    -- └─ SoldOut
+                    --
+                    -- We create our own transparent Kira container and clone
+                    -- ONLY the useful CONTENT children. Therefore the item's
+                    -- own UICorner/UIStroke can never enter KiraUI at all.
+                    local cloneRoot =
+                        new("Frame", {
+                            Name =
+                                "NativeCraftContent_"
+                                .. tostring(
+                                    source.Name
+                                ),
+                            BackgroundTransparency = 1,
+                            BorderSizePixel = 0,
+                            Position =
+                                UDim2.fromOffset(
+                                    0,
+                                    0
+                                ),
+                            Size =
+                                UDim2.fromScale(
+                                    1,
+                                    1
+                                ),
+                            ClipsDescendants = false,
+                            ZIndex = 20,
+                        }, holder)
+
+                    local soldOutClone =
+                        nil
+
+                    for _, child in ipairs(
+                        source:GetChildren()
                     ) do
-                        if directChild:IsA("UICorner")
-                            or directChild:IsA("UIStroke")
+                        -- Explicitly reject root-decoration objects.
+                        -- This is stronger than cloning the root and deleting
+                        -- afterward: these instances are never cloned at all.
+                        if not child:IsA("UICorner")
+                            and not child:IsA("UIStroke")
+                            and not child:IsA("UIAspectRatioConstraint")
+                            and not child:IsA("UIGridLayout")
+                            and not child:IsA("UIListLayout")
+                            and not child:IsA("UIPadding")
                         then
-                            directChild:Destroy()
+                            local ok, childClone =
+                                pcall(function()
+                                    return child:Clone()
+                                end)
+
+                            if ok
+                                and childClone
+                            then
+                                childClone.Parent =
+                                    cloneRoot
+
+                                if childClone.Name
+                                    == "SoldOut"
+                                    and childClone:IsA(
+                                        "GuiObject"
+                                    )
+                                then
+                                    soldOutClone =
+                                        childClone
+                                end
+                            end
                         end
                     end
 
-                    clone.BackgroundTransparency = 1
+                    makeNativePassive(
+                        cloneRoot
+                    )
 
-                    clone.Parent = holder
-
-                    makeNativePassive(clone)
-
-                    -- Preserve the game's own SoldOut subtree. Only the rest of
-                    -- the native card is dimmed when sold out.
+                    -- Keep the game's own SoldOut subtree readable, but dim
+                    -- the rest of the copied native content more strongly.
                     if soldOut then
                         dimSoldOutNative(
-                            clone,
-                            clone:FindFirstChild(
-                                "SoldOut",
-                                true
-                            )
+                            cloneRoot,
+                            soldOutClone
                         )
                     end
 
-                    return clone
+                    return cloneRoot
                 end
 
                 local function updateCanvas()
