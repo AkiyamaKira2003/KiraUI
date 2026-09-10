@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.8"
+KiraUI.Version = "0.6.9"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -8130,6 +8130,22 @@ function KiraUI:CreateWindow(config)
                     clone.Visible = true
                     clone.LayoutOrder = 0
                     clone.ZIndex = 20
+
+                    -- Không lấy UICorner của chính item gốc trong
+                    -- CraftingTable (ví dụ:
+                    -- Tier1["Crafting Bench 2"].UICorner).
+                    --
+                    -- Chỉ xóa UICorner là DIRECT CHILD của root recipe clone.
+                    -- UICorner nằm sâu trong Price / Infinity / SoldOut...
+                    -- vẫn được giữ nguyên.
+                    for _, directChild in ipairs(
+                        clone:GetChildren()
+                    ) do
+                        if directChild:IsA("UICorner") then
+                            directChild:Destroy()
+                        end
+                    end
+
                     clone.Parent = holder
 
                     makeNativePassive(clone)
