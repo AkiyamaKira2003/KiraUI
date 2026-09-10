@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.5"
+KiraUI.Version = "0.6.6"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -3220,10 +3220,12 @@ function KiraUI:CreateWindow(config)
 
             function section:AddNumberMap(options)
                 options = options or {}
+
                 local minValue = tonumber(options.Min)
                 local maxValue = tonumber(options.Max)
                 local step = tonumber(options.Step) or 1
                 local suffix = tostring(options.Suffix or "")
+
                 if minValue and maxValue and maxValue < minValue then
                     minValue, maxValue = maxValue, minValue
                 end
@@ -3236,48 +3238,101 @@ function KiraUI:CreateWindow(config)
                     return text
                 end
 
-                local function normalizeNumber(value, fallback)
-                    local text = tostring(value or "")
-                    local number = tonumber(text)
-                    if number == nil or number ~= number or math.abs(number) == math.huge then
+                local function normalizeBase(value, fallback)
+                    local number = tonumber(tostring(value or ""))
+
+                    if number == nil
+                        or number ~= number
+                        or math.abs(number) == math.huge
+                    then
                         number = tonumber(fallback)
                     end
+
                     if number == nil then
                         number = minValue or 0
                     end
-                    if minValue then
+
+                    if minValue ~= nil then
                         number = math.max(minValue, number)
                     end
-                    if maxValue then
+
+                    if maxValue ~= nil then
                         number = math.min(maxValue, number)
                     end
+
                     if step > 0 then
-                        number = roundToStep(number, minValue or 0, step)
+                        number = roundToStep(
+                            number,
+                            minValue or 0,
+                            step
+                        )
                     end
+
                     return number
                 end
 
                 local function formatValue(value)
-                    return trimNumberText(formatNumber(normalizeNumber(value, 0), step)) .. suffix
+                    return trimNumberText(
+                        formatNumber(
+                            normalizeBase(value, 0),
+                            step
+                        )
+                    ) .. suffix
                 end
 
                 local function copyMap(values)
                     local out = {}
+
                     for key, value in pairs(values or {}) do
-                        out[tostring(key)] = normalizeNumber(value, options.Default or options.Shared or 0)
+                        out[tostring(key)] =
+                            normalizeBase(
+                                value,
+                                options.Default
+                                    or options.Shared
+                                    or 0
+                            )
                     end
+
                     return out
                 end
 
                 local function copyItems(items)
                     local out = {}
                     local seen = {}
+
                     for _, item in ipairs(items or {}) do
                         local key
                         local text
+                        local subText = ""
+                        local itemMin
+                        local itemMax
+                        local disabled = false
+
                         if type(item) == "table" then
-                            key = item.Key or item.Id or item.Value or item.Name or item.Text or item.Label
-                            text = item.Text or item.Label or item.Name or key
+                            key =
+                                item.Key
+                                or item.Id
+                                or item.Value
+                                or item.Name
+                                or item.Text
+                                or item.Label
+
+                            text =
+                                item.Text
+                                or item.Label
+                                or item.Name
+                                or key
+
+                            subText =
+                                tostring(
+                                    item.SubText
+                                    or item.Detail
+                                    or ""
+                                )
+
+                            itemMin = tonumber(item.Min)
+                            itemMax = tonumber(item.Max)
+                            disabled = item.Disabled == true
                         else
                             key = item
                             text = item
@@ -3285,14 +3340,23 @@ function KiraUI:CreateWindow(config)
 
                         key = tostring(key or "")
                         text = tostring(text or key)
-                        if key ~= "" and not seen[key] then
+
+                        if key ~= ""
+                            and not seen[key]
+                        then
                             seen[key] = true
+
                             out[#out + 1] = {
                                 Key = key,
                                 Text = text,
+                                SubText = subText,
+                                Min = itemMin,
+                                Max = itemMax,
+                                Disabled = disabled,
                             }
                         end
                     end
+
                     return out
                 end
 
@@ -3304,26 +3368,165 @@ function KiraUI:CreateWindow(config)
                         local ok, result = pcall(options.Provider)
                         return copyItems(ok and result or {})
                     end
+
                     return copyItems(options.Items or {})
                 end
 
                 local state = {
                     Locked = options.Locked ~= false,
-                    Shared = normalizeNumber(options.Shared or options.Default or options.Value, minValue or 0),
-                    Values = copyMap(options.Values or options.DefaultValues or {}),
+                    Shared =
+                        normalizeBase(
+                            options.Shared
+                                or options.Default
+                                or options.Value,
+                            minValue or 0
+                        ),
+                    Values =
+                        copyMap(
+                            options.Values
+                                or options.DefaultValues
+                                or {}
+                        ),
                     Items = readItems(),
                 }
 
+                local function findItem(key)
+                    key = tostring(key or "")
+
+                    for _, item in ipairs(state.Items) do
+                        if item.Key == key then
+                            return item
+                        end
+                    end
+
+                    return nil
+                end
+
+                local function normalizeForItem(value, fallback, item)
+                    local number = normalizeBase(value, fallback)
+
+                    if item then
+                        if item.Min ~= nil then
+                            number = math.max(item.Min, number)
+                        end
+
+                        if item.Max ~= nil
+                            and item.Max < math.huge
+                        then
+                            number = math.min(item.Max, number)
+                        end
+                    end
+
+                    if step > 0 then
+                        number = roundToStep(
+                            number,
+                            minValue or 0,
+                            step
+                        )
+                    end
+
+                    return number
+                end
+
+                local function getSharedBounds()
+                    local dynamicMin = minValue
+                    local dynamicMax = maxValue
+                    local foundEnabled = false
+
+                    for _, item in ipairs(state.Items) do
+                        if not item.Disabled then
+                            foundEnabled = true
+
+                            if item.Min ~= nil then
+                                dynamicMin =
+                                    dynamicMin == nil
+                                    and item.Min
+                                    or math.max(
+                                        dynamicMin,
+                                        item.Min
+                                    )
+                            end
+
+                            if item.Max ~= nil
+                                and item.Max < math.huge
+                            then
+                                dynamicMax =
+                                    dynamicMax == nil
+                                    and item.Max
+                                    or math.min(
+                                        dynamicMax,
+                                        item.Max
+                                    )
+                            end
+                        end
+                    end
+
+                    if not foundEnabled then
+                        return minValue, maxValue
+                    end
+
+                    return dynamicMin, dynamicMax
+                end
+
+                local function normalizeShared(value, fallback)
+                    local number = normalizeBase(value, fallback)
+                    local dynamicMin, dynamicMax = getSharedBounds()
+
+                    if dynamicMin ~= nil then
+                        number = math.max(dynamicMin, number)
+                    end
+
+                    if dynamicMax ~= nil then
+                        number = math.min(dynamicMax, number)
+                    end
+
+                    if step > 0 then
+                        number = roundToStep(
+                            number,
+                            minValue or 0,
+                            step
+                        )
+                    end
+
+                    return number
+                end
+
+                local function clampState()
+                    state.Shared =
+                        normalizeShared(
+                            state.Shared,
+                            state.Shared
+                        )
+
+                    for key, value in pairs(state.Values) do
+                        state.Values[key] =
+                            normalizeForItem(
+                                value,
+                                state.Shared,
+                                findItem(key)
+                            )
+                    end
+                end
+
+                clampState()
+
                 local function copyState()
+                    -- Do not serialize provider-generated Items. This keeps config
+                    -- clean and prevents stale item metadata from overriding the
+                    -- current game's xN / SoldOut values on next load.
                     return {
                         Locked = state.Locked,
                         Shared = state.Shared,
                         Values = copyMap(state.Values),
-                        Items = copyItems(state.Items),
                     }
                 end
 
-                local object = makeValueObject(copyState(), options.Callback)
+                local object =
+                    makeValueObject(
+                        copyState(),
+                        options.Callback
+                    )
+
                 local row = controlFrame(68)
                 local itemBoxes = {}
 
@@ -3332,7 +3535,14 @@ function KiraUI:CreateWindow(config)
                     Position = UDim2.fromOffset(0, 0),
                     Size = UDim2.new(1, 0, 0, 18),
                     Font = Enum.Font.Gotham,
-                    Text = string.upper(tostring(options.Text or options.Name or "Number Map")),
+                    Text =
+                        string.upper(
+                            tostring(
+                                options.Text
+                                or options.Name
+                                or "Number Map"
+                            )
+                        ),
                     TextSize = 10,
                     TextColor3 = theme.MutedText,
                     TextXAlignment = Enum.TextXAlignment.Left,
@@ -3347,7 +3557,11 @@ function KiraUI:CreateWindow(config)
                     Size = UDim2.new(1, -98, 0, 36),
                     Font = Enum.Font.GothamMedium,
                     Text = "",
-                    PlaceholderText = tostring(options.Placeholder or "Shared value"),
+                    PlaceholderText =
+                        tostring(
+                            options.Placeholder
+                            or "Shared value"
+                        ),
                     TextSize = 11,
                     TextColor3 = theme.Text,
                     PlaceholderColor3 = theme.MutedText,
@@ -3355,8 +3569,14 @@ function KiraUI:CreateWindow(config)
                     ClearTextOnFocus = false,
                     ZIndex = 17,
                 }, row)
+
                 corner(sharedBox, 8)
-                stroke(sharedBox, theme.Border, 0.5, 1)
+                stroke(
+                    sharedBox,
+                    theme.Border,
+                    0.5,
+                    1
+                )
                 padding(sharedBox, 11, 11, 0, 0)
 
                 local lockButton = new("TextButton", {
@@ -3387,6 +3607,7 @@ function KiraUI:CreateWindow(config)
                     Visible = false,
                     ZIndex = 17,
                 }, row)
+
                 corner(list, 10)
                 stroke(list, theme.Border, 0.35, 1)
                 padding(list, 6, 6, 6, 6)
@@ -3398,36 +3619,104 @@ function KiraUI:CreateWindow(config)
 
                 local function emit(silent)
                     object.Value = copyState()
+
                     if not silent then
                         object:_emit(copyState())
                     end
                 end
 
                 local function syncRowHeight()
-                    local itemHeight = 34
-                    local maxVisibleItems = tonumber(options.MaxVisibleItems) or 5
-                    local listHeight = state.Locked and 0 or math.min(
-                        math.max(1, #state.Items) * (itemHeight + 6) + 6,
-                        (maxVisibleItems * (itemHeight + 6)) + 6
-                    )
+                    local itemHeight = 42
+                    local maxVisibleItems =
+                        tonumber(options.MaxVisibleItems)
+                        or 5
+
+                    local listHeight =
+                        state.Locked
+                        and 0
+                        or math.min(
+                            math.max(
+                                1,
+                                #state.Items
+                            )
+                                * (itemHeight + 6)
+                                + 6,
+                            (
+                                maxVisibleItems
+                                * (itemHeight + 6)
+                            ) + 6
+                        )
 
                     list.Visible = not state.Locked
-                    list.Size = UDim2.new(1, 0, 0, listHeight)
-                    row.Size = UDim2.new(1, 0, 0, state.Locked and 68 or (72 + listHeight))
-                    list.CanvasSize = UDim2.fromOffset(0, math.max(0, listLayout.AbsoluteContentSize.Y + 12))
+                    list.Size =
+                        UDim2.new(
+                            1,
+                            0,
+                            0,
+                            listHeight
+                        )
+
+                    row.Size =
+                        UDim2.new(
+                            1,
+                            0,
+                            0,
+                            state.Locked
+                                and 68
+                                or (72 + listHeight)
+                        )
+
+                    list.CanvasSize =
+                        UDim2.fromOffset(
+                            0,
+                            math.max(
+                                0,
+                                listLayout.AbsoluteContentSize.Y
+                                    + 12
+                            )
+                        )
                 end
 
                 local function renderItemBox(key, box)
+                    local item = findItem(key)
                     local value = state.Values[key]
+
                     if value == nil then
                         value = state.Shared
                     end
+
+                    value =
+                        normalizeForItem(
+                            value,
+                            state.Shared,
+                            item
+                        )
+
+                    state.Values[key] = value
                     box.Text = formatValue(value)
+
+                    local disabled =
+                        item
+                        and item.Disabled == true
+
+                    box.TextEditable = not disabled
+                    box.Active = not disabled
+                    box.TextColor3 =
+                        disabled
+                        and theme.MutedText
+                        or theme.Text
+                    box.BackgroundTransparency =
+                        disabled
+                        and 0.48
+                        or 0
                 end
 
                 local function clearList()
                     itemBoxes = {}
-                    for _, child in ipairs(list:GetChildren()) do
+
+                    for _, child in ipairs(
+                        list:GetChildren()
+                    ) do
                         if child:IsA("Frame") then
                             child:Destroy()
                         end
@@ -3440,80 +3729,199 @@ function KiraUI:CreateWindow(config)
                     if #state.Items == 0 then
                         local empty = new("Frame", {
                             BackgroundTransparency = 1,
-                            Size = UDim2.new(1, 0, 0, 34),
+                            Size = UDim2.new(1, 0, 0, 42),
                             ZIndex = 18,
                         }, list)
+
                         new("TextLabel", {
                             BackgroundTransparency = 1,
                             Size = UDim2.fromScale(1, 1),
                             Font = Enum.Font.Gotham,
-                            Text = tostring(options.EmptyText or "No items"),
+                            Text =
+                                tostring(
+                                    options.EmptyText
+                                    or "No items"
+                                ),
                             TextSize = 10,
                             TextColor3 = theme.MutedText,
+                            TextWrapped = true,
                             ZIndex = 19,
                         }, empty)
+
                         syncRowHeight()
                         return
                     end
 
                     for index, item in ipairs(state.Items) do
                         local key = item.Key
+
                         local line = new("Frame", {
                             BackgroundTransparency = 1,
-                            Size = UDim2.new(1, 0, 0, 34),
+                            Size = UDim2.new(1, 0, 0, 42),
                             LayoutOrder = index,
                             ZIndex = 18,
                         }, list)
 
                         new("TextLabel", {
                             BackgroundTransparency = 1,
-                            Position = UDim2.fromOffset(0, 0),
-                            Size = UDim2.new(1, -110, 1, 0),
+                            Position = UDim2.fromOffset(0, 1),
+                            Size = UDim2.new(1, -158, 0, 19),
                             Font = Enum.Font.GothamMedium,
                             Text = item.Text,
                             TextSize = 10,
-                            TextColor3 = theme.Text,
+                            TextColor3 =
+                                item.Disabled
+                                and theme.MutedText
+                                or theme.Text,
                             TextXAlignment = Enum.TextXAlignment.Left,
                             TextTruncate = Enum.TextTruncate.AtEnd,
                             ZIndex = 19,
                         }, line)
+
+                        if item.SubText ~= "" then
+                            new("TextLabel", {
+                                BackgroundTransparency = 1,
+                                Position = UDim2.fromOffset(0, 20),
+                                Size = UDim2.new(1, -158, 0, 16),
+                                Font = Enum.Font.Gotham,
+                                Text = item.SubText,
+                                TextSize = 9,
+                                TextColor3 = theme.MutedText,
+                                TextXAlignment = Enum.TextXAlignment.Left,
+                                TextTruncate = Enum.TextTruncate.AtEnd,
+                                ZIndex = 19,
+                            }, line)
+                        end
+
+                        if item.Max ~= nil then
+                            new("TextLabel", {
+                                BackgroundTransparency = 1,
+                                AnchorPoint = Vector2.new(1, 0.5),
+                                Position = UDim2.new(1, -102, 0.5, 0),
+                                Size = UDim2.fromOffset(52, 20),
+                                Font = Enum.Font.Gotham,
+                                Text =
+                                    item.Max == math.huge
+                                    and "max ∞"
+                                    or (
+                                        "max "
+                                        .. trimNumberText(
+                                            formatNumber(
+                                                item.Max,
+                                                1
+                                            )
+                                        )
+                                    ),
+                                TextSize = 9,
+                                TextColor3 = theme.MutedText,
+                                TextXAlignment = Enum.TextXAlignment.Right,
+                                ZIndex = 19,
+                            }, line)
+                        end
 
                         local box = new("TextBox", {
                             BackgroundColor3 = theme.Surface2,
                             BorderSizePixel = 0,
                             AnchorPoint = Vector2.new(1, 0.5),
                             Position = UDim2.new(1, 0, 0.5, 0),
-                            Size = UDim2.fromOffset(96, 28),
+                            Size = UDim2.fromOffset(94, 30),
                             Font = Enum.Font.GothamMedium,
                             Text = "",
-                            PlaceholderText = formatValue(state.Shared),
+                            PlaceholderText =
+                                formatValue(state.Shared),
                             TextSize = 10,
                             TextColor3 = theme.Text,
                             PlaceholderColor3 = theme.MutedText,
+                            ClearTextOnFocus = false,
                             ZIndex = 19,
                         }, line)
+
                         corner(box, 7)
                         itemBoxes[key] = box
                         renderItemBox(key, box)
 
-                        window:_connect(box.FocusLost, function()
-                            state.Values[key] = normalizeNumber(box.Text, state.Values[key] or state.Shared)
-                            renderItemBox(key, box)
-                            emit(false)
-                        end)
+                        window:_connect(
+                            box.FocusLost,
+                            function()
+                                local liveItem =
+                                    findItem(key)
+
+                                if liveItem
+                                    and liveItem.Disabled
+                                then
+                                    renderItemBox(
+                                        key,
+                                        box
+                                    )
+                                    return
+                                end
+
+                                state.Values[key] =
+                                    normalizeForItem(
+                                        box.Text,
+                                        state.Values[key]
+                                            or state.Shared,
+                                        liveItem
+                                    )
+
+                                renderItemBox(key, box)
+                                emit(false)
+                            end
+                        )
                     end
 
                     syncRowHeight()
                 end
 
                 local function render()
-                    sharedBox.Text = formatValue(state.Shared)
-                    lockButton.Text = state.Locked and "LOCKED" or "CUSTOM"
-                    lockButton.BackgroundColor3 = state.Locked and theme.AccentSoft or theme.Surface3
-                    lockButton.TextColor3 = state.Locked and theme.Text or theme.Warning
+                    clampState()
+
+                    sharedBox.Text =
+                        formatValue(state.Shared)
+
+                    local _, dynamicMax =
+                        getSharedBounds()
+
+                    if dynamicMax ~= nil then
+                        sharedBox.PlaceholderText =
+                            dynamicMax == math.huge
+                            and "max ∞"
+                            or (
+                                "max "
+                                .. trimNumberText(
+                                    formatNumber(
+                                        dynamicMax,
+                                        1
+                                    )
+                                )
+                            )
+                    else
+                        sharedBox.PlaceholderText =
+                            tostring(
+                                options.Placeholder
+                                or "Shared value"
+                            )
+                    end
+
+                    lockButton.Text =
+                        state.Locked
+                        and "LOCKED"
+                        or "CUSTOM"
+
+                    lockButton.BackgroundColor3 =
+                        state.Locked
+                        and theme.AccentSoft
+                        or theme.Surface3
+
+                    lockButton.TextColor3 =
+                        state.Locked
+                        and theme.Text
+                        or theme.Warning
+
                     for key, box in pairs(itemBoxes) do
                         renderItemBox(key, box)
                     end
+
                     syncRowHeight()
                 end
 
@@ -3529,7 +3937,12 @@ function KiraUI:CreateWindow(config)
                 end
 
                 function object:SetSharedValue(value, silent)
-                    state.Shared = normalizeNumber(value, state.Shared)
+                    state.Shared =
+                        normalizeShared(
+                            value,
+                            state.Shared
+                        )
+
                     render()
                     emit(silent)
                     return self
@@ -3537,10 +3950,26 @@ function KiraUI:CreateWindow(config)
 
                 function object:SetItemValue(key, value, silent)
                     key = tostring(key or "")
+
                     if key == "" then
                         return self
                     end
-                    state.Values[key] = normalizeNumber(value, state.Shared)
+
+                    local item = findItem(key)
+
+                    if item
+                        and item.Disabled
+                    then
+                        return self
+                    end
+
+                    state.Values[key] =
+                        normalizeForItem(
+                            value,
+                            state.Shared,
+                            item
+                        )
+
                     render()
                     emit(silent)
                     return self
@@ -3548,14 +3977,24 @@ function KiraUI:CreateWindow(config)
 
                 function object:GetItemValue(key)
                     key = tostring(key or "")
+
                     if state.Locked then
                         return state.Shared
                     end
-                    return state.Values[key] or state.Shared
+
+                    local item = findItem(key)
+
+                    return normalizeForItem(
+                        state.Values[key]
+                            or state.Shared,
+                        state.Shared,
+                        item
+                    )
                 end
 
                 function object:SetItems(items, silent)
                     state.Items = copyItems(items)
+                    clampState()
                     rebuildList()
                     render()
                     emit(silent)
@@ -3563,11 +4002,18 @@ function KiraUI:CreateWindow(config)
                 end
 
                 function object:Refresh()
-                    return self:SetItems(readItems())
+                    -- Provider metadata may change live (xN, SoldOut, selected
+                    -- item set). Refresh also clamps old config values to the
+                    -- newest per-item maximum.
+                    return self:SetItems(
+                        readItems(),
+                        false
+                    )
                 end
 
                 function object:SetValues(values, silent)
                     state.Values = copyMap(values)
+                    clampState()
                     render()
                     emit(silent)
                     return self
@@ -3580,46 +4026,80 @@ function KiraUI:CreateWindow(config)
                 function object:SetValue(value, silent)
                     if type(value) == "table" then
                         if value.Locked ~= nil then
-                            state.Locked = value.Locked == true
+                            state.Locked =
+                                value.Locked == true
                         end
+
                         if value.Shared ~= nil then
-                            state.Shared = normalizeNumber(value.Shared, state.Shared)
+                            state.Shared =
+                                normalizeBase(
+                                    value.Shared,
+                                    state.Shared
+                                )
                         elseif value.Default ~= nil then
-                            state.Shared = normalizeNumber(value.Default, state.Shared)
+                            state.Shared =
+                                normalizeBase(
+                                    value.Default,
+                                    state.Shared
+                                )
                         end
+
                         if value.Values ~= nil then
-                            state.Values = copyMap(value.Values)
-                        end
-                        if value.Items ~= nil then
-                            state.Items = copyItems(value.Items)
-                            rebuildList()
+                            state.Values =
+                                copyMap(value.Values)
                         end
                     else
-                        state.Shared = normalizeNumber(value, state.Shared)
+                        state.Shared =
+                            normalizeBase(
+                                value,
+                                state.Shared
+                            )
                     end
+
+                    clampState()
                     render()
                     emit(silent)
                     return self
                 end
 
-                window:_connect(sharedBox.FocusLost, function()
-                    object:SetSharedValue(sharedBox.Text)
-                end)
+                window:_connect(
+                    sharedBox.FocusLost,
+                    function()
+                        object:SetSharedValue(
+                            sharedBox.Text
+                        )
+                    end
+                )
 
-                window:_connect(lockButton.MouseButton1Click, function()
-                    object:SetLocked(not state.Locked)
-                end)
+                window:_connect(
+                    lockButton.MouseButton1Click,
+                    function()
+                        object:SetLocked(
+                            not state.Locked
+                        )
+                    end
+                )
 
-                window:_connect(listLayout:GetPropertyChangedSignal("AbsoluteContentSize"), syncRowHeight)
+                window:_connect(
+                    listLayout:GetPropertyChangedSignal(
+                        "AbsoluteContentSize"
+                    ),
+                    syncRowHeight
+                )
 
                 rebuildList()
                 render()
+
                 object.Instance = row
                 object.Label = label
                 object.SharedBox = sharedBox
                 object.LockButton = lockButton
                 object.List = list
-                return window:_maybeRegisterConfig(object, options)
+
+                return window:_maybeRegisterConfig(
+                    object,
+                    options
+                )
             end
 
             section.AddPerItemNumber = section.AddNumberMap
@@ -7114,6 +7594,702 @@ function KiraUI:CreateWindow(config)
                     or {}
                 )
 
+                return object
+            end
+
+            function section:AddMaterialStrip(options)
+                options = options or {}
+
+                local function readItems()
+                    if type(options.Items) == "function" then
+                        local ok, result =
+                            pcall(options.Items)
+
+                        return ok
+                            and type(result) == "table"
+                            and result
+                            or {}
+                    end
+
+                    return type(options.Items) == "table"
+                        and options.Items
+                        or {}
+                end
+
+                local row = controlFrame(84)
+
+                new("TextLabel", {
+                    BackgroundTransparency = 1,
+                    Position = UDim2.fromOffset(0, 0),
+                    Size = UDim2.new(1, 0, 0, 18),
+                    Font = Enum.Font.Gotham,
+                    Text =
+                        string.upper(
+                            tostring(
+                                options.Text
+                                or "Materials"
+                            )
+                        ),
+                    TextSize = 10,
+                    TextColor3 = theme.MutedText,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    ZIndex = 17,
+                }, row)
+
+                local holder = new("Frame", {
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    Position = UDim2.fromOffset(0, 22),
+                    Size = UDim2.new(1, 0, 0, 58),
+                    ZIndex = 17,
+                }, row)
+
+                corner(holder, 10)
+                stroke(holder, theme.Border, 0.4, 1)
+                padding(holder, 6, 6, 6, 6)
+
+                new("UIGridLayout", {
+                    CellPadding = UDim2.fromOffset(6, 0),
+                    CellSize = UDim2.new(0.25, -5, 1, 0),
+                    FillDirectionMaxCells = 4,
+                    SortOrder = Enum.SortOrder.LayoutOrder,
+                }, holder)
+
+                local object = {
+                    Instance = row,
+                    Holder = holder,
+                }
+
+                local function clear()
+                    for _, child in ipairs(
+                        holder:GetChildren()
+                    ) do
+                        if child:IsA("GuiObject") then
+                            child:Destroy()
+                        end
+                    end
+                end
+
+                local function cloneImage(source, parent)
+                    if not source
+                        or not source:IsA("ImageLabel")
+                    then
+                        return nil
+                    end
+
+                    local ok, clone =
+                        pcall(function()
+                            return source:Clone()
+                        end)
+
+                    if not ok or not clone then
+                        return nil
+                    end
+
+                    clone.Name = "GameMaterialImage"
+                    clone.AnchorPoint = Vector2.zero
+                    clone.Position = UDim2.fromOffset(7, 8)
+                    clone.Size = UDim2.fromOffset(26, 26)
+                    clone.BackgroundTransparency = 1
+                    clone.Visible = true
+                    clone.ZIndex = 19
+                    clone.Parent = parent
+
+                    return clone
+                end
+
+                function object:Refresh()
+                    clear()
+
+                    for index, item in ipairs(
+                        readItems()
+                    ) do
+                        local card = new("Frame", {
+                            BackgroundColor3 = theme.Surface2,
+                            BorderSizePixel = 0,
+                            LayoutOrder = index,
+                            ZIndex = 18,
+                        }, holder)
+
+                        corner(card, 8)
+
+                        cloneImage(
+                            item.ImageSource,
+                            card
+                        )
+
+                        new("TextLabel", {
+                            BackgroundTransparency = 1,
+                            Position = UDim2.fromOffset(39, 5),
+                            Size = UDim2.new(1, -43, 0, 16),
+                            Font = Enum.Font.Gotham,
+                            Text = tostring(item.Name or "?"),
+                            TextSize = 9,
+                            TextColor3 = theme.MutedText,
+                            TextXAlignment = Enum.TextXAlignment.Left,
+                            TextTruncate = Enum.TextTruncate.AtEnd,
+                            ZIndex = 19,
+                        }, card)
+
+                        new("TextLabel", {
+                            BackgroundTransparency = 1,
+                            Position = UDim2.fromOffset(39, 20),
+                            Size = UDim2.new(1, -43, 0, 25),
+                            Font = Enum.Font.GothamBold,
+                            Text = tostring(item.Amount or "?"),
+                            TextSize = 13,
+                            TextColor3 = theme.Text,
+                            TextXAlignment = Enum.TextXAlignment.Left,
+                            TextTruncate = Enum.TextTruncate.AtEnd,
+                            ZIndex = 19,
+                        }, card)
+                    end
+
+                    return self
+                end
+
+                object:Refresh()
+                return object
+            end
+
+            function section:AddCraftCatalog(options)
+                options = options or {}
+
+                local height =
+                    math.max(
+                        180,
+                        tonumber(options.Height)
+                            or 360
+                    )
+
+                local function readItems()
+                    if type(options.Items) == "function" then
+                        local ok, result =
+                            pcall(options.Items)
+
+                        return ok
+                            and type(result) == "table"
+                            and result
+                            or {}
+                    end
+
+                    return type(options.Items) == "table"
+                        and options.Items
+                        or {}
+                end
+
+                local row = controlFrame(height)
+
+                new("TextLabel", {
+                    BackgroundTransparency = 1,
+                    Position = UDim2.fromOffset(0, 0),
+                    Size = UDim2.new(1, 0, 0, 18),
+                    Font = Enum.Font.Gotham,
+                    Text =
+                        string.upper(
+                            tostring(
+                                options.Text
+                                or "Craft Items"
+                            )
+                        ),
+                    TextSize = 10,
+                    TextColor3 = theme.MutedText,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    ZIndex = 17,
+                }, row)
+
+                local list = new("ScrollingFrame", {
+                    Name = "CraftCatalog",
+                    BackgroundColor3 = theme.Surface3,
+                    BorderSizePixel = 0,
+                    Position = UDim2.fromOffset(0, 22),
+                    Size = UDim2.new(1, 0, 1, -22),
+                    CanvasSize = UDim2.fromOffset(0, 0),
+                    ScrollBarThickness = 3,
+                    ScrollBarImageColor3 = theme.Border,
+                    ScrollBarImageTransparency = 0.12,
+                    ScrollingDirection = Enum.ScrollingDirection.Y,
+                    ZIndex = 17,
+                }, row)
+
+                corner(list, 10)
+                stroke(list, theme.Border, 0.35, 1)
+                padding(list, 7, 7, 7, 7)
+
+                local layout = new("UIListLayout", {
+                    Padding = UDim.new(0, 7),
+                    SortOrder = Enum.SortOrder.LayoutOrder,
+                }, list)
+
+                local object = {
+                    Instance = row,
+                    List = list,
+                }
+
+                local function clear()
+                    for _, child in ipairs(
+                        list:GetChildren()
+                    ) do
+                        if child:IsA("GuiObject") then
+                            child:Destroy()
+                        end
+                    end
+                end
+
+                local function dimTree(root, amount)
+                    if root:IsA("ImageLabel")
+                        or root:IsA("ImageButton")
+                    then
+                        root.ImageTransparency =
+                            math.clamp(
+                                root.ImageTransparency
+                                    + amount,
+                                0,
+                                1
+                            )
+                    end
+
+                    for _, obj in ipairs(
+                        root:GetDescendants()
+                    ) do
+                        if obj:IsA("ImageLabel")
+                            or obj:IsA("ImageButton")
+                        then
+                            obj.ImageTransparency =
+                                math.clamp(
+                                    obj.ImageTransparency
+                                        + amount,
+                                    0,
+                                    1
+                                )
+                        elseif obj:IsA("TextLabel")
+                            or obj:IsA("TextButton")
+                            or obj:IsA("TextBox")
+                        then
+                            obj.TextTransparency =
+                                math.clamp(
+                                    obj.TextTransparency
+                                        + amount,
+                                    0,
+                                    1
+                                )
+                        end
+                    end
+                end
+
+                local function cloneItemVisual(source, parent, soldOut)
+                    if not source
+                        or not source:IsA("GuiObject")
+                    then
+                        return nil
+                    end
+
+                    local ok, clone =
+                        pcall(function()
+                            return source:Clone()
+                        end)
+
+                    if not ok or not clone then
+                        return nil
+                    end
+
+                    -- Clone the game's whole ImageLabel subtree.
+                    -- This preserves its Infinity / LimitCountFrame / TextLabel
+                    -- appearance instead of recreating them approximately.
+                    clone.Name = "GameItemImage"
+                    clone.AnchorPoint = Vector2.zero
+                    clone.Position = UDim2.fromOffset(8, 8)
+                    clone.Size = UDim2.fromOffset(62, 62)
+                    clone.Visible = true
+                    clone.ZIndex = 20
+                    clone.Parent = parent
+
+                    if clone:IsA("ImageLabel")
+                        or clone:IsA("ImageButton")
+                    then
+                        clone.BackgroundTransparency = 1
+                    end
+
+                    if soldOut then
+                        dimTree(clone, 0.55)
+                    end
+
+                    return clone
+                end
+
+                local function cloneSoldOut(source, parent)
+                    if not source
+                        or not source:IsA("GuiObject")
+                    then
+                        return nil
+                    end
+
+                    local ok, clone =
+                        pcall(function()
+                            return source:Clone()
+                        end)
+
+                    if not ok or not clone then
+                        return nil
+                    end
+
+                    -- Clone the actual game's SoldOut GuiObject so its font,
+                    -- stroke, colors and text remain game-authentic.
+                    clone.Name = "GameSoldOut"
+                    clone.Visible = true
+                    clone.AnchorPoint = Vector2.new(1, 0)
+                    clone.Position = UDim2.new(1, -8, 0, 7)
+
+                    local width =
+                        math.clamp(
+                            source.AbsoluteSize.X > 0
+                                and source.AbsoluteSize.X
+                                or 86,
+                            64,
+                            120
+                        )
+
+                    local soldHeight =
+                        math.clamp(
+                            source.AbsoluteSize.Y > 0
+                                and source.AbsoluteSize.Y
+                                or 22,
+                            18,
+                            28
+                        )
+
+                    clone.Size =
+                        UDim2.fromOffset(
+                            width,
+                            soldHeight
+                        )
+
+                    clone.ZIndex = 25
+                    clone.Parent = parent
+
+                    return clone
+                end
+
+                local function cloneCostIcon(source, parent)
+                    if not source
+                        or not source:IsA("ImageLabel")
+                    then
+                        return nil
+                    end
+
+                    local ok, clone =
+                        pcall(function()
+                            return source:Clone()
+                        end)
+
+                    if not ok or not clone then
+                        return nil
+                    end
+
+                    clone.Name = "GameCostImage"
+                    clone.AnchorPoint = Vector2.zero
+                    clone.Position = UDim2.fromOffset(0, 0)
+                    clone.Size = UDim2.fromOffset(16, 16)
+                    clone.BackgroundTransparency = 1
+                    clone.Visible = true
+                    clone.ZIndex = 22
+                    clone.Parent = parent
+
+                    return clone
+                end
+
+                function object:Refresh()
+                    clear()
+
+                    local items = readItems()
+
+                    if #items == 0 then
+                        new("TextLabel", {
+                            BackgroundTransparency = 1,
+                            Size = UDim2.new(1, 0, 0, 54),
+                            Font = Enum.Font.Gotham,
+                            Text =
+                                tostring(
+                                    options.EmptyText
+                                    or "No craft items"
+                                ),
+                            TextSize = 10,
+                            TextColor3 = theme.MutedText,
+                            TextWrapped = true,
+                            ZIndex = 19,
+                        }, list)
+
+                        task.defer(function()
+                            list.CanvasSize =
+                                UDim2.fromOffset(
+                                    0,
+                                    math.max(
+                                        0,
+                                        layout.AbsoluteContentSize.Y
+                                            + 14
+                                    )
+                                )
+                        end)
+
+                        return self
+                    end
+
+                    for index, item in ipairs(items) do
+                        local soldOut =
+                            item.SoldOut == true
+
+                        local selected =
+                            item.Selected == true
+
+                        local selectable =
+                            item.Selectable ~= false
+                            and not soldOut
+
+                        local card = new("TextButton", {
+                            Name =
+                                "Craft_"
+                                .. tostring(
+                                    item.Key
+                                    or item.Name
+                                    or index
+                                ),
+                            BackgroundColor3 =
+                                selected
+                                and theme.AccentSoft
+                                or theme.Surface2,
+                            BackgroundTransparency =
+                                soldOut
+                                and 0.38
+                                or 0,
+                            BorderSizePixel = 0,
+                            Size = UDim2.new(1, -2, 0, 82),
+                            Text = "",
+                            AutoButtonColor = false,
+                            Active = selectable,
+                            LayoutOrder = index,
+                            ZIndex = 18,
+                        }, list)
+
+                        corner(card, 10)
+
+                        stroke(
+                            card,
+                            selected
+                                and theme.Accent
+                                or theme.Border,
+                            soldOut
+                                and 0.62
+                                or 0.35,
+                            selected
+                                and 1.35
+                                or 1
+                        )
+
+                        cloneItemVisual(
+                            item.ImageSource,
+                            card,
+                            soldOut
+                        )
+
+                        new("TextLabel", {
+                            BackgroundTransparency = 1,
+                            Position = UDim2.fromOffset(80, 7),
+                            Size = UDim2.new(1, -178, 0, 20),
+                            Font = Enum.Font.GothamBold,
+                            Text =
+                                tostring(
+                                    item.Name
+                                    or item.Key
+                                    or "?"
+                                ),
+                            TextSize = 11,
+                            TextColor3 =
+                                soldOut
+                                and theme.MutedText
+                                or theme.Text,
+                            TextXAlignment = Enum.TextXAlignment.Left,
+                            TextTruncate = Enum.TextTruncate.AtEnd,
+                            ZIndex = 21,
+                        }, card)
+
+                        new("TextLabel", {
+                            BackgroundTransparency = 1,
+                            AnchorPoint = Vector2.new(1, 0),
+                            Position = UDim2.new(1, -9, 0, 34),
+                            Size = UDim2.fromOffset(88, 20),
+                            Font = Enum.Font.GothamBold,
+                            Text =
+                                tostring(
+                                    item.LimitText
+                                    or ""
+                                ),
+                            TextSize = 10,
+                            TextColor3 = theme.Warning,
+                            TextXAlignment = Enum.TextXAlignment.Right,
+                            TextTruncate = Enum.TextTruncate.AtEnd,
+                            ZIndex = 21,
+                        }, card)
+
+                        new("TextLabel", {
+                            BackgroundTransparency = 1,
+                            Position = UDim2.fromOffset(80, 28),
+                            Size = UDim2.fromOffset(130, 18),
+                            Font = Enum.Font.Gotham,
+                            Text =
+                                item.IsBench
+                                and (
+                                    "Tier "
+                                    .. tostring(
+                                        item.Tier
+                                        or "?"
+                                    )
+                                    .. " • AUTO TIER"
+                                )
+                                or (
+                                    "Tier "
+                                    .. tostring(
+                                        item.Tier
+                                        or "?"
+                                    )
+                                ),
+                            TextSize = 9,
+                            TextColor3 = theme.MutedText,
+                            TextXAlignment = Enum.TextXAlignment.Left,
+                            ZIndex = 21,
+                        }, card)
+
+                        if selected
+                            and not soldOut
+                        then
+                            local selectedTag =
+                                new("TextLabel", {
+                                    BackgroundColor3 = theme.AccentSoft,
+                                    BackgroundTransparency = 0.1,
+                                    BorderSizePixel = 0,
+                                    AnchorPoint = Vector2.new(1, 0),
+                                    Position = UDim2.new(1, -8, 0, 7),
+                                    Size = UDim2.fromOffset(72, 20),
+                                    Font = Enum.Font.GothamBold,
+                                    Text = "SELECTED",
+                                    TextSize = 8,
+                                    TextColor3 = theme.Text,
+                                    ZIndex = 23,
+                                }, card)
+
+                            corner(selectedTag, 6)
+                        end
+
+                        local costs = new("Frame", {
+                            BackgroundTransparency = 1,
+                            Position = UDim2.fromOffset(80, 52),
+                            Size = UDim2.new(1, -90, 0, 21),
+                            ZIndex = 21,
+                        }, card)
+
+                        new("UIListLayout", {
+                            FillDirection = Enum.FillDirection.Horizontal,
+                            Padding = UDim.new(0, 7),
+                            SortOrder = Enum.SortOrder.LayoutOrder,
+                            VerticalAlignment = Enum.VerticalAlignment.Center,
+                        }, costs)
+
+                        for costIndex, cost in ipairs(
+                            item.Costs
+                            or {}
+                        ) do
+                            local mini = new("Frame", {
+                                BackgroundTransparency = 1,
+                                Size = UDim2.fromOffset(62, 18),
+                                LayoutOrder = costIndex,
+                                ZIndex = 21,
+                            }, costs)
+
+                            cloneCostIcon(
+                                cost.ImageSource,
+                                mini
+                            )
+
+                            new("TextLabel", {
+                                BackgroundTransparency = 1,
+                                Position = UDim2.fromOffset(20, 0),
+                                Size = UDim2.new(1, -20, 1, 0),
+                                Font = Enum.Font.GothamMedium,
+                                Text =
+                                    tostring(
+                                        cost.Amount
+                                        or 0
+                                    ),
+                                TextSize = 9,
+                                TextColor3 =
+                                    soldOut
+                                    and theme.MutedText
+                                    or theme.Text,
+                                TextXAlignment = Enum.TextXAlignment.Left,
+                                ZIndex = 22,
+                            }, mini)
+                        end
+
+                        if soldOut then
+                            cloneSoldOut(
+                                item.SoldOutSource,
+                                card
+                            )
+                        end
+
+                        if selectable
+                            and type(options.OnToggle)
+                                == "function"
+                        then
+                            window:_connect(
+                                card.MouseButton1Click,
+                                function()
+                                    pcall(
+                                        options.OnToggle,
+                                        tostring(
+                                            item.Key
+                                            or item.Name
+                                            or ""
+                                        ),
+                                        not selected
+                                    )
+                                end
+                            )
+                        end
+                    end
+
+                    task.defer(function()
+                        list.CanvasSize =
+                            UDim2.fromOffset(
+                                0,
+                                math.max(
+                                    0,
+                                    layout.AbsoluteContentSize.Y
+                                        + 14
+                                )
+                            )
+                    end)
+
+                    return self
+                end
+
+                window:_connect(
+                    layout:GetPropertyChangedSignal(
+                        "AbsoluteContentSize"
+                    ),
+                    function()
+                        list.CanvasSize =
+                            UDim2.fromOffset(
+                                0,
+                                math.max(
+                                    0,
+                                    layout.AbsoluteContentSize.Y
+                                        + 14
+                                )
+                            )
+                    end
+                )
+
+                object:Refresh()
                 return object
             end
 
