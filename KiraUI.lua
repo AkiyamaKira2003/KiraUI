@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.13"
+KiraUI.Version = "0.6.14"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -7889,29 +7889,34 @@ function KiraUI:CreateWindow(config)
                         options.Callback
                     )
 
+                local hideLabel =
+                    options.HideLabel == true
+
                 local row =
                     controlFrame(height)
 
-                new("TextLabel", {
-                    BackgroundTransparency = 1,
-                    Position = UDim2.fromOffset(0, 0),
-                    Size = UDim2.new(1, 0, 0, 18),
-                    Font = Enum.Font.Gotham,
-                    Text =
-                        string.upper(
-                            tostring(
-                                options.Text
-                                or "Craft Items"
-                            )
-                        ),
-                    TextSize = 10,
-                    TextColor3 = theme.MutedText,
-                    TextXAlignment =
-                        Enum.TextXAlignment.Left,
-                    TextTruncate =
-                        Enum.TextTruncate.AtEnd,
-                    ZIndex = 17,
-                }, row)
+                if not hideLabel then
+                    new("TextLabel", {
+                        BackgroundTransparency = 1,
+                        Position = UDim2.fromOffset(0, 0),
+                        Size = UDim2.new(1, 0, 0, 18),
+                        Font = Enum.Font.Gotham,
+                        Text =
+                            string.upper(
+                                tostring(
+                                    options.Text
+                                    or "Craft Items"
+                                )
+                            ),
+                        TextSize = 10,
+                        TextColor3 = theme.MutedText,
+                        TextXAlignment =
+                            Enum.TextXAlignment.Left,
+                        TextTruncate =
+                            Enum.TextTruncate.AtEnd,
+                        ZIndex = 17,
+                    }, row)
+                end
 
                 local list =
                     new("ScrollingFrame", {
@@ -7920,12 +7925,24 @@ function KiraUI:CreateWindow(config)
                             theme.Surface3,
                         BorderSizePixel = 0,
                         Position =
-                            UDim2.fromOffset(
+                            hideLabel
+                            and UDim2.fromOffset(
+                                0,
+                                0
+                            )
+                            or UDim2.fromOffset(
                                 0,
                                 22
                             ),
                         Size =
-                            UDim2.new(
+                            hideLabel
+                            and UDim2.new(
+                                1,
+                                0,
+                                1,
+                                0
+                            )
+                            or UDim2.new(
                                 1,
                                 0,
                                 1,
