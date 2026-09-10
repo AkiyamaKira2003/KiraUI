@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.4"
+KiraUI.Version = "0.6.5"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -107,6 +107,7 @@ KiraUI.Icons.tree = KiraUI.Icons["sprout"]
 KiraUI.Icons.food = KiraUI.Icons["carrot"]
 KiraUI.Icons.functions = KiraUI.Icons["electricity"]
 KiraUI.Icons.teleport = KiraUI.Icons["navigation"]
+KiraUI.Icons.craft = KiraUI.Icons["box"]
 
 -- Dynamic dropdown provider: KiraUI.other_player_names(Players, LocalPlayer).
 function KiraUI.other_player_names(players, localPlayer)
@@ -1649,11 +1650,20 @@ function KiraUI:CreateWindow(config)
     }, body)
     window.Sidebar = sidebar
 
-    local nav = new("Frame", {
+    -- Sidebar tabs must remain reachable even when the window is very short.
+    local nav = new("ScrollingFrame", {
         Name = "Navigation",
         BackgroundTransparency = 1,
+        BorderSizePixel = 0,
         Position = UDim2.fromOffset(10, 12),
         Size = UDim2.new(1, -20, 1, -24),
+        CanvasSize = UDim2.fromOffset(0, 0),
+        ScrollBarThickness = 2,
+        ScrollBarImageColor3 = theme.Border,
+        ScrollBarImageTransparency = 0.18,
+        ScrollingDirection = Enum.ScrollingDirection.Y,
+        ElasticBehavior = Enum.ElasticBehavior.WhenScrollable,
+        ClipsDescendants = true,
         ZIndex = 13,
     }, sidebar)
 
@@ -1661,6 +1671,27 @@ function KiraUI:CreateWindow(config)
         Padding = UDim.new(0, 7),
         SortOrder = Enum.SortOrder.LayoutOrder,
     }, nav)
+
+    local function updateNavCanvas()
+        if not nav.Parent then return end
+
+        nav.CanvasSize = UDim2.fromOffset(
+            0,
+            math.max(0, navLayout.AbsoluteContentSize.Y + 2)
+        )
+    end
+
+    window:_connect(
+        navLayout:GetPropertyChangedSignal("AbsoluteContentSize"),
+        updateNavCanvas
+    )
+
+    window:_connect(
+        nav:GetPropertyChangedSignal("AbsoluteSize"),
+        updateNavCanvas
+    )
+
+    task.defer(updateNavCanvas)
 
     local content = new("Frame", {
         Name = "Content",
