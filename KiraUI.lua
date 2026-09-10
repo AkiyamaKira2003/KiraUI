@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.7"
+KiraUI.Version = "0.6.8"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -7671,8 +7671,12 @@ function KiraUI:CreateWindow(config)
                 end
 
                 local function cloneImage(source, parent)
+                    -- Some materials use ImageLabel, but ScrapImage in this
+                    -- game can be a TextLabel. Clone the native GuiObject
+                    -- regardless of concrete GUI class so its exact icon/text
+                    -- styling is preserved.
                     if not source
-                        or not source:IsA("ImageLabel")
+                        or not source:IsA("GuiObject")
                     then
                         return nil
                     end
@@ -7686,7 +7690,7 @@ function KiraUI:CreateWindow(config)
                         return nil
                     end
 
-                    clone.Name = "GameMaterialImage"
+                    clone.Name = "GameMaterialVisual"
                     clone.AnchorPoint = Vector2.zero
                     clone.Position = UDim2.fromOffset(7, 8)
                     clone.Size = UDim2.fromOffset(26, 26)
@@ -7694,6 +7698,28 @@ function KiraUI:CreateWindow(config)
                     clone.Visible = true
                     clone.ZIndex = 19
                     clone.Parent = parent
+
+                    -- A cloned button should be visual-only inside KiraUI.
+                    if clone:IsA("GuiButton") then
+                        clone.Active = false
+                        clone.Selectable = false
+                        clone.AutoButtonColor = false
+                    end
+
+                    for _, child in ipairs(
+                        clone:GetDescendants()
+                    ) do
+                        if child:IsA("LocalScript")
+                            or child:IsA("Script")
+                            or child:IsA("ModuleScript")
+                        then
+                            child:Destroy()
+                        elseif child:IsA("GuiButton") then
+                            child.Active = false
+                            child.Selectable = false
+                            child.AutoButtonColor = false
+                        end
+                    end
 
                     return clone
                 end
@@ -8225,8 +8251,7 @@ function KiraUI:CreateWindow(config)
                                 1,
                                 0,
                                 0,
-                                28
-                                    + block.Holder.Size.Y.Offset
+                                block.Holder.Size.Y.Offset
                             )
                     end
 
@@ -8313,6 +8338,11 @@ function KiraUI:CreateWindow(config)
                         local tierItems =
                             grouped[tier]
 
+                        -- One independent grid block per Tier.
+                        -- There is intentionally NO "TIER N" / "NEEDS
+                        -- CRAFTING BENCH N" separator. The new block itself
+                        -- forces the next Tier onto a fresh row, matching the
+                        -- game's visual flow without extra break text.
                         local tierFrame =
                             new("Frame", {
                                 Name =
@@ -8326,41 +8356,12 @@ function KiraUI:CreateWindow(config)
                                         1,
                                         0,
                                         0,
-                                        160
+                                        132
                                     ),
                                 LayoutOrder =
                                     tierOrder,
                                 ZIndex = 18,
                             }, list)
-
-                        new("TextLabel", {
-                            BackgroundTransparency = 1,
-                            Position =
-                                UDim2.fromOffset(
-                                    2,
-                                    0
-                                ),
-                            Size =
-                                UDim2.new(
-                                    1,
-                                    -4,
-                                    0,
-                                    22
-                                ),
-                            Font =
-                                Enum.Font.GothamBold,
-                            Text =
-                                "TIER "
-                                .. tostring(
-                                    tier
-                                ),
-                            TextSize = 10,
-                            TextColor3 =
-                                theme.MutedText,
-                            TextXAlignment =
-                                Enum.TextXAlignment.Left,
-                            ZIndex = 19,
-                        }, tierFrame)
 
                         local holder =
                             new("Frame", {
@@ -8369,7 +8370,7 @@ function KiraUI:CreateWindow(config)
                                 Position =
                                     UDim2.fromOffset(
                                         0,
-                                        28
+                                        0
                                     ),
                                 Size =
                                     UDim2.new(
@@ -8449,7 +8450,13 @@ function KiraUI:CreateWindow(config)
                                     ZIndex = 19,
                                 }, holder)
 
-                            corner(tile, 10)
+                            new("UICorner", {
+                                CornerRadius =
+                                    UDim.new(
+                                        0.15,
+                                        0
+                                    ),
+                            }, tile)
 
                             local tileStroke =
                                 stroke(
