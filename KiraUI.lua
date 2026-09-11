@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.14"
+KiraUI.Version = "0.6.15"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -3217,6 +3217,631 @@ function KiraUI:CreateWindow(config)
 
             section.AddTextBox = section.AddInput
             section.AddTextbox = section.AddInput
+
+            -- Searchable free-text dropdown.
+            --
+            -- Behaves like a normal text input, but while focused it filters
+            -- dynamic suggestions. Clicking the arrow with an empty query
+            -- opens the full list. Clicking one suggestion fills the input.
+            --
+            -- Useful for values that may appear/disappear at runtime, such as
+            -- workspace.Items objects and "<Player> Body" models.
+            function section:AddSearchDropdown(options)
+                options = options or {}
+
+                local default =
+                    tostring(
+                        options.Default
+                        or options.Value
+                        or ""
+                    )
+
+                local object =
+                    makeValueObject(
+                        default,
+                        options.Callback
+                    )
+
+                local row =
+                    controlFrame(62)
+
+                local label =
+                    new("TextLabel", {
+                        BackgroundTransparency = 1,
+                        Position = UDim2.fromOffset(0, 0),
+                        Size = UDim2.new(1, 0, 0, 18),
+                        Font = Enum.Font.Gotham,
+                        Text =
+                            string.upper(
+                                tostring(
+                                    options.Text
+                                    or options.Name
+                                    or "Search"
+                                )
+                            ),
+                        TextSize = 10,
+                        TextColor3 = theme.MutedText,
+                        TextXAlignment =
+                            Enum.TextXAlignment.Left,
+                        TextTruncate =
+                            Enum.TextTruncate.AtEnd,
+                        ZIndex = 17,
+                    }, row)
+
+                local box =
+                    new("TextBox", {
+                        BackgroundColor3 = theme.Surface3,
+                        BorderSizePixel = 0,
+                        Position = UDim2.fromOffset(0, 22),
+                        Size = UDim2.new(1, 0, 0, 36),
+                        Font = Enum.Font.GothamMedium,
+                        Text = default,
+                        PlaceholderText =
+                            tostring(
+                                options.Placeholder
+                                or "Gõ để tìm..."
+                            ),
+                        TextSize = 11,
+                        TextColor3 = theme.Text,
+                        PlaceholderColor3 = theme.MutedText,
+                        TextXAlignment =
+                            Enum.TextXAlignment.Left,
+                        ClearTextOnFocus = false,
+                        MultiLine = false,
+                        ZIndex = 17,
+                    }, row)
+
+                corner(box, 8)
+                stroke(box, theme.Border, 0.5, 1)
+                padding(box, 11, 38, 0, 0)
+
+                local arrowButton =
+                    new("TextButton", {
+                        BackgroundTransparency = 1,
+                        BorderSizePixel = 0,
+                        AnchorPoint = Vector2.new(1, 0),
+                        Position = UDim2.new(1, 0, 0, 22),
+                        Size = UDim2.fromOffset(36, 36),
+                        Text = "",
+                        AutoButtonColor = false,
+                        ZIndex = 20,
+                    }, row)
+
+                local arrow =
+                    createImageIcon(
+                        arrowButton,
+                        (
+                            KiraUI.ResolveIcon(
+                                options.ArrowIcon
+                            )
+                            and options.ArrowIcon
+                            or "chevron-down"
+                        ),
+                        {
+                            AnchorPoint =
+                                Vector2.new(
+                                    0.5,
+                                    0.5
+                                ),
+                            Position =
+                                UDim2.fromScale(
+                                    0.5,
+                                    0.5
+                                ),
+                            Size =
+                                UDim2.fromOffset(
+                                    16,
+                                    16
+                                ),
+                            ImageColor3 =
+                                theme.MutedText,
+                            ZIndex = 21,
+                        }
+                    )
+
+                local popup = nil
+                local dropdownApi = {}
+                local suppressTextSignal = false
+
+                local function getOptions()
+                    local values
+
+                    if type(options.Values)
+                        == "function"
+                    then
+                        local ok, result =
+                            pcall(options.Values)
+
+                        values =
+                            ok
+                            and result
+                            or {}
+                    elseif type(options.Provider)
+                        == "function"
+                    then
+                        local ok, result =
+                            pcall(options.Provider)
+
+                        values =
+                            ok
+                            and result
+                            or {}
+                    else
+                        values =
+                            options.Values
+                            or options.Options
+                            or {}
+                    end
+
+                    local out = {}
+                    local seen = {}
+
+                    for _, value in ipairs(
+                        values or {}
+                    ) do
+                        local text =
+                            tostring(value or "")
+
+                        if text ~= ""
+                            and not seen[text]
+                        then
+                            seen[text] = true
+                            out[#out + 1] = text
+                        end
+                    end
+
+                    table.sort(
+                        out,
+                        function(a, b)
+                            return string.lower(a)
+                                < string.lower(b)
+                        end
+                    )
+
+                    return out
+                end
+
+                local function filterOptions(query)
+                    query =
+                        string.lower(
+                            tostring(query or "")
+                        )
+
+                    local values =
+                        getOptions()
+
+                    if query == "" then
+                        return values
+                    end
+
+                    local prefix = {}
+                    local contains = {}
+
+                    for _, value in ipairs(values) do
+                        local lower =
+                            string.lower(value)
+
+                        local found =
+                            string.find(
+                                lower,
+                                query,
+                                1,
+                                true
+                            )
+
+                        if found == 1 then
+                            prefix[#prefix + 1] =
+                                value
+                        elseif found then
+                            contains[#contains + 1] =
+                                value
+                        end
+                    end
+
+                    for _, value in ipairs(
+                        contains
+                    ) do
+                        prefix[#prefix + 1] =
+                            value
+                    end
+
+                    return prefix
+                end
+
+                local function close()
+                    if popup then
+                        popup:Destroy()
+                        popup = nil
+                    end
+
+                    dismissLayer.Visible = false
+                    arrow.Rotation = 0
+
+                    if window._openDropdown
+                        == dropdownApi
+                    then
+                        window._openDropdown =
+                            nil
+                    end
+                end
+
+                function dropdownApi:Close()
+                    close()
+                end
+
+                local function setBoxText(value)
+                    suppressTextSignal = true
+                    box.Text =
+                        tostring(value or "")
+                    suppressTextSignal = false
+                end
+
+                function object:SetValue(value, silent)
+                    value =
+                        tostring(value or "")
+
+                    if self.Value == value then
+                        setBoxText(value)
+                        return self
+                    end
+
+                    self.Value = value
+                    setBoxText(value)
+
+                    if not silent then
+                        self:_emit(value)
+                    end
+
+                    return self
+                end
+
+                function object:SetText(value, silent)
+                    return self:SetValue(
+                        value,
+                        silent
+                    )
+                end
+
+                function object:GetText()
+                    return tostring(
+                        self.Value or ""
+                    )
+                end
+
+                function object:SetValues(values)
+                    options.Values =
+                        values or {}
+                    options.Provider = nil
+                    return self
+                end
+
+                local function renderPopup(query)
+                    if popup then
+                        popup:Destroy()
+                        popup = nil
+                    end
+
+                    local values =
+                        filterOptions(query)
+
+                    local itemHeight = 34
+                    local maxVisibleItems =
+                        tonumber(
+                            options.MaxVisibleItems
+                        ) or 7
+
+                    local visibleCount =
+                        math.max(
+                            1,
+                            math.min(
+                                #values,
+                                maxVisibleItems
+                            )
+                        )
+
+                    local popupHeight =
+                        visibleCount
+                            * itemHeight
+                        + 8
+
+                    local boxPos =
+                        box.AbsolutePosition
+
+                    local boxSize =
+                        box.AbsoluteSize
+
+                    local viewportSize =
+                        getViewport()
+
+                    local popupWidth =
+                        math.max(
+                            boxSize.X,
+                            tonumber(
+                                options.MinPopupWidth
+                            ) or 180
+                        )
+
+                    local x = boxPos.X
+
+                    local belowY =
+                        boxPos.Y
+                        + boxSize.Y
+                        + 6
+
+                    local aboveY =
+                        boxPos.Y
+                        - popupHeight
+                        - 6
+
+                    local spaceBelow =
+                        viewportSize.Y
+                        - belowY
+
+                    local y =
+                        (
+                            spaceBelow
+                                >= popupHeight
+                            or aboveY < 8
+                        )
+                        and belowY
+                        or aboveY
+
+                    if x + popupWidth
+                        > viewportSize.X - 8
+                    then
+                        x =
+                            viewportSize.X
+                            - popupWidth
+                            - 8
+                    end
+
+                    x = math.max(8, x)
+
+                    y =
+                        math.max(
+                            8,
+                            math.min(
+                                y,
+                                viewportSize.Y
+                                    - popupHeight
+                                    - 8
+                            )
+                        )
+
+                    popup =
+                        new("ScrollingFrame", {
+                            Name =
+                                "SearchDropdownPopup",
+                            BackgroundColor3 =
+                                theme.Surface3,
+                            BorderSizePixel = 0,
+                            Position =
+                                UDim2.fromOffset(
+                                    x,
+                                    y
+                                ),
+                            Size =
+                                UDim2.fromOffset(
+                                    popupWidth,
+                                    popupHeight
+                                ),
+                            CanvasSize =
+                                UDim2.fromOffset(
+                                    0,
+                                    math.max(
+                                        0,
+                                        #values
+                                            * itemHeight
+                                            + 8
+                                    )
+                                ),
+                            ScrollBarThickness = 2,
+                            ScrollBarImageColor3 =
+                                theme.Border,
+                            ScrollBarImageTransparency =
+                                0.1,
+                            ZIndex = 910,
+                        }, portal)
+
+                    corner(popup, 10)
+                    stroke(
+                        popup,
+                        theme.Border,
+                        0.18,
+                        1
+                    )
+                    padding(
+                        popup,
+                        4,
+                        4,
+                        4,
+                        4
+                    )
+
+                    new("UIListLayout", {
+                        Padding = UDim.new(0, 0),
+                        SortOrder =
+                            Enum.SortOrder.LayoutOrder,
+                    }, popup)
+
+                    if #values == 0 then
+                        new("TextLabel", {
+                            BackgroundTransparency = 1,
+                            Size =
+                                UDim2.new(
+                                    1,
+                                    0,
+                                    0,
+                                    itemHeight
+                                ),
+                            Font = Enum.Font.Gotham,
+                            Text =
+                                tostring(
+                                    options.EmptyText
+                                    or "Không có kết quả"
+                                ),
+                            TextSize = 10,
+                            TextColor3 =
+                                theme.MutedText,
+                            ZIndex = 911,
+                        }, popup)
+                    else
+                        for _, value in ipairs(values) do
+                            local item =
+                                new("TextButton", {
+                                    BackgroundTransparency = 1,
+                                    BorderSizePixel = 0,
+                                    Size =
+                                        UDim2.new(
+                                            1,
+                                            0,
+                                            0,
+                                            itemHeight
+                                        ),
+                                    Font =
+                                        Enum.Font.GothamMedium,
+                                    Text =
+                                        "  "
+                                        .. value,
+                                    TextSize = 10,
+                                    TextColor3 =
+                                        value
+                                            == object.Value
+                                        and theme.Accent
+                                        or theme.Text,
+                                    TextXAlignment =
+                                        Enum.TextXAlignment.Left,
+                                    AutoButtonColor = false,
+                                    ZIndex = 911,
+                                }, popup)
+
+                            window:_connect(
+                                item.MouseEnter,
+                                function()
+                                    item.BackgroundTransparency = 0
+                                    item.BackgroundColor3 =
+                                        theme.Surface2
+                                end
+                            )
+
+                            window:_connect(
+                                item.MouseLeave,
+                                function()
+                                    item.BackgroundTransparency = 1
+                                end
+                            )
+
+                            window:_connect(
+                                item.MouseButton1Click,
+                                function()
+                                    object:SetValue(
+                                        value
+                                    )
+                                    box:ReleaseFocus()
+                                    close()
+                                end
+                            )
+                        end
+                    end
+
+                    dismissLayer.Visible = true
+                    arrow.Rotation = 180
+                    window._openDropdown =
+                        dropdownApi
+                end
+
+                local function open(query)
+                    window:_closeDropdown()
+                    renderPopup(query or "")
+                end
+
+                function object:Refresh()
+                    if popup then
+                        renderPopup(
+                            box:IsFocused()
+                            and box.Text
+                            or ""
+                        )
+                    end
+
+                    return self
+                end
+
+                window:_connect(
+                    box.Focused,
+                    function()
+                        open(box.Text)
+                    end
+                )
+
+                window:_connect(
+                    box:GetPropertyChangedSignal(
+                        "Text"
+                    ),
+                    function()
+                        if suppressTextSignal
+                            or not box:IsFocused()
+                        then
+                            return
+                        end
+
+                        -- Free-text is valid immediately, while suggestions
+                        -- keep filtering live like a search engine.
+                        object.Value =
+                            tostring(box.Text or "")
+
+                        object:_emit(
+                            object.Value
+                        )
+
+                        renderPopup(
+                            box.Text
+                        )
+                    end
+                )
+
+                window:_connect(
+                    box.FocusLost,
+                    function()
+                        object:SetValue(
+                            box.Text
+                        )
+
+                        close()
+                    end
+                )
+
+                window:_connect(
+                    arrowButton.MouseButton1Click,
+                    function()
+                        if window._openDropdown
+                            == dropdownApi
+                        then
+                            close()
+                        else
+                            -- Arrow always shows the whole current list.
+                            open("")
+                        end
+                    end
+                )
+
+                object.Instance = row
+                object.Label = label
+                object.Box = box
+                object.ArrowButton =
+                    arrowButton
+                object.Close = close
+
+                return window:_maybeRegisterConfig(
+                    object,
+                    options
+                )
+            end
+
+            section.AddSearchInput =
+                section.AddSearchDropdown
+            section.AddComboInput =
+                section.AddSearchDropdown
 
             function section:AddNumberMap(options)
                 options = options or {}
