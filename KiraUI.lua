@@ -39,7 +39,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local KiraUI = {}
 KiraUI.__index = KiraUI
-KiraUI.Version = "0.6.15"
+KiraUI.Version = "0.6.16"
 
 -- Lucide image icons hosted as Roblox image assets.
 -- These are ImageLabel/ImageButton assets, not font/Unicode glyphs.
@@ -3343,6 +3343,11 @@ function KiraUI:CreateWindow(config)
                 local dropdownApi = {}
                 local suppressTextSignal = false
 
+                -- FocusLost can fire before a popup suggestion's click event.
+                -- A serial cancels the delayed FocusLost close whenever the
+                -- user actually interacts with the arrow or a suggestion.
+                local interactionSerial = 0
+
                 local function getOptions()
                     local values
 
@@ -3734,9 +3739,12 @@ function KiraUI:CreateWindow(config)
                             window:_connect(
                                 item.MouseButton1Click,
                                 function()
+                                    interactionSerial += 1
+
                                     object:SetValue(
                                         value
                                     )
+
                                     box:ReleaseFocus()
                                     close()
                                 end
@@ -3803,23 +3811,50 @@ function KiraUI:CreateWindow(config)
                 window:_connect(
                     box.FocusLost,
                     function()
-                        object:SetValue(
-                            box.Text
-                        )
+                        interactionSerial += 1
 
-                        close()
+                        local mySerial =
+                            interactionSerial
+
+                        local lostText =
+                            tostring(
+                                box.Text or ""
+                            )
+
+                        -- Give a popup item / arrow click time to fire first.
+                        -- If that interaction increments interactionSerial,
+                        -- this stale FocusLost callback does nothing.
+                        task.delay(
+                            0.12,
+                            function()
+                                if mySerial
+                                    ~= interactionSerial
+                                then
+                                    return
+                                end
+
+                                object:SetValue(
+                                    lostText
+                                )
+
+                                close()
+                            end
+                        )
                     end
                 )
 
                 window:_connect(
                     arrowButton.MouseButton1Click,
                     function()
+                        interactionSerial += 1
+
                         if window._openDropdown
                             == dropdownApi
                         then
                             close()
                         else
-                            -- Arrow always shows the whole current list.
+                            -- Arrow always shows the FULL live provider list,
+                            -- regardless of the text currently in the box.
                             open("")
                         end
                     end
